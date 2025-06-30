@@ -204,8 +204,11 @@
   }
 
   .dark-theme .header {
-    background: var(--dark-bg-secondary);
-    border-bottom: 1px solid var(--dark-border-color);
+    /* background: var(--dark-bg-secondary); */ /* Original: lighter than main content */
+    background: var(--dark-bg-primary); /* Match main content bg for seamless look */
+    /* border-bottom: 1px solid var(--dark-border-color); */ /* Original border */
+    border-bottom: none; /* Remove border to blend further */
+    /* padding-bottom: 16px; */ /* Keep padding or adjust if needed */
   }
   .dark-theme .header .greeting { color: var(--dark-text-secondary); }
   .dark-theme .header .user-info h2 { color: var(--dark-text-primary); }
@@ -412,6 +415,25 @@
   .dark-theme .profile-section input:checked + .slider { background-color: var(--dark-accent-color); }
   .dark-theme .profile-section .slider:before { background-color: var(--dark-text-secondary); } /* Thumb color in dark */
   .dark-theme .profile-section input:checked + .slider:before { background-color: white; }
+
+  /* Decorative Gradient Ball for Dark Mode */
+  .dark-theme .ui-container::after {
+    content: '';
+    position: fixed; /* Fixed to viewport */
+    right: -80px;  /* Partially off-screen */
+    bottom: -80px; /* Partially off-screen */
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(0, 123, 255, 0.15) 0%, rgba(0, 123, 255, 0.0) 70%);
+    border-radius: 50%;
+    z-index: 0; /* Below most content, but above body background */
+    pointer-events: none; /* Non-interactive */
+    display: block; /* Ensure it's displayed */
+  }
+  /* Ensure it's not on light theme */
+  .ui-container::after {
+    display: none;
+  }
 
 
 </style>
