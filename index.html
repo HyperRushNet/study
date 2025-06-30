@@ -927,9 +927,12 @@
     if(file) {
       const reader=new FileReader();
       reader.onloadend=()=>{
-        userProfile.profilePicUrl=reader.result; 
-        userProfile.profilePicIdentifier=''; 
-        document.getElementById('editProfilePicUrl').value='';
+        userProfile.profilePicUrl=reader.result; // Store base64
+        document.getElementById('editProfilePicUrl').value = ''; // Clear URL input
+        userProfile.profilePicIdentifier = ''; // Clear stored initials
+        document.getElementById('editProfilePicIdentifier').value = ''; // Clear initials input
+        document.getElementById('profilePictureUpload').value = null; // Clear file input
+
         saveProfileToLocalStorage();
         updateProfileDisplay();
         showMessageBox('Succes','Profielfoto geüpload!');
@@ -948,15 +951,24 @@
       showMessageBox('Fout','Voer een geldige URL in.');
       return;
     }
-    if (!document.getElementById('profilePictureUpload').files.length || newUrl) {
-      userProfile.profilePicUrl= newUrl;
-      userProfile.profilePicIdentifier= newInit|| (userProfile.name ? userProfile.name.substring(0,2).toUpperCase() :'YN');
-      saveProfileToLocalStorage();
-      updateProfileDisplay();
-      showMessageBox('Succes','Profielfoto-instellingen bijgewerkt!');
-    } else {
-      showMessageBox('Informatie','Gebruik de bestandsupload of voer een URL in.');
+
+    if (newUrl) { // If a new URL is provided
+      userProfile.profilePicUrl = newUrl;
+      userProfile.profilePicIdentifier = ''; // URL takes precedence, clear initials logic
+    } else { // No new URL provided
+      // If userProfile.profilePicUrl is not already a base64 string, clear it.
+      // This means if it was an old web URL (now deleted from input) or empty, it becomes truly empty.
+      // If it was a base64 string (from a file upload), it remains untouched here.
+      if (!userProfile.profilePicUrl || !userProfile.profilePicUrl.startsWith('data:image')) {
+        userProfile.profilePicUrl = '';
+      }
+      // Set/update initials. These will be used by updateProfileDisplay if profilePicUrl is now empty.
+      userProfile.profilePicIdentifier = newInit || (userProfile.name ? userProfile.name.substring(0,2).toUpperCase() :'YN');
     }
+
+    saveProfileToLocalStorage();
+    updateProfileDisplay();
+    showMessageBox('Succes','Profielfoto-instellingen bijgewerkt!');
   };
 
   // Profile picture click handler
