@@ -5,173 +5,370 @@
 <title>MyStudyLife - Mobile UI</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 <style>
+  :root {
+    --body-bg: #f0f2f5;
+    --container-bg: #fff;
+    --container-shadow: rgba(0,0,0,.1);
+    --header-bg: #fff;
+    --header-border: #eee;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-muted: #888;
+    --accent-color: #007bff;
+    --accent-color-darker: #0056b3;
+    --accent-color-hover: #0056b3;
+    --info-box-bg: #e0f7fa;
+    --info-box-text: #007bb5;
+    --info-box-active-bg: #007bff;
+    --info-box-active-text: #fff;
+    --info-box-shadow: rgba(0,0,0,.05);
+    --info-box-active-shadow: rgba(0,123,255,.2);
+    --main-content-bg: #f9f9f9;
+    --card-bg: #fff;
+    --card-shadow: rgba(0,0,0,.05);
+    --card-hover-shadow: rgba(0,0,0,.1);
+    --up-next-card-bg: #e8f5e9;
+    --tag-bg: #dcedc8;
+    --tag-text: #5cb85c;
+    --tag-orange-bg: #ffecb3;
+    --tag-orange-text: #ff9800;
+    --nav-bg: #fff;
+    --nav-border: #eee;
+    --nav-item-text: #888;
+    --nav-item-active-text: #007bff;
+    --nav-item-hover-text: #0056b3;
+    --modal-overlay-bg: rgba(0,0,0,.4);
+    --modal-bg: #fff;
+    --modal-shadow: rgba(0,0,0,.2);
+    --input-border: #ddd;
+    --input-bg: #fff; /* Added for inputs */
+    --button-cancel-bg: #e0e0e0;
+    --button-cancel-text: #333;
+    --button-cancel-hover-bg: #ccc;
+    --button-delete-bg: #dc3545;
+    --button-delete-text: #fff;
+    --button-delete-hover-bg: #c82333;
+    --progress-bar-track: #ddd;
+    --progress-bar-thumb: #007bff;
+    --track-button-bg: #f0f0f0;
+    --track-button-text: #333;
+    --track-button-border: #ddd;
+    --track-button-hover-bg: #e0e0e0;
+    --track-button-hover-border: #c0c0c0;
+    --track-button-active-bg: #007bff;
+    --track-button-active-text: #fff;
+    --track-button-active-border: #007bff;
+    --dropdown-selected-bg: #e0f7fa;
+    --dropdown-selected-text: #007bff;
+    --icon-color: #333; /* For icons like search, delete */
+  }
+
+  /* Define dark theme variables when body has data-theme="dark" */
+  body[data-theme="dark"] {
+    --body-bg: #121212;
+    --container-bg: #1e1e1e;
+    --container-shadow: rgba(255,255,255,.05);
+    --header-bg: #1e1e1e;
+    --header-border: #333;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #888;
+    --accent-color: #0088ff;
+    --accent-color-darker: #0066cc;
+    --accent-color-hover: #0066cc;
+    --info-box-bg: #2a2a2a;
+    --info-box-text: #00aaff;
+    --info-box-active-bg: #007bff;
+    --info-box-active-text: #fff;
+    --info-box-shadow: rgba(255,255,255,.03);
+    --info-box-active-shadow: rgba(0,123,255,.3);
+    --main-content-bg: #171717;
+    --card-bg: #2c2c2c;
+    --card-shadow: rgba(255,255,255,.03);
+    --card-hover-shadow: rgba(255,255,255,.07);
+    --up-next-card-bg: #2c3e50; /* Darker green alternative */
+    --tag-bg: #3a533a;
+    --tag-text: #a7d7a7;
+    --tag-orange-bg: #5c4322;
+    --tag-orange-text: #ffcc80;
+    --nav-bg: #1e1e1e;
+    --nav-border: #333;
+    --nav-item-text: #888;
+    --nav-item-active-text: #0088ff;
+    --nav-item-hover-text: #0066cc;
+    --modal-overlay-bg: rgba(0,0,0,.7);
+    --modal-bg: #252525;
+    --modal-shadow: rgba(255,255,255,.1);
+    --input-border: #555;
+    --input-bg: #333;
+    --button-cancel-bg: #444;
+    --button-cancel-text: #e0e0e0;
+    --button-cancel-hover-bg: #555;
+    --button-delete-bg: #c0392b;
+    --button-delete-text: #fff;
+    --button-delete-hover-bg: #a93226;
+    --progress-bar-track: #444;
+    --progress-bar-thumb: #0088ff;
+    --track-button-bg: #333;
+    --track-button-text: #e0e0e0;
+    --track-button-border: #555;
+    --track-button-hover-bg: #444;
+    --track-button-hover-border: #666;
+    --track-button-active-bg: #007bff;
+    --track-button-active-text: #fff;
+    --track-button-active-border: #007bff;
+    --dropdown-selected-bg: #2a3b4b;
+    --dropdown-selected-text: #00aaff;
+    --icon-color: #e0e0e0;
+  }
+
+  /* Specific dark mode adjustments for images if needed */
+  body[data-theme="dark"] .icon-placeholder img[src*="placehold.co"] { /* Example: make placeholder images less bright */
+    filter: brightness(0.8) contrast(1.2);
+  }
+
   /* Algemene body en container styles */
-  body { margin: 0; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; background-color: #f0f2f5; overflow-x: hidden; position: relative; }
-  .ui-container { width: 100%; max-width: 375px; background: #fff; box-shadow: 0 0 15px rgba(0,0,0,.1); display: flex; flex-direction: column; min-height: 100vh; position: relative; }
+  body { margin: 0; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; background-color: var(--body-bg); color: var(--text-primary); overflow-x: hidden; position: relative; transition: background-color .3s, color .3s; }
+  .ui-container { width: 100%; max-width: 375px; background: var(--container-bg); box-shadow: 0 0 15px var(--container-shadow); display: flex; flex-direction: column; min-height: 100vh; position: relative; transition: background-color .3s, box-shadow .3s; }
 
   /* Header */
-  .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; position: relative; width: 100%; box-sizing: border-box; }
-  .header .greeting { font-size: 16px; color: #888; }
-  .header .user-info h2 { margin: 0; font-size: 24px; color: #333; font-weight: 700; }
-  .header .user-info p { margin: 0; font-size: 14px; color: #666; }
-  .header .search-icon { font-size: 28px; color: #333; cursor: pointer; }
-  .profile-pic { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff; margin-left: 15px; cursor: pointer; }
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--header-bg); border-bottom: 1px solid var(--header-border); position: relative; width: 100%; box-sizing: border-box; transition: background-color .3s, border-color .3s; }
+  .header .greeting { font-size: 16px; color: var(--text-muted); }
+  .header .user-info h2 { margin: 0; font-size: 24px; color: var(--text-primary); font-weight: 700; }
+  .header .user-info p { margin: 0; font-size: 14px; color: var(--text-secondary); }
+  .header .search-icon { font-size: 28px; color: var(--icon-color); cursor: pointer; }
+  .profile-pic { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); margin-left: 15px; cursor: pointer; transition: border-color .3s; }
 
   /* Info boxes */
-  .info-boxes { display: flex; justify-content: space-around; padding: 15px 20px; gap: 10px; background: #fff; width: 100%; box-sizing: border-box; }
-  .info-box { flex: 1; background: #e0f7fa; border-radius: 15px; padding: 15px; text-align: center; font-weight: bold; color: #007bb5; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,.05); cursor: pointer; transition: transform .2s, background-color .3s, color .3s; }
+  .info-boxes { display: flex; justify-content: space-around; padding: 15px 20px; gap: 10px; background: var(--header-bg); /* Same as header for consistency */ width: 100%; box-sizing: border-box; transition: background-color .3s; }
+  .info-box { flex: 1; background: var(--info-box-bg); border-radius: 15px; padding: 15px; text-align: center; font-weight: bold; color: var(--info-box-text); font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 2px 5px var(--info-box-shadow); cursor: pointer; transition: transform .2s, background-color .3s, color .3s, box-shadow .3s; }
   .info-box:hover { transform: translateY(-2px); }
-  .info-box.active { background-color: #007bff; color: #fff; box-shadow: 0 4px 8px rgba(0,123,255,.2); }
+  .info-box.active { background-color: var(--info-box-active-bg); color: var(--info-box-active-text); box-shadow: 0 4px 8px var(--info-box-active-shadow); }
 
   /* Main content sections */
-  .main-content { flex-grow: 1; overflow-y: auto; padding: 0 20px 90px; background: #f9f9f9; width: 100%; box-sizing: border-box; }
+  .main-content { flex-grow: 1; overflow-y: auto; padding: 0 20px 90px; background: var(--main-content-bg); width: 100%; box-sizing: border-box; transition: background-color .3s; }
   .content-section-tab { display: none; padding-top: 20px; }
   .content-section-tab.active { display: block; }
 
   /* Section headers */
   .section-header { display: flex; justify-content: space-between; align-items: center; margin: 25px 0 15px; }
-  .section-header h3 { margin: 0; font-size: 20px; font-weight: 600; color: #333; }
+  .section-header h3 { margin: 0; font-size: 20px; font-weight: 600; color: var(--text-primary); }
 
   /* Cards for tests, exams, tasks */
-  .card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,.05); display: flex; align-items: flex-start; cursor: pointer; transition: transform .2s, box-shadow .2s; position: relative; }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,.1); }
+  .card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px var(--card-shadow); display: flex; align-items: flex-start; cursor: pointer; transition: transform .2s, box-shadow .3s, background-color .3s; position: relative; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 5px 10px var(--card-hover-shadow); }
   .icon-placeholder { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-right: 15px; }
   .icon-placeholder img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
   .content { flex: 1; }
-  .content h4 { margin: 0 0 5px; font-size: 18px; font-weight: 600; color: #333; }
-  .time-range { font-size: 14px; color: #888; margin-top: 5px; }
-  .delete-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.7; transition: opacity 0.2s, transform 0.2s; }
+  .content h4 { margin: 0 0 5px; font-size: 18px; font-weight: 600; color: var(--text-primary); }
+  .time-range { font-size: 14px; color: var(--text-muted); margin-top: 5px; }
+  .delete-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.7; transition: opacity 0.2s, transform 0.2s; color: var(--icon-color); }
   .delete-btn:hover { opacity: 1; transform: scale(1.1); }
+  .delete-btn i { color: var(--icon-color); } /* Ensure icon color is also variable */
+
 
   /* Up Next cards */
-  .up-next-card { background: #e8f5e9; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,.05); display: flex; flex-direction: column; cursor: pointer; transition: transform .2s, box-shadow .2s; }
-  .up-next-card:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,.1); }
-  .title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 10px; }
+  .up-next-card { background: var(--up-next-card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px var(--card-shadow); display: flex; flex-direction: column; cursor: pointer; transition: transform .2s, box-shadow .3s, background-color .3s; }
+  .up-next-card:hover { transform: translateY(-3px); box-shadow: 0 5px 10px var(--card-hover-shadow); }
+  .title { font-size: 16px; font-weight: bold; color: var(--text-primary); margin-bottom: 10px; }
   .up-next-item { display: flex; align-items: center; width: 100%; margin-bottom: 10px; }
   .up-next-item:last-child { margin-bottom: 0; }
-  .color-block { width: 10px; height: 40px; border-radius: 5px; margin-right: 10px; }
+  .color-block { width: 10px; height: 40px; border-radius: 5px; margin-right: 10px; } /* Color is set inline, so no variable here unless refactored */
   .text-content { flex-grow: 1; }
-  .task-name { font-weight: bold; font-size: 15px; color: #333; }
-  .time-info { font-size: 13px; color: #666; }
-  .tag { background-color: #dcedc8; color: #5cb85c; padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-left: auto; flex-shrink: 0; }
-  .tag.orange { background-color: #ffecb3; color: #ff9800; }
+  .task-name { font-weight: bold; font-size: 15px; color: var(--text-primary); }
+  .time-info { font-size: 13px; color: var(--text-secondary); }
+  .tag { background-color: var(--tag-bg); color: var(--tag-text); padding: 5px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-left: auto; flex-shrink: 0; transition: background-color .3s, color .3s; }
+  .tag.orange { background-color: var(--tag-orange-bg); color: var(--tag-orange-text); }
 
   /* Bottom navigation bar */
-  .bottom-nav { display: flex; justify-content: space-around; align-items: center; background: #fff; padding: 10px 0; border-top: 1px solid #eee; position: fixed; bottom: 0; width: 100%; max-width: 375px; box-sizing: border-box; z-index: 90; }
-  .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 12px; text-decoration: none; cursor: pointer; padding: 5px; transition: color .2s; }
+  .bottom-nav { display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); padding: 10px 0; border-top: 1px solid var(--nav-border); position: fixed; bottom: 0; width: 100%; max-width: 375px; box-sizing: border-box; z-index: 90; transition: background-color .3s, border-color .3s; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--nav-item-text); font-size: 12px; text-decoration: none; cursor: pointer; padding: 5px; transition: color .2s; }
   .nav-item i { font-size: 24px; margin: 0; padding: 0; height: 32px; display: flex; justify-content: center; align-items: center; line-height: 1; }
   .nav-item span { margin: 0; padding: 0; line-height: 1; }
   .nav-item.add-button i { font-size: 32px; background-color: transparent; transform: none; }
   .nav-item.add-button:hover i { background-color: transparent; transform: none; }
-  .nav-item.active { color: #007bff; font-weight: bold; }
-  .nav-item:hover { color: #0056b3; }
+  .nav-item.active { color: var(--nav-item-active-text); font-weight: bold; }
+  .nav-item:hover { color: var(--nav-item-hover-text); }
 
   /* Modal overlay styles */
   .message-box-overlay,
   .add-item-modal-overlay,
   .search-modal-overlay,
-  .delete-bottom-sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.4); display: flex; justify-content: center; align-items: center; z-index: 200; visibility: hidden; opacity: 0; transition: visibility 0s, opacity .3s; box-sizing: border-box; }
+  .delete-bottom-sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--modal-overlay-bg); display: flex; justify-content: center; align-items: center; z-index: 200; visibility: hidden; opacity: 0; transition: visibility 0s, opacity .3s, background-color .3s; box-sizing: border-box; }
   .message-box-overlay.visible,
   .add-item-modal-overlay.visible,
   .search-modal-overlay.visible,
   .delete-bottom-sheet-overlay.visible { visibility: visible; opacity: 1; }
 
   /* Message box styling */
-  .message-box { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,.2); text-align: center; max-width: 80%; transform: scale(.9); transition: transform .3s; }
+  .message-box { background: var(--modal-bg); padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px var(--modal-shadow); text-align: center; max-width: 80%; transform: scale(.9); transition: transform .3s, background-color .3s, box-shadow .3s; }
   .message-box-overlay.visible .message-box { transform: scale(1); }
-  .message-box h4 { margin: 0 0 15px; font-size: 22px; color: #333; }
-  .message-box p { font-size: 16px; color: #666; margin-bottom: 25px; }
-  .message-box button { background: #007bff; color: #fff; border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: background .2s, transform .1s; }
-  .message-box button:hover { background: #0056b3; transform: translateY(-1px); }
+  .message-box h4 { margin: 0 0 15px; font-size: 22px; color: var(--text-primary); }
+  .message-box p { font-size: 16px; color: var(--text-secondary); margin-bottom: 25px; }
+  .message-box button { background: var(--accent-color); color: var(--info-box-active-text); /* Usually #fff */ border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: background .2s, transform .1s; }
+  .message-box button:hover { background: var(--accent-color-hover); transform: translateY(-1px); }
 
   /* Add item modal bottom sheet styles */
   .add-item-modal-overlay { align-items: flex-end; }
-  .add-item-modal { background: #fff; width偶: 1px solid #ddd; width: 100%; max-width: 375px; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 25px; box-shadow: 0 -5px 15px rgba(0,0,0,.2); transform: translateY(100%); transition: transform .3s ease-out; display: flex; flex-direction: column; gap: 15px; }
+  .add-item-modal { background: var(--modal-bg); border: 1px solid var(--input-border); width: 100%; max-width: 375px; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 25px; box-shadow: 0 -5px 15px var(--modal-shadow); transform: translateY(100%); transition: transform .3s ease-out, background-color .3s, box-shadow .3s, border-color .3s; display: flex; flex-direction: column; gap: 15px; }
   .add-item-modal-overlay.visible .add-item-modal { transform: translateY(0); }
-  .add-item-modal h3 { margin: 0 0 15px; font-size: 24px; text-align: center; color: #333; }
-  .add-item-modal label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 14px; }
+  .add-item-modal h3 { margin: 0 0 15px; font-size: 24px; text-align: center; color: var(--text-primary); }
+  .add-item-modal label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-secondary); font-size: 14px; }
   .add-item-modal input[type="text"],
   .add-item-modal input[type="date"],
-  .add-item-modal input[type="time"] { width: calc(100% - 20px); padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+  .add-item-modal input[type="time"] { width: calc(100% - 20px); padding: 10px; margin-bottom: 15px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 16px; box-sizing: border-box; background-color: var(--input-bg); color: var(--text-primary); transition: background-color .3s, color .3s, border-color .3s; }
+  /* Styling for date/time input text color in dark mode if browser default is problematic */
+  .add-item-modal input[type="date"]::-webkit-calendar-picker-indicator,
+  .add-item-modal input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: var(--body-bg, #121212) brightness(0) invert(1); /* Invert only in dark mode, controlled by body-bg being dark */
+  }
+  @media (prefers-color-scheme: dark) {
+    .add-item-modal input[type="date"]::-webkit-calendar-picker-indicator,
+    .add-item-modal input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+     .add-item-modal input[type="date"], .add-item-modal input[type="time"] {
+      color-scheme: dark; /* Helps with native date/time pickers */
+    }
+  }
+
   .form-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
   .add-item-modal button { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 16px; transition: background .2s; }
-  .cancel { background-color: #e0e0e0; color: #333; }
-  .cancel:hover { background-color: #ccc; }
-  .add { background-color: #007bff; color: #fff; }
-  .add:hover { background-color: #0056b3; }
+  .cancel { background-color: var(--button-cancel-bg); color: var(--button-cancel-text); }
+  .cancel:hover { background-color: var(--button-cancel-hover-bg); }
+  .add { background-color: var(--accent-color); color: var(--info-box-active-text); } /* Usually #fff */
+  .add:hover { background-color: var(--accent-color-hover); }
 
   /* Music player styles */
-  .music-player { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,.05); margin-bottom: 15px; text-align: center; }
-  .music-player h4 { margin: 0; color: #333; font-size: 18px; }
+  .music-player { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 2px 5px var(--card-shadow); margin-bottom: 15px; text-align: center; transition: background-color .3s, box-shadow .3s; }
+  .music-player h4 { margin: 0; color: var(--text-primary); font-size: 18px; }
   .progress-container { width: 100%; margin-top: 15px; text-align: center; }
-  #progressBar { width: 100%; height: 8px; border-radius: 5px; background: #ddd; outline: none; -webkit-appearance: none; appearance: none; cursor: pointer; margin-bottom: 10px; }
-  #progressBar::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #007bff; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-  #progressBar::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #007bff; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-  .time-display { font-size: 14px; color: #666; }
+  #progressBar { width: 100%; height: 8px; border-radius: 5px; background: var(--progress-bar-track); outline: none; -webkit-appearance: none; appearance: none; cursor: pointer; margin-bottom: 10px; transition: background-color .3s; }
+  #progressBar::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--progress-bar-thumb); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background-color .3s; } /* Shadow might need dark mode adjustment */
+  #progressBar::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--progress-bar-thumb); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background-color .3s; } /* Shadow might need dark mode adjustment */
+  .time-display { font-size: 14px; color: var(--text-secondary); }
   .track-selection { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-  .track-selection button { background: #f0f0f0; color: #333; border: 1px solid #ddd; padding: 10px 15px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: background .2s, border-color .2s; width: 100%; box-sizing: border-box; }
-  .track-selection button.active { background: #007bff; color: #fff; border-color: #007bff; }
-  .track-selection button:hover { background: #e0e0e0; border-color: #c0c0c0; }
-  .track-selection button.active:hover { background: #0056b3; border-color: #0056b3; }
+  .track-selection button { background: var(--track-button-bg); color: var(--track-button-text); border: 1px solid var(--track-button-border); padding: 10px 15px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: background .2s, border-color .2s, color .2s; width: 100%; box-sizing: border-box; }
+  .track-selection button.active { background: var(--track-button-active-bg); color: var(--track-button-active-text); border-color: var(--track-button-active-border); }
+  .track-selection button:hover { background: var(--track-button-hover-bg); border-color: var(--track-button-hover-border); }
+  .track-selection button.active:hover { background: var(--accent-color-darker); border-color: var(--accent-color-darker); }
 
   /* Search modal top bar style (now embedded in overlay) */
-  .search-modalmaakt { background: #fff; border-radius: 0 0 15px 15px; box-shadow: 0 5px 15px rgba(0,0,0,.2); max-width: 375px; width: 100%; padding: 15px 20px; display: flex; flex-direction: column; gap: 15px; transform: translateY(-100%); transition: transform .3s ease-out; }
+  .search-modal { background: var(--modal-bg); border-radius: 0 0 15px 15px; box-shadow: 0 5px 15px var(--modal-shadow); max-width: 375px; width: 100%; padding: 15px 20px; display: flex; flex-direction: column; gap: 15px; transform: translateY(-100%); transition: transform .3s ease-out, background-color .3s, box-shadow .3s; }
   .search-modal-overlay.visible .search-modal { transform: translateY(0); }
-  .search-modal input[type="text"] { width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-  .search-results { max-height: 300px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px; }
+  .search-modal input[type="text"] { width: calc(100% - 20px); padding: 10px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 16px; box-sizing: border-box; background-color: var(--input-bg); color: var(--text-primary); transition: background-color .3s, color .3s, border-color .3s; }
+  .search-results { max-height: 300px; overflow-y: auto; border-top: 1px solid var(--header-border); padding-top: 10px; margin-top: 10px; transition: border-color .3s; }
   .search-results .card { margin-bottom: 10px; }
+  .search-modal .close-btn { background: none; border: none; color: var(--icon-color); position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; }
+  .search-modal .close-btn i { color: var(--icon-color); }
+
 
   /* Profile section styles */
-  .profile-content-inner { display: flex; flex-direction: column; gap: 20px; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,.05); margin-bottom: 15px; }
-  .profile-section label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 14px; }
+  .profile-content-inner { display: flex; flex-direction: column; gap: 20px; padding: 20px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 2px 5px var(--card-shadow); margin-bottom: 15px; transition: background-color .3s, box-shadow .3s; }
+  .profile-section label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-secondary); font-size: 14px; }
   .profile-section input[type="text"],
   .profile-section input[type="url"],
-  .profile-section input[type="file"] { width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; margin-bottom: 10px; }
-  button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; transition: background .2s; }
-  button:hover { background-color: #0056b3; }
+  .profile-section input[type="file"] { width: calc(100% - 20px); padding: 10px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 16px; box-sizing: border-box; margin-bottom: 10px; background-color: var(--input-bg); color: var(--text-primary); transition: background-color .3s, color .3s, border-color .3s; }
+  .profile-section p { color: var(--text-muted); }
+
+  /* General button styling (already exists, ensure it uses variables) */
+  button { background-color: var(--accent-color); color: var(--info-box-active-text); /* Usually #fff */ border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; transition: background .2s; }
+  button:hover { background-color: var(--accent-color-hover); }
+
+  /* Theme Toggle Button */
+  .theme-toggle-button {
+    padding: 10px 15px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg); /* Use input-bg for consistency or a new var */
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color .3s, color .3s, border-color .3s;
+    width: 100%; /* Make it full width like other inputs in profile */
+    margin-top: 5px; /* Add some space if needed */
+  }
+  .theme-toggle-button:hover {
+    border-color: var(--accent-color);
+  }
 
   /* Pomodoro timer styles */
-  .pomodoro-timer { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,.05); margin-bottom: 15px; }
-  .timer-display { font-size: 60px; font-weight: bold; color: #333; margin-bottom: 10px; }
-  .timer-status { font-size: 20px; color: #666; margin-bottom: 20px; }
+  .pomodoro-timer { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 2px 5px var(--card-shadow); margin-bottom: 15px; transition: background-color .3s, box-shadow .3s; }
+  .timer-display { font-size: 60px; font-weight: bold; color: var(--text-primary); margin-bottom: 10px; }
+  .timer-status { font-size: 20px; color: var(--text-secondary); margin-bottom: 20px; }
   .timer-controls { display: flex; gap: 15px; }
-  .timer-controls button { background-color: #007bff; color: #fff; border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: background .2s, transform .1s; }
-  .timer-controls button:hover { background-color: #0056b3; transform: translateY(-1px); }
-  .reset { background-color: #f44336; }
-  .reset:hover { background-color: #d32f2f; }
+  .timer-controls button { background-color: var(--accent-color); color: var(--info-box-active-text); border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: background .2s, transform .1s; }
+  .timer-controls button:hover { background-color: var(--accent-color-hover); transform: translateY(-1px); }
+  .reset { background-color: var(--button-delete-bg); } /* Using delete color for reset */
+  .reset:hover { background-color: var(--button-delete-hover-bg); }
   .timer-settings { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 250px; margin-top: 20px; }
-  .timer-settings label { font-size: 14px; color: #555; display: flex; justify-content: space-between; align-items: center; }
-  .timer-settings input[type="number"] { width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 16px; }
+  .timer-settings label { font-size: 14px; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center; }
+  .timer-settings input[type="number"] { width: 70px; padding: 8px; border: 1px solid var(--input-border); border-radius: 5px; text-align: center; font-size: 16px; background-color: var(--input-bg); color: var(--text-primary); transition: background-color .3s, color .3s, border-color .3s; }
 
   /* Delete bottom sheet styles */
-  .delete-bottom-sheet { background: #fff; width: 100%; max-width: 375px; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; box-shadow: 0 -5px 15px rgba(0,0,0,.2); transform: translateY(100%); transition: transform .3s ease-out; }
+  .delete-bottom-sheet { background: var(--modal-bg); width: 100%; max-width: 375px; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; box-shadow: 0 -5px 15px var(--modal-shadow); transform: translateY(100%); transition: transform .3s ease-out, background-color .3s, box-shadow .3s; }
   .delete-bottom-sheet-overlay.visible .delete-bottom-sheet { transform: translateY(0); }
-  .delete-bottom-sheet h4 { margin-top: 0; font-size: 20px; text-align: center; margin-bottom: 15px; color: #333; }
-  .delete-bottom-sheet p { font-size: 15px; color: #666; margin-bottom: 25px; text-align: center; }
+  .delete-bottom-sheet h4 { margin-top: 0; font-size: 20px; text-align: center; margin-bottom: 15px; color: var(--text-primary); }
+  .delete-bottom-sheet p { font-size: 15px; color: var(--text-secondary); margin-bottom: 25px; text-align: center; }
   .button-group { display: flex; justify-content: space-around; gap: 10px; }
-  .cancel-delete { background-color: #e0e0e0; color: #333; }
-  .cancel-delete:hover { background-color: #ccc; }
-  .confirm-delete { background-color: #dc3545; color: #fff; }
-  .confirm-delete:hover { background-color: #c82333; }
+  .cancel-delete { background-color: var(--button-cancel-bg); color: var(--button-cancel-text); }
+  .cancel-delete:hover { background-color: var(--button-cancel-hover-bg); }
+  .confirm-delete { background-color: var(--button-delete-bg); color: var(--button-delete-text); }
+  .confirm-delete:hover { background-color: var(--button-delete-hover-bg); }
 
   /* Custom dropdown styles */
   .custom-dropdown { position: relative; width: calc(100% - 20px); margin-bottom: 15px; }
-  .dropdown-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; cursor: pointer; font-size: 16px; color: #333; }
-  .dropdown-header.active { border-color: #007bff; }
-  .dropdown-header i { font-size: 20px; transition: transform .3s; }
+  .dropdown-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid var(--input-border); border-radius: 8px; background-color: var(--input-bg); cursor: pointer; font-size: 16px; color: var(--text-primary); transition: background-color .3s, color .3s, border-color .3s; }
+  .dropdown-header.active { border-color: var(--accent-color); }
+  .dropdown-header i { font-size: 20px; transition: transform .3s; color: var(--icon-color); }
   .dropdown-header.active i { transform: rotate(180deg); }
-  .dropdown-list { position: absolute; top: 100%; left: 0; width: 100%; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,.1); list-style: none; padding: 0; margin-top: 5px; max-height: 200px; overflow-y: auto; visibility: hidden; opacity: 0; transform: translateY(-10px); transition: visibility 0s, opacity .3s, transform .3s; z-index: 100; }
+  .dropdown-list { position: absolute; top: 100%; left: 0; width: 100%; background-color: var(--modal-bg); border: 1px solid var(--input-border); border-radius: 8px; box-shadow: 0 4px 8px var(--card-shadow); list-style: none; padding: 0; margin-top: 5px; max-height: 200px; overflow-y: auto; visibility: hidden; opacity: 0; transform: translateY(-10px); transition: visibility 0s, opacity .3s, transform .3s, background-color .3s, border-color .3s; z-index: 100; }
   .dropdown-list.visible { visibility: visible; opacity: 1; transform: translateY(0); }
-  .dropdown-list li { padding: 10px; cursor: pointer; font-size: 16px; color: #333; }
-  .dropdown-list li:hover { background-color: #f0f0f0; }
-  .dropdown-list li.selected { background-color: #e0f7fa; color: #007bff; font-weight: bold; }
+  .dropdown-list li { padding: 10px; cursor: pointer; font-size: 16px; color: var(--text-primary); transition: background-color .3s, color .3s; }
+  .dropdown-list li:hover { background-color: var(--body-bg); /* Use body-bg for hover, or a dedicated var */ }
+  .dropdown-list li.selected { background-color: var(--dropdown-selected-bg); color: var(--dropdown-selected-text); font-weight: bold; }
 
   /* Study Tips Section */
-  .study-tips { padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,.05); margin-bottom: 15px; }
-  .study-tips h4 { margin: 0 0 15px; font-size: 18px; font-weight: 600; color: #333; }
-  .study-tips p { font-size: 16px; color: #666; margin-bottom: 15px; line-height: 1.5; }
+  .study-tips { padding: 20px; background: var(--card-bg); border-radius: 15px; box-shadow: 0 2px 5px var(--card-shadow); margin-bottom: 15px; transition: background-color .3s, box-shadow .3s; }
+  .study-tips h4 { margin: 0 0 15px; font-size: 18px; font-weight: 600; color: var(--text-primary); }
+  .study-tips p { font-size: 16px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.5; }
   .study-tips ul { margin: 0; padding-left: 20px; }
-  .study-tips li { font-size: 16px; color: #333; margin-bottom: 10px; }
+  .study-tips li { font-size: 16px; color: var(--text-primary); margin-bottom: 10px; }
+
+  /* Fix for search modal class name typo if it exists */
+  .search-modalmaakt { /* This class seems to have a typo: "search-modalmaakt" */
+    background: var(--modal-bg);
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 5px 15px var(--modal-shadow);
+    max-width: 375px;
+    width: 100%;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transform: translateY(-100%);
+    transition: transform .3s ease-out, background-color .3s, box-shadow .3s;
+  }
+  /* Corrected class name if it was a typo for .search-modal */
+  /* .search-modal { ... } is already defined above, this is just a note */
+
+  /* Fix for add-item-modal width typo if it exists */
+  .add-item-modal {
+    /* background: #fff; width偶: 1px solid #ddd; ... */ /* Original had "width偶:" */
+    background: var(--modal-bg);
+    border: 1px solid var(--input-border); /* Corrected and using var */
+    width: 100%;
+    max-width: 375px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 -5px 15px var(--modal-shadow);
+    transform: translateY(100%);
+    transition: transform .3s ease-out, background-color .3s, box-shadow .3s, border-color .3s;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
 </style>
 </head>
 <body>
@@ -315,6 +512,10 @@
           <input type="url" id="editProfilePicUrl" placeholder="https://example.com/your-pic.jpg" />
           <button id="saveProfilePic">Update Afbeelding</button>
           <p style="font-size: 12px; color:#888; margin-top:5px;">(Voer URL in voor aangepaste afbeelding, anders initialen )</p>
+        </div>
+        <div class="profile-section">
+          <label for="darkModeToggleBtn">Thema:</label>
+          <button id="darkModeToggleBtn" class="theme-toggle-button">Toggle Thema</button>
         </div>
       </div>
     </div>
@@ -1115,8 +1316,73 @@
     }
   }
 
+  // =================== Theme Toggle ===================
+  const darkModeToggleBtn = document.getElementById('darkModeToggleBtn');
+
+  function applyTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('myStudyLifeTheme', theme);
+    if (darkModeToggleBtn) {
+        darkModeToggleBtn.textContent = theme === 'dark' ? 'Activeer Lichte Thema' : 'Activeer Donkere Thema';
+    }
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.body.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(newTheme);
+  }
+
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem('myStudyLifeTheme');
+    if (savedTheme) {
+      applyTheme(savedTheme);
+    } else {
+      // Apply system preference if no saved theme
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        applyTheme('dark');
+      } else {
+        applyTheme('light'); // Default to light if no system preference or system is light
+      }
+    }
+  }
+
+  if (darkModeToggleBtn) {
+      darkModeToggleBtn.onclick = toggleTheme;
+  }
+  // Listener for system theme changes (optional, if you want it to auto-update if not manually set)
+  // window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  //   if (!localStorage.getItem('myStudyLifeTheme')) { // Only if no manual preference is set
+  //       applyTheme(e.matches ? "dark" : "light");
+  //   }
+  // });
+
+
+  // =================== Profile Picture URL Clear ===================
+  // Modify existing profilePictureUpload onchange
+  document.getElementById('profilePictureUpload').onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        userProfile.profilePicUrl = reader.result; // This will be a base64 string
+        userProfile.profilePicIdentifier = '';
+        document.getElementById('editProfilePicUrl').value = ''; // Clear the URL field
+        saveProfileToLocalStorage();
+        updateProfileDisplay();
+        showMessageBox('Succes', 'Profielfoto geüpload!');
+      };
+      reader.onerror = () => { showMessageBox('Fout', 'Kon de afbeelding niet lezen.'); }
+      reader.readAsDataURL(file);
+    } else {
+      // showMessageBox('Fout', 'Geen bestand geselecteerd.'); // This might be too noisy if user cancels file dialog
+    }
+  }
+
+
   // =================== Initialiseren ===================
   document.addEventListener('DOMContentLoaded', ()=> {
+    initializeTheme(); // Initialize theme first
     loadItemsFromLocalStorage();
     updateGreeting();
     updateProfileDisplay();
