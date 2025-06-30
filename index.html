@@ -1402,6 +1402,31 @@
     updateUpNextCard();
 
     setInterval(updateGreeting,60*1000);
+
+    // --- Add Event Listeners for Info Boxes on Home Screen ---
+    const infoBoxesContainer = document.getElementById('infoBoxes');
+    const infoBoxElements = infoBoxesContainer.querySelectorAll('.info-box');
+    const contentSections = document.querySelectorAll('#homeContent > .content-section'); // Select only direct children
+
+    infoBoxElements.forEach(box => {
+      box.addEventListener('click', () => {
+        // Update active state for info boxes
+        infoBoxElements.forEach(b => b.classList.remove('active'));
+        box.classList.add('active');
+
+        // Hide all relevant content sections
+        contentSections.forEach(section => section.style.display = 'none');
+
+        // Show the target content section
+        const contentId = box.dataset.contentId;
+        if (contentId) {
+          const targetSection = document.getElementById(contentId + 'Content');
+          if (targetSection) {
+            targetSection.style.display = 'block';
+          }
+        }
+      });
+    });
   });
 </script>
 </body>
