@@ -893,7 +893,7 @@
     document.getElementById('editUserName').value=userProfile.name;
     document.getElementById('userNameDisplay').textContent=userProfile.name;
     document.getElementById('editProfilePicIdentifier').value= userProfile.profilePicIdentifier;
-    document.getElementById('editProfilePicUrl').value= userProfile.profilePicUrl;
+    // document.getElementById('editProfilePicUrl').value= userProfile.profilePicUrl; // Verwijderd element
     const profPic=document.getElementById('profilePicture');
     if (userProfile.profilePicUrl) {
       profPic.src=userProfile.profilePicUrl;
@@ -926,7 +926,7 @@
       reader.onloadend=()=>{
         userProfile.profilePicUrl=reader.result; 
         userProfile.profilePicIdentifier=''; 
-        document.getElementById('editProfilePicUrl').value='';
+         // document.getElementById('editProfilePicUrl').value=''; // Verwijderd element
         saveProfileToLocalStorage();
         updateProfileDisplay();
         showMessageBox('Succes','Profielfoto geüpload!');
@@ -939,21 +939,27 @@
   }
 
   document.getElementById('saveProfilePic').onclick=()=>{
-    const newUrl= document.getElementById('editProfilePicUrl').value.trim();
+    // const newUrl= document.getElementById('editProfilePicUrl').value.trim(); // Verwijderd element
     const newInit= document.getElementById('editProfilePicIdentifier').value.trim().toUpperCase();
-    if(newUrl && !newUrl.match(/^(https?:\/\/[^\s$.?#].[^\s]*)$/i)) {
-      showMessageBox('Fout','Voer een geldige URL in.');
-      return;
+    // if(newUrl && !newUrl.match(/^(https?:\/\/[^\s$.?#].[^\s]*)$/i)) { // Verwijderd element
+    //   showMessageBox('Fout','Voer een geldige URL in.');
+    //   return;
+    // }
+    // Als er een bestand is geüpload, wordt profilePicUrl al ingesteld in de 'onchange' handler.
+    // We hoeven hier alleen de initialen bij te werken als er geen URL is (wat betekent dat er geen bestand is geüpload).
+    if (!userProfile.profilePicUrl) { // Geen bestand geüpload en geen URL meer mogelijk
+        userProfile.profilePicIdentifier = newInit || (userProfile.name ? userProfile.name.substring(0, 2).toUpperCase() : 'YN');
     }
-    if (!document.getElementById('profilePictureUpload').files.length || newUrl) {
-      userProfile.profilePicUrl= newUrl;
-      userProfile.profilePicIdentifier= newInit|| (userProfile.name ? userProfile.name.substring(0,2).toUpperCase() :'YN');
-      saveProfileToLocalStorage();
-      updateProfileDisplay();
-      showMessageBox('Succes','Profielfoto-instellingen bijgewerkt!');
-    } else {
-      showMessageBox('Informatie','Gebruik de bestandsupload of voer een URL in.');
-    }
+    // Als er wel een bestand is geüpload, wordt profilePicUrl al gezet, en initialen worden gewist.
+    // Als er geen bestand is geüpload, dan worden alleen de initialen gebruikt.
+    // De URL optie is weg.
+
+    // De logica hieronder is vereenvoudigd omdat de URL-optie weg is.
+    // We slaan altijd op, want ofwel de initialen zijn veranderd, ofwel een foto is geupload (wat de URL en initialen al aanpast).
+    saveProfileToLocalStorage();
+    updateProfileDisplay();
+    showMessageBox('Succes','Profielfoto-instellingen bijgewerkt!');
+    // De oude else-conditie is niet meer relevant omdat er geen URL-veld meer is.
   };
 
   // Profile picture click handler
