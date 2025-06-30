@@ -1123,6 +1123,36 @@
     renderAllItems();
     updateUpNextCard();
 
+    // Info box click handler
+    const infoBoxesContainer = document.getElementById('infoBoxes');
+    if (infoBoxesContainer) {
+      infoBoxesContainer.addEventListener('click', (e) => {
+        const targetInfoBox = e.target.closest('.info-box');
+        if (targetInfoBox && !targetInfoBox.classList.contains('active')) {
+          // Remove active from all info boxes
+          document.querySelectorAll('#infoBoxes .info-box').forEach(box => {
+            box.classList.remove('active');
+          });
+          // Add active to clicked box
+          targetInfoBox.classList.add('active');
+
+          // Hide all content sections
+          document.querySelectorAll('#homeContent .content-section').forEach(section => {
+            section.style.display = 'none';
+          });
+
+          // Show target content section
+          const contentId = targetInfoBox.dataset.contentId;
+          if (contentId) {
+            const targetSection = document.getElementById(contentId + 'Content');
+            if (targetSection) {
+              targetSection.style.display = 'block';
+            }
+          }
+        }
+      });
+    }
+
     setInterval(updateGreeting,60*1000);
   });
 </script>
