@@ -70,14 +70,14 @@
   .message-box-overlay,
   .add-item-modal-overlay,
   .search-modal-overlay,
-  .delete-bottom-sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.4); display: flex; justify-content: center; align-items: center; z-index: 200; visibility: hidden; opacity: 0; transition: visibility 0s, opacity .3s; box-sizing: border-box; }
+  .delete-bottom-sheet-overlay { position: fixed; bottom: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,.4); display: flex; justify-content: center; align-items: center; z-index: 200; visibility: hidden; opacity: 0; transition: visibility 0s, opacity .3s; box-sizing: border-box; }
   .message-box-overlay.visible,
   .add-item-modal-overlay.visible,
   .search-modal-overlay.visible,
   .delete-bottom-sheet-overlay.visible { visibility: visible; opacity: 1; }
 
   /* Message box styling */
-  .message-box { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,.2); text-align: center; max-width: 80%; transform: scale(.9); transition: transform .3s; }
+  .message-box { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,.2); text-align: center; max-width: 100% ; transform: scale(.9); transition: transform .3s; }
   .message-box-overlay.visible .message-box { transform: scale(1); }
   .message-box h4 { margin: 0 0 15px; font-size: 22px; color: #333; }
   .message-box p { font-size: 16px; color: #666; margin-bottom: 25px; }
@@ -575,10 +575,7 @@
           <label for="profilePictureUpload" style="margin-top:15px;">Upload Profielfoto:</label>
           <input type="file" id="profilePictureUpload" accept="image/*" />
           <p style="font-size: 12px; color:#888; margin-top:5px;">(Upload een afbeeldingsbestand zoals .png, .jpg, .jpeg. Overschrijft link.)</p>
-          <label for="editProfilePicUrl" style="margin-top:15px;">Profielfoto URL (optioneel):</label>
-          <input type="url" id="editProfilePicUrl" placeholder="https://example.com/your-pic.jpg" />
           <button id="saveProfilePic">Update Afbeelding</button>
-          <p style="font-size: 12px; color:#888; margin-top:5px;">(Voer URL in voor aangepaste afbeelding, anders initialen )</p>
         </div>
         <div class="profile-section">
           <label for="themeToggle">Dark Mode:</label>
@@ -896,7 +893,7 @@
     document.getElementById('editUserName').value=userProfile.name;
     document.getElementById('userNameDisplay').textContent=userProfile.name;
     document.getElementById('editProfilePicIdentifier').value= userProfile.profilePicIdentifier;
-    document.getElementById('editProfilePicUrl').value= userProfile.profilePicUrl;
+    // document.getElementById('editProfilePicUrl').value= userProfile.profilePicUrl; // Verwijderd element
     const profPic=document.getElementById('profilePicture');
     if (userProfile.profilePicUrl) {
       profPic.src=userProfile.profilePicUrl;
@@ -929,7 +926,7 @@
       reader.onloadend=()=>{
         userProfile.profilePicUrl=reader.result; 
         userProfile.profilePicIdentifier=''; 
-        document.getElementById('editProfilePicUrl').value='';
+         // document.getElementById('editProfilePicUrl').value=''; // Verwijderd element
         saveProfileToLocalStorage();
         updateProfileDisplay();
         showMessageBox('Succes','Profielfoto geüpload!');
@@ -942,21 +939,27 @@
   }
 
   document.getElementById('saveProfilePic').onclick=()=>{
-    const newUrl= document.getElementById('editProfilePicUrl').value.trim();
+    // const newUrl= document.getElementById('editProfilePicUrl').value.trim(); // Verwijderd element
     const newInit= document.getElementById('editProfilePicIdentifier').value.trim().toUpperCase();
-    if(newUrl && !newUrl.match(/^(https?:\/\/[^\s$.?#].[^\s]*)$/i)) {
-      showMessageBox('Fout','Voer een geldige URL in.');
-      return;
+    // if(newUrl && !newUrl.match(/^(https?:\/\/[^\s$.?#].[^\s]*)$/i)) { // Verwijderd element
+    //   showMessageBox('Fout','Voer een geldige URL in.');
+    //   return;
+    // }
+    // Als er een bestand is geüpload, wordt profilePicUrl al ingesteld in de 'onchange' handler.
+    // We hoeven hier alleen de initialen bij te werken als er geen URL is (wat betekent dat er geen bestand is geüpload).
+    if (!userProfile.profilePicUrl) { // Geen bestand geüpload en geen URL meer mogelijk
+        userProfile.profilePicIdentifier = newInit || (userProfile.name ? userProfile.name.substring(0, 2).toUpperCase() : 'YN');
     }
-    if (!document.getElementById('profilePictureUpload').files.length || newUrl) {
-      userProfile.profilePicUrl= newUrl;
-      userProfile.profilePicIdentifier= newInit|| (userProfile.name ? userProfile.name.substring(0,2).toUpperCase() :'YN');
-      saveProfileToLocalStorage();
-      updateProfileDisplay();
-      showMessageBox('Succes','Profielfoto-instellingen bijgewerkt!');
-    } else {
-      showMessageBox('Informatie','Gebruik de bestandsupload of voer een URL in.');
-    }
+    // Als er wel een bestand is geüpload, wordt profilePicUrl al gezet, en initialen worden gewist.
+    // Als er geen bestand is geüpload, dan worden alleen de initialen gebruikt.
+    // De URL optie is weg.
+
+    // De logica hieronder is vereenvoudigd omdat de URL-optie weg is.
+    // We slaan altijd op, want ofwel de initialen zijn veranderd, ofwel een foto is geupload (wat de URL en initialen al aanpast).
+    saveProfileToLocalStorage();
+    updateProfileDisplay();
+    showMessageBox('Succes','Profielfoto-instellingen bijgewerkt!');
+    // De oude else-conditie is niet meer relevant omdat er geen URL-veld meer is.
   };
 
   // Profile picture click handler
