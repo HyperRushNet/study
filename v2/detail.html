@@ -1,100 +1,72 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Item detail</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0; font-family: 'Inter', sans-serif; background: #f0f2f5;
-    }
-    .main-content {
-      max-width: 500px; margin: auto;
-      background: #fff; min-height: 100vh;
-      box-shadow: 0 0 15px rgba(0,0,0,.08);
-    }
-
-    /* Banner */
-    .banner {
-      position: relative; height: 180px;
-      background-image: url('http://wallup.net/wp-content/uploads/2017/03/28/291899-plants.jpg');
-      background-size: cover; background-position: center;
-      border-bottom: 4px solid #007bff;
-      border-top-left-radius: 0; border-top-right-radius: 0;
-    }
-    .banner::after {
-      content: ""; position: absolute; inset: 0;
-      background: rgba(0,0,0,0.3);
-    }
-    .banner h2 {
-      position: absolute; bottom: 15px; left: 20px; right: 20px;
-      margin: 0; font-size: 22px; font-weight: 600;
-      color: #fff; z-index: 1;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    }
-
-    .content {
-      padding: 20px;
-    }
-    .content p {
-      font-size: 15px; color: #555; line-height: 1.5; margin: 8px 0;
-    }
-    .back {
-      display: inline-block; margin-bottom: 20px; text-decoration: none;
-      color: #007bff; font-size: 14px;
-    }
-    .back:hover { text-decoration: underline; }
-    .delete-btn {
-      display: inline-block; margin-top: 25px; padding: 12px 15px;
-      background: #dc3545; color: #fff; border-radius: 6px;
-      font-size: 14px; border: none; cursor: pointer;
-    }
-    .delete-btn:hover { background: #a71d2a; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detailpagina</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+html,body{margin:0;padding:0;font-family:'Inter',sans-serif;background:#fff}body{scroll-behavior:smooth}
+.banner{width:100%;height:33vh;background-image:url('http://wallup.net/wp-content/uploads/2017/03/28/291899-plants.jpg');background-size:cover;background-position:center;position:relative;z-index:1}
+.container{position:relative;top:-5vh;background:#fff;border-top-left-radius:30px;border-top-right-radius:30px;padding:25px;z-index:2}
+.delete-icon-fixed,.back-icon-fixed{position:fixed;top:10px;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);color:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:10;transition:background 0.2s,transform 0.2s}
+.delete-icon-fixed{right:10px}
+.back-icon-fixed{left:10px}
+.delete-icon-fixed:hover,.back-icon-fixed:hover{background:rgba(0,0,0,0.6);transform:scale(1.1)}
+h2{margin-top:0;font-size:22px;color:#222}
+p{font-size:15px;color:#555;line-height:1.5;margin:10px 0}
+</style>
 </head>
 <body>
-  <div class="main-content">
-    <div class="banner">
-      <h2 id="itemTitle">Item</h2>
-    </div>
-    <div class="content">
-      <a href="./home.html" class="back">← Terug naar overzicht</a>
-      <p id="itemType"></p>
-      <p id="itemDescription"></p>
-      <p id="itemDate"></p>
-      <button class="delete-btn" id="deleteBtn">Verwijder item</button>
-    </div>
-  </div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const itemId = params.get("id");
+<div class="banner"></div>
+<div class="delete-icon-fixed" id="deleteBtn"><i class="fas fa-trash"></i></div>
+<div class="back-icon-fixed" onclick="window.location.href='./home.html'"><i class="fas fa-arrow-left"></i></div>
+<div class="container">
+  <h2 id="itemTitle">Voorbeeld Item</h2>
+  <p><strong>Categorie:</strong> <span id="itemType">Test</span></p>
+  <p><strong>Beschrijving:</strong> <span id="itemDescription">Dit is een voorbeeld.</span></p>
+  <p><strong>Datum:</strong> <span id="itemDate">2025-08-22</span></p>
+</div>
 
-    if (!itemId) {
-      document.getElementById("itemTitle").textContent = "Geen item gevonden.";
+<script>
+  // Haal item ID uit URL (bv. ?id=tests_0)
+  const params = new URLSearchParams(window.location.search);
+  const itemId = params.get('id');
+
+  if (!itemId) {
+    document.getElementById('itemTitle').textContent = 'Geen item gevonden';
+    document.getElementById('itemType').textContent = '';
+    document.getElementById('itemDescription').textContent = '';
+    document.getElementById('itemDate').textContent = '';
+  } else {
+    const [type, index] = itemId.split('_');
+    let data = JSON.parse(localStorage.getItem('studyData')) || { tests: [], exams: [], tasks: [] };
+    const item = data[type] && data[type][index];
+
+    if (item) {
+      document.getElementById('itemTitle').textContent = item.title;
+      document.getElementById('itemType').textContent = type === 'tests' ? 'Test' : type === 'exams' ? 'Examen' : 'Taak';
+      document.getElementById('itemDescription').textContent = item.description || '-';
+      document.getElementById('itemDate').textContent = item.date || '-';
+
+      document.getElementById('deleteBtn').addEventListener('click', () => {
+        if(confirm('Weet je zeker dat je dit item wilt verwijderen?')) {
+          data[type].splice(index,1);
+          localStorage.setItem('studyData', JSON.stringify(data));
+          window.location.href = './home.html';
+        }
+      });
     } else {
-      const [type, index] = itemId.split("_");
-      let data = JSON.parse(localStorage.getItem("studyData")) || { tests: [], exams: [], tasks: [] };
-      const item = data[type] && data[type][index];
-
-      if (item) {
-        document.getElementById("itemTitle").textContent = item.title;
-        document.getElementById("itemType").textContent = "Categorie: " + (type === "tests" ? "Test" : type === "exams" ? "Examen" : "Taak");
-        document.getElementById("itemDescription").textContent = item.description ? "Beschrijving: " + item.description : "";
-        document.getElementById("itemDate").textContent = item.date ? "Datum: " + item.date : "";
-
-        document.getElementById("deleteBtn").addEventListener("click", () => {
-          if (confirm("Weet je zeker dat je dit item wilt verwijderen?")) {
-            data[type].splice(index, 1);
-            localStorage.setItem("studyData", JSON.stringify(data));
-            window.location.href = "./home.html";
-          }
-        });
-      } else {
-        document.getElementById("itemTitle").textContent = "Item niet gevonden.";
-      }
+      document.getElementById('itemTitle').textContent = 'Item niet gevonden';
+      document.getElementById('itemType').textContent = '';
+      document.getElementById('itemDescription').textContent = '';
+      document.getElementById('itemDate').textContent = '';
+      document.getElementById('deleteBtn').style.display = 'none';
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
