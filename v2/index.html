@@ -22,6 +22,15 @@
             cursor: pointer;
             z-index: 1000;
         }
+        #reloadBtn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 1001;
+        }
         iframe {
             width: 100vw;
             height: 100vh;
@@ -32,25 +41,31 @@
 </head>
 <body>
     <button id="fullscreenBtn">Ga fullscreen</button>
+    <button id="reloadBtn">Herlaad iframe</button>
     <iframe id="mainIframe" src="./home.html"></iframe>
 
     <script>
-        const btn = document.getElementById('fullscreenBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const reloadBtn = document.getElementById('reloadBtn');
         const iframe = document.getElementById('mainIframe');
 
-        btn.addEventListener('click', () => {
-            // Fullscreen request voor de body
+        // Fullscreen knop
+        fullscreenBtn.addEventListener('click', () => {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
+            } else if (document.documentElement.webkitRequestFullscreen) {
                 document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
+            } else if (document.documentElement.msRequestFullscreen) {
                 document.documentElement.msRequestFullscreen();
             }
 
-            // Verberg knop en toon iframe
-            btn.style.display = 'none';
+            fullscreenBtn.style.display = 'none';
             iframe.style.display = 'block';
+        });
+
+        // Reload knop
+        reloadBtn.addEventListener('click', () => {
+            iframe.src = iframe.src;
         });
     </script>
 </body>
