@@ -1,203 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyStudyLife - Mobile UI</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #f0f2f5;
-      display: flex;
-      justify-content: center;
-    }
-    .ui-container {
-      width: 100%;
-      max-width: 500px;
-      background: #fff;
-      box-shadow: 0 0 15px rgba(0,0,0,.1);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      position: relative;
-    }
-    .iframe-wrapper {
-      position: relative;
-      flex-grow: 1;
-    }
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: calc(100vh - 60px);
-      border: none;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-    iframe.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .loader {
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 40px;
-      height: 40px;
-      border: 5px solid #ccc;
-      border-top: 5px solid #007bff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      z-index: 99;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-    .loader.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .loader-text {
-      position: absolute;
-      top: 55%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 14px;
-      color: #555;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-    .loader-text.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      background: #fff;
-      padding: 10px 0;
-      border-top: 1px solid #eee;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      max-width: 500px;
-      box-sizing: border-box;
-      z-index: 90;
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      flex: 1;
-      padding: 6px 0;
-      color: #888;
-      font-size: 12px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-    .nav-item i {
-      font-size: 24px;
-      line-height: 1;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .nav-item span {
-      line-height: 1;
-    }
-    .nav-item.active {
-      color: #007bff;
-      font-weight: bold;
-    }
-    .nav-item:hover {
-      color: #0056b3;
-    }
-    @media (max-width: 320px) {
-      .nav-item i {
-        font-size: 20px;
-      }
-      .nav-item span {
-        font-size: 11px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study App</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #fullscreenBtn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none; /* Start hidden */
+        }
+    </style>
 </head>
 <body>
-  <div class="ui-container">
-    <div class="iframe-wrapper">
-      <div class="loader" id="loader"></div>
-      <div class="loader-text" id="loaderText">Loading...</div>
-      <iframe src="./home.html" id="homeFrame" class="active" sandbox="allow-scripts allow-same-origin"></iframe>
-      <iframe src="https://example.com" id="pomodoroFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-      <iframe src="https://example.com/" id="musicFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-      <iframe src="https://example.com/" id="settingsFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-      <iframe src="https://example.com/" id="tipsFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-    </div>
+    <button id="fullscreenBtn">Ga fullscreen</button>
+    <iframe id="mainIframe" src="./home.html"></iframe>
 
-    <div class="bottom-nav">
-      <a href="#" class="nav-item active" data-frame="homeFrame">
-        <i class="material-icons">home</i>
-        <span>Home</span>
-      </a>
-      <a href="#" class="nav-item" data-frame="pomodoroFrame">
-        <i class="material-icons">timer</i>
-        <span>Pomodoro</span>
-      </a>
-      <a href="#" class="nav-item" data-frame="musicFrame">
-        <i class="material-icons">music_note</i>
-        <span>Music</span>
-      </a>
-      <a href="#" class="nav-item" data-frame="settingsFrame">
-        <i class="material-icons">settings</i>
-        <span>Settings</span>
-      </a>
-      <a href="#" class="nav-item" data-frame="tipsFrame">
-        <i class="material-icons">school</i>
-        <span>Tips</span>
-      </a>
-    </div>
-  </div>
+    <script>
+        const btn = document.getElementById('fullscreenBtn');
+        const iframe = document.getElementById('mainIframe');
 
-  <script>
-    const navItems = document.querySelectorAll('.nav-item');
-    const loader = document.getElementById('loader');
-    const loaderText = document.getElementById('loaderText');
-    const iframes = document.querySelectorAll('iframe');
+        btn.addEventListener('click', () => {
+            // Fullscreen request voor de body
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
+                document.documentElement.msRequestFullscreen();
+            }
 
-    navItems.forEach(item => {
-      item.addEventListener('click', e => {
-        e.preventDefault();
-        const targetId = item.getAttribute('data-frame');
-
-        navItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-
-        loader.classList.add('show');
-        loaderText.classList.add('show');
-        iframes.forEach(f => f.classList.remove('active'));
-
-        setTimeout(() => {
-          document.getElementById(targetId).classList.add('active');
-          loader.classList.remove('show');
-          loaderText.classList.remove('show');
-        }, 600);
-      });
-    });
-  </script>
+            // Verberg knop en toon iframe
+            btn.style.display = 'none';
+            iframe.style.display = 'block';
+        });
+    </script>
 </body>
 </html>
