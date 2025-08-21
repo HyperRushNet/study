@@ -41,7 +41,7 @@
 </head>
 <body>
     <button id="fullscreenBtn">Ga fullscreen</button>
-    <button id="reloadBtn">Herlaad iframe</button>
+    <button id="reloadBtn">Reload</button>
     <iframe id="mainIframe" src="./home.html"></iframe>
 
     <script>
@@ -63,9 +63,14 @@
             iframe.style.display = 'block';
         });
 
-        // Reload knop
+        // Reload knop: herlaadt het huidige document in het iframe
         reloadBtn.addEventListener('click', () => {
-            iframe.src = iframe.src;
+            try {
+                iframe.contentWindow.location.reload();
+            } catch (err) {
+                // fallback: als cross-origin, laad originele src
+                iframe.src = iframe.src;
+            }
         });
     </script>
 </body>
