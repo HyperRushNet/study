@@ -6,34 +6,65 @@
   <title>Item detail</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { margin: 0; font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
-    .main-content {
-      max-width: 500px; margin: auto; background: #fff;
-      box-shadow: 0 0 15px rgba(0,0,0,.08); min-height: 100vh; padding: 25px;
+    body {
+      margin: 0; font-family: 'Inter', sans-serif; background: #f0f2f5;
     }
-    h2 { margin-top: 0; font-size: 22px; color: #222; }
-    p { font-size: 15px; color: #555; line-height: 1.5; }
+    .main-content {
+      max-width: 500px; margin: auto;
+      background: #fff; min-height: 100vh;
+      box-shadow: 0 0 15px rgba(0,0,0,.08);
+    }
+
+    /* Banner */
+    .banner {
+      position: relative; height: 180px;
+      background-image: url('http://wallup.net/wp-content/uploads/2017/03/28/291899-plants.jpg');
+      background-size: cover; background-position: center;
+      border-bottom: 4px solid #007bff;
+      border-top-left-radius: 0; border-top-right-radius: 0;
+    }
+    .banner::after {
+      content: ""; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.3);
+    }
+    .banner h2 {
+      position: absolute; bottom: 15px; left: 20px; right: 20px;
+      margin: 0; font-size: 22px; font-weight: 600;
+      color: #fff; z-index: 1;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      font-size: 15px; color: #555; line-height: 1.5; margin: 8px 0;
+    }
     .back {
       display: inline-block; margin-bottom: 20px; text-decoration: none;
       color: #007bff; font-size: 14px;
     }
     .back:hover { text-decoration: underline; }
     .delete-btn {
-      display: inline-block; margin-top: 30px; padding: 12px 15px;
-      background: #dc3545; color: #fff; border-radius: 6px; cursor: pointer;
-      font-size: 14px; border: none;
+      display: inline-block; margin-top: 25px; padding: 12px 15px;
+      background: #dc3545; color: #fff; border-radius: 6px;
+      font-size: 14px; border: none; cursor: pointer;
     }
     .delete-btn:hover { background: #a71d2a; }
   </style>
 </head>
 <body>
   <div class="main-content">
-    <a href="./home.html" class="back">← Terug naar overzicht</a>
-    <h2 id="itemTitle">Item</h2>
-    <p id="itemType"></p>
-    <p id="itemDescription"></p>
-    <p id="itemDate"></p>
-    <button class="delete-btn" id="deleteBtn">Verwijder item</button>
+    <div class="banner">
+      <h2 id="itemTitle">Item</h2>
+    </div>
+    <div class="content">
+      <a href="./home.html" class="back">← Terug naar overzicht</a>
+      <p id="itemType"></p>
+      <p id="itemDescription"></p>
+      <p id="itemDate"></p>
+      <button class="delete-btn" id="deleteBtn">Verwijder item</button>
+    </div>
   </div>
 
   <script>
