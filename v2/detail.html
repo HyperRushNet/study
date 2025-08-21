@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item detail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
+    .main-content {
+      max-width: 500px; margin: auto; background: #fff;
+      box-shadow: 0 0 15px rgba(0,0,0,.08); min-height: 100vh; padding: 25px;
+    }
+    h2 { margin-top: 0; font-size: 22px; color: #222; }
+    p { font-size: 15px; color: #555; line-height: 1.5; }
+    .back {
+      display: inline-block; margin-bottom: 20px; text-decoration: none;
+      color: #007bff; font-size: 14px;
+    }
+    .back:hover { text-decoration: underline; }
+    .delete-btn {
+      display: inline-block; margin-top: 30px; padding: 12px 15px;
+      background: #dc3545; color: #fff; border-radius: 6px; cursor: pointer;
+      font-size: 14px; border: none;
+    }
+    .delete-btn:hover { background: #a71d2a; }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <a href="./home.html" class="back">← Terug naar overzicht</a>
+    <h2 id="itemTitle">Item</h2>
+    <p id="itemType"></p>
+    <p id="itemDescription"></p>
+    <p id="itemDate"></p>
+    <button class="delete-btn" id="deleteBtn">Verwijder item</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const itemId = params.get("id");
+
+    if (!itemId) {
+      document.getElementById("itemTitle").textContent = "Geen item gevonden.";
+    } else {
+      const [type, index] = itemId.split("_");
+      let data = JSON.parse(localStorage.getItem("studyData")) || { tests: [], exams: [], tasks: [] };
+      const item = data[type] && data[type][index];
+
+      if (item) {
+        document.getElementById("itemTitle").textContent = item.title;
+        document.getElementById("itemType").textContent = "Categorie: " + (type === "tests" ? "Test" : type === "exams" ? "Examen" : "Taak");
+        document.getElementById("itemDescription").textContent = item.description ? "Beschrijving: " + item.description : "";
+        document.getElementById("itemDate").textContent = item.date ? "Datum: " + item.date : "";
+
+        document.getElementById("deleteBtn").addEventListener("click", () => {
+          if (confirm("Weet je zeker dat je dit item wilt verwijderen?")) {
+            data[type].splice(index, 1);
+            localStorage.setItem("studyData", JSON.stringify(data));
+            window.location.href = "./home.html";
+          }
+        });
+      } else {
+        document.getElementById("itemTitle").textContent = "Item niet gevonden.";
+      }
+    }
+  </script>
+</body>
+</html>
