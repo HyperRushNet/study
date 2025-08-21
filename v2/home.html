@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyStudyLife - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
+    .main-content {
+      max-width: 500px; margin: auto; background: #fff;
+      box-shadow: 0 0 15px rgba(0,0,0,.08); min-height: 100vh; padding: 25px;
+    }
+    .header { padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    .greeting { font-size: 16px; color: #888; }
+    .user-info h2 { font-size: 26px; margin: 5px 0; color: #222; font-weight: 600; }
+    .user-info p { margin: 0; font-size: 14px; color: #666; }
+    .info-boxes { display: flex; gap: 12px; margin-top: 25px; }
+    .info-box {
+      flex: 1; background: #e0f7fa; border-radius: 15px; padding: 15px;
+      text-align: center; font-weight: 600; color: #007bb5;
+      box-shadow: 0 2px 6px rgba(0,0,0,.06); cursor: pointer;
+      transition: transform .2s, background .2s; font-size: 15px;
+    }
+    .info-box:hover { transform: translateY(-2px); }
+    .info-box.active { background-color: #007bff; color: #fff; }
+    .section { margin-top: 30px; display: none; }
+    .section.active { display: block; }
+    .section h3 { margin-bottom: 15px; font-size: 20px; color: #333; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li {
+      background: #f9f9f9; margin: 8px 0; padding: 12px 15px; border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05); font-size: 15px; color: #444;
+      cursor: pointer;
+    }
+    li.empty { text-align: center; color: #999; background: transparent; box-shadow: none; cursor: default; }
+    .add-btn {
+      display: block; margin: 30px auto 0; padding: 12px; width: 100%;
+      text-align: center; background: #28a745; color: #fff; border-radius: 8px;
+      font-weight: 600; text-decoration: none; font-size: 15px;
+    }
+    .add-btn:hover { background: #218838; }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="header">
+      <div class="user-info">
+        <span class="greeting" id="greeting">Goedemorgen!</span>
+        <h2 id="userName">Odne</h2>
+        <p id="dateDisplay">21 aug</p>
+      </div>
+    </div>
+
+    <div class="info-boxes">
+      <div class="info-box active" data-section="tests">0 Tests</div>
+      <div class="info-box" data-section="exams">0 Examens</div>
+      <div class="info-box" data-section="tasks">0 Taken</div>
+    </div>
+
+    <div id="tests" class="section active">
+      <h3>Tests</h3>
+      <ul id="testsList"><li class="empty">Je hebt geen tests gepland.</li></ul>
+    </div>
+    <div id="exams" class="section">
+      <h3>Examens</h3>
+      <ul id="examsList"><li class="empty">Je hebt geen examens gepland.</li></ul>
+    </div>
+    <div id="tasks" class="section">
+      <h3>Taken</h3>
+      <ul id="tasksList"><li class="empty">Je hebt geen taken gepland.</li></ul>
+    </div>
+
+    <a href="./add.html" class="add-btn">+ Nieuw item toevoegen</a>
+  </div>
+
+  <script>
+    const hour = new Date().getHours();
+    const greeting = document.getElementById("greeting");
+    if (hour >= 5 && hour < 12) greeting.textContent = "Goedemorgen!";
+    else if (hour >= 12 && hour < 18) greeting.textContent = "Goedemiddag!";
+    else greeting.textContent = "Goedenavond!";
+
+    const date = new Date();
+    document.getElementById("dateDisplay").textContent = date.toLocaleDateString("nl-NL", {
+      weekday: "short", day: "numeric", month: "short"
+    });
+
+    let data = JSON.parse(localStorage.getItem("studyData")) || { tests: [], exams: [], tasks: [] };
+
+    function renderList(type, label) {
+      const listEl = document.getElementById(type + "List");
+      listEl.innerHTML = "";
+
+      if (!data[type] || data[type].length === 0) {
+        const li = document.createElement("li");
+        li.textContent = `Je hebt geen ${label.toLowerCase()} gepland.`;
+        li.classList.add("empty");
+        listEl.appendChild(li);
+      } else {
+        data[type].forEach((item, index) => {
+          const li = document.createElement("li");
+          li.textContent = item.title;
+          li.addEventListener("click", () => {
+            window.location.href = `./detail.html?id=${type}_${index}`;
+          });
+          listEl.appendChild(li);
+        });
+      }
+
+      const box = document.querySelector(`.info-box[data-section="${type}"]`);
+      box.textContent = `${data[type].length} ${label}`;
+    }
+
+    renderList("tests", "Tests");
+    renderList("exams", "Examens");
+    renderList("tasks", "Taken");
+
+    document.querySelectorAll(".info-box").forEach(box => {
+      box.addEventListener("click", () => {
+        document.querySelectorAll(".info-box").forEach(b => b.classList.remove("active"));
+        box.classList.add("active");
+
+        const sectionId = box.getAttribute("data-section");
+        document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+        document.getElementById(sectionId).classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
