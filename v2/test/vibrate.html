@@ -14,8 +14,9 @@
 
     button.addEventListener('click', () => {
       if ('vibrate' in navigator) {
-        // 10 seconds = 10000 milliseconds
-        navigator.vibrate(10000);
+        // Pattern: vibrate 1000ms, pause 0ms, repeat 10 times
+        const pattern = Array(10).fill(1000).flatMap(v => [v, 0]);
+        navigator.vibrate(pattern);
       } else {
         alert('Sorry, your device does not support vibration.');
       }
