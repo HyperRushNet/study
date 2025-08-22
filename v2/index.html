@@ -15,53 +15,6 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        #fullscreen-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f2f5;
-        }
-
-        #fullscreenBtn, #reloadBtn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, background-color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #fullscreenBtn:hover, #reloadBtn:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-
-        #fullscreenBtn:active, #reloadBtn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .action-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: none; /* Standaard verborgen */
-            flex-direction: column;
-            gap: 10px;
-        }
-
         iframe {
             width: 100vw;
             height: 100vh;
@@ -71,61 +24,16 @@
     </style>
 </head>
 <body>
-    <div id="fullscreen-container">
-        <button id="fullscreenBtn">
-            <i class="fas fa-expand"></i> Enter Fullscreen
-        </button>
-    </div>
-
-    <div id="action-buttons" class="action-buttons">
-        <button id="reloadBtn">
-            <i class="fas fa-sync-alt"></i> Reload
-        </button>
-    </div>
-
     <iframe id="mainIframe" src="./home.html"></iframe>
     
     <iframe id="pomodoroIframe" src="./pomodoro.html"></iframe>
 
     <script>
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const fullscreenContainer = document.getElementById('fullscreen-container');
         const mainIframe = document.getElementById('mainIframe');
         const pomodoroIframe = document.getElementById('pomodoroIframe');
-        const actionButtons = document.getElementById('action-buttons');
-        const reloadBtn = document.getElementById('reloadBtn');
 
-        pomodoroIframe.style.display = 'none';
-        mainIframe.style.display = 'none';
-
-        fullscreenBtn.addEventListener('click', () => {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            }
-
-            fullscreenContainer.style.display = 'none';
-            mainIframe.style.display = 'block';
-            actionButtons.style.display = 'flex';
-        });
-
-        reloadBtn.addEventListener('click', () => {
-            let activeIframe;
-            if (mainIframe.style.display === 'block') {
-                activeIframe = mainIframe;
-            } else if (pomodoroIframe.style.display === 'block') {
-                activeIframe = pomodoroIframe;
-            }
-
-            if (activeIframe) {
-                const url = new URL(activeIframe.src);
-                url.searchParams.set('nocache', Date.now());
-                activeIframe.src = url.toString();
-            }
-        });
+        // Toon de startpagina direct
+        mainIframe.style.display = 'block';
 
         // Luister naar berichten van child iframes om van pagina te wisselen
         window.addEventListener('message', (event) => {
