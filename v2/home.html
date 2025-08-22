@@ -41,7 +41,7 @@
         }
 
         .header {
-            margin-bottom: 25px;
+            margin-bottom: 15px; /* Minder marge om de tools dichterbij te plaatsen */
         }
         .header h1 {
             font-size: 38px;
@@ -55,6 +55,44 @@
             margin-top: 5px;
         }
 
+        .tools-section {
+            margin-bottom: 25px; /* Marge onder de tools sectie */
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .tool-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tool-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .tool-button i {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
         .card-list {
             display: flex;
             flex-direction: column;
@@ -144,6 +182,23 @@
         <p class="date" id="current-date"></p>
     </div>
 
+    <div class="tools-section">
+        <div class="tools-grid">
+            <a href="./pomodoro.html" class="tool-button">
+                <i class="fas fa-stopwatch"></i>
+                Pomodoro
+            </a>
+            <a href="#" class="tool-button">
+                <i class="fas fa-list-check"></i>
+                Tasks
+            </a>
+            <a href="#" class="tool-button">
+                <i class="fas fa-calendar-alt"></i>
+                Planner
+            </a>
+        </div>
+    </div>
+    
     <ul id="card-list" class="card-list">
         </ul>
     
@@ -233,14 +288,18 @@
             renderCards();
         }
 
-        function setCurrentDate() {
+        function updateDateTime() {
             const today = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            currentDateEl.textContent = today.toLocaleDateString('en-US', options);
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' };
+            const formattedDate = today.toLocaleDateString('en-US', dateOptions);
+            const formattedTime = today.toLocaleTimeString('en-US', timeOptions);
+            currentDateEl.textContent = `${formattedDate} - ${formattedTime}`;
         }
         
         greetingTextEl.textContent = getGreeting();
-        setCurrentDate();
+        updateDateTime(); // Initial call
+        setInterval(updateDateTime, 60000); // Update every minute (60,000 milliseconds)
         updateUI();
 
         window.addEventListener('focus', updateUI);
