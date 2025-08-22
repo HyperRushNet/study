@@ -13,9 +13,11 @@
             --text-dark: #333;
             --text-medium: #666;
             --text-light: #888;
-            --input-border: #ccc;
+            --input-border: #e0e0e0;
+            --focus-glow: #d8d8ff;
         }
 
+        /* ALGEMEEN */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
@@ -38,6 +40,7 @@
             position: relative;
         }
 
+        /* HEADER */
         .header {
             display: flex;
             align-items: center;
@@ -50,6 +53,10 @@
             color: var(--text-dark);
             cursor: pointer;
             margin-right: 15px;
+            transition: color 0.2s ease;
+        }
+        .header .back-button:hover {
+            color: var(--primary);
         }
         .header h1 {
             font-size: 32px;
@@ -58,10 +65,12 @@
             margin: 0;
         }
 
+        /* FORMULIER SECTIE */
         .form-section {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            padding-bottom: 40px; /* Ruimte voor de knop */
         }
 
         .form-group {
@@ -71,106 +80,175 @@
         }
         .form-group label {
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-dark);
         }
+        
+        /* Input & Select & Textarea Styling */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: var(--text-medium);
+            font-size: 18px;
+        }
+
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px;
+            width: 100%;
+            padding: 15px 15px 15px 50px; /* Extra padding voor het icoon */
             border: 1px solid var(--input-border);
             border-radius: 12px;
             font-size: 16px;
-        }
-        .form-group textarea {
-            resize: vertical;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
         }
 
+        .form-group textarea {
+            height: 120px;
+            resize: none;
+            padding-left: 15px; /* Geen icoon, dus normale padding */
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--focus-glow);
+        }
+
+        /* Specifieke styling voor select-pijl */
+        .form-group select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666666'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+
+        /* SAVE KNOP */
         .save-button {
-            padding: 15px;
+            width: 100%;
+            padding: 18px;
             background-color: var(--primary);
             color: #fff;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .save-button:hover {
+            background-color: #4b4bdf;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .save-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
 <body>
+    <div class="phone-ui">
+        <div class="header">
+            <button class="back-button" onclick="window.history.back();"><i class="fas fa-chevron-left"></i></button>
+            <h1>Add New Item</h1>
+        </div>
 
-<div class="phone-ui">
-    <div class="header">
-        <button class="back-button" onclick="window.history.back();"><i class="fas fa-chevron-left"></i></button>
-        <h1>Add New Item</h1>
+        <form id="addItemForm" class="form-section">
+            <div class="form-group">
+                <label for="itemTitle">Title</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-file-alt"></i>
+                    <input type="text" id="itemTitle" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="itemDescription">Description</label>
+                <textarea id="itemDescription" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="itemDate">Date</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-calendar-alt"></i>
+                    <input type="date" id="itemDate" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="itemStartTime">Start Time</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-clock"></i>
+                    <input type="time" id="itemStartTime" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="itemEndTime">End Time</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-clock"></i>
+                    <input type="time" id="itemEndTime" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="itemType">Type</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-tags"></i>
+                    <select id="itemType" required>
+                        <option value="tasks">Task</option>
+                        <option value="tests">Test</option>
+                        <option value="exams">Exam</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="save-button">Save Item</button>
+        </form>
     </div>
 
-    <form id="addItemForm" class="form-section">
-        <div class="form-group">
-            <label for="itemTitle">Title</label>
-            <input type="text" id="itemTitle" required>
-        </div>
-        <div class="form-group">
-            <label for="itemDescription">Description</label>
-            <textarea id="itemDescription" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="itemDate">Date</label>
-            <input type="date" id="itemDate" required>
-        </div>
-        <div class="form-group">
-            <label for="itemStartTime">Start Time</label>
-            <input type="time" id="itemStartTime" required>
-        </div>
-        <div class="form-group">
-            <label for="itemEndTime">End Time</label>
-            <input type="time" id="itemEndTime" required>
-        </div>
-        <div class="form-group">
-            <label for="itemType">Type</label>
-            <select id="itemType" required>
-                <option value="tasks">Task</option>
-                <option value="tests">Test</option>
-                <option value="exams">Exam</option>
-            </select>
-        </div>
-        <button type="submit" class="save-button">Save Item</button>
-    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('addItemForm');
 
-</div>
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('addItemForm');
+                const title = document.getElementById('itemTitle').value;
+                const description = document.getElementById('itemDescription').value;
+                const date = document.getElementById('itemDate').value;
+                const startTime = document.getElementById('itemStartTime').value;
+                const endTime = document.getElementById('itemEndTime').value;
+                const type = document.getElementById('itemType').value;
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+                const storedData = localStorage.getItem('HRN_Study_data');
+                const data = storedData ? JSON.parse(storedData) : { tasks: [], tests: [], exams: [] };
 
-            const title = document.getElementById('itemTitle').value;
-            const description = document.getElementById('itemDescription').value;
-            const date = document.getElementById('itemDate').value;
-            const startTime = document.getElementById('itemStartTime').value;
-            const endTime = document.getElementById('itemEndTime').value;
-            const type = document.getElementById('itemType').value;
+                const newItem = {
+                    title,
+                    description,
+                    date,
+                    startTime,
+                    endTime
+                };
 
-            const storedData = localStorage.getItem('HRN_Study_data');
-            const data = storedData ? JSON.parse(storedData) : { tasks: [], tests: [], exams: [] };
+                data[type].push(newItem);
 
-            const newItem = {
-                title,
-                description,
-                date,
-                startTime,
-                endTime
-            };
-            data[type].push(newItem);
+                localStorage.setItem('HRN_Study_data', JSON.stringify(data));
 
-            localStorage.setItem('HRN_Study_data', JSON.stringify(data));
-
-            window.history.back();
+                window.history.back();
+            });
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
