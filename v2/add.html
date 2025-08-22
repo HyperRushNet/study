@@ -1,73 +1,132 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nieuw item toevoegen</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; }
-    .main-content {
-      max-width: 500px; margin: auto; background: #fff;
-      min-height: 100vh; padding: 25px; box-shadow: 0 0 15px rgba(0,0,0,.08);
-    }
-    h2 { margin-top: 0; color: #222; }
-    label { font-weight: 600; display: block; margin-top: 15px; }
-    input, select, textarea {
-      width: 100%; padding: 10px; margin-top: 5px;
-      border: 1px solid #ccc; border-radius: 6px; font-family: inherit;
-    }
-    button {
-      margin-top: 20px; width: 100%; padding: 12px;
-      background: #007bff; color: #fff; border: none;
-      border-radius: 6px; font-size: 15px; cursor: pointer;
-    }
-    button:hover { background: #0056b3; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRN Study Data Settings</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: flex-start; height: 100vh; width: 100vw; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { width: 100%; max-width: 500px; background-color: #ffffff; border-radius: 15px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; gap: 20px; }
+        h1 { margin: 0 0 10px 0; font-size: 24px; color: #333; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
+        label { font-size: 14px; font-weight: 600; color: #555; margin-bottom: 5px; }
+        input, select { padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 12px; font-size: 16px; font-weight: 600; color: white; background-color: #4CAF50; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; }
+        button:hover { background-color: #45a049; }
+        .back-button { position: fixed; top: 20px; left: 20px; background-color: #ccc; color: white; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; display: flex; justify-content: center; align-items: center; text-decoration: none; }
+        .list-section { margin-top: 20px; }
+        .list-section h2 { font-size: 20px; margin-bottom: 10px; }
+        .item-list { display: flex; flex-direction: column; gap: 10px; }
+        .list-item { background-color: #f7f9fc; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .list-item .details { font-size: 14px; }
+        .list-item .delete-btn { background-color: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    </style>
 </head>
 <body>
-  <div class="main-content">
-    <h2>Nieuw item toevoegen</h2>
-    <form id="itemForm">
-      <label for="type">Type</label>
-      <select id="type" required>
-        <option value="tests">Test</option>
-        <option value="exams">Examen</option>
-        <option value="tasks">Taak</option>
-      </select>
 
-      <label for="title">Titel</label>
-      <input type="text" id="title" placeholder="Titel van het item" required />
+<a href="index.html" class="back-button">&larr;</a>
 
-      <label for="description">Beschrijving</label>
-      <textarea id="description" placeholder="Optionele beschrijving"></textarea>
+<div class="container">
+    <h1>Instellingen</h1>
 
-      <label for="date">Datum</label>
-      <input type="date" id="date" />
-
-      <button type="submit">Toevoegen</button>
+    <h2>Nieuwe item toevoegen</h2>
+    <form id="item-form">
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <select id="type">
+                <option value="tests">Test</option>
+                <option value="exams">Examen</option>
+                <option value="tasks">Taak</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="title">Titel:</label>
+            <input type="text" id="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Beschrijving:</label>
+            <input type="text" id="description" required>
+        </div>
+        <div class="form-group">
+            <label for="date">Datum:</label>
+            <input type="date" id="date" required>
+        </div>
+        <button type="submit">Item toevoegen</button>
     </form>
-  </div>
+    
+    <div class="list-section">
+        <h2>Bestaande items</h2>
+        <div id="items-list">
+            </div>
+    </div>
+</div>
 
-  <script>
-    document.getElementById("itemForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('item-form');
+        const itemsList = document.getElementById('items-list');
 
-      const type = document.getElementById("type").value;
-      const title = document.getElementById("title").value.trim();
-      const description = document.getElementById("description").value.trim();
-      const date = document.getElementById("date").value;
+        const dataKey = 'HRN_Study_data';
 
-      if (!title) return alert("Voer een titel in.");
+        function loadItems() {
+            const storedData = localStorage.getItem(dataKey);
+            const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
+            
+            itemsList.innerHTML = '';
+            
+            // Toon alle items
+            Object.keys(data).forEach(type => {
+                data[type].forEach((item, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-item';
+                    listItem.innerHTML = `
+                        <div class="details">
+                            <strong>${item.title}</strong> (${item.date})<br>
+                            <em>${item.description}</em>
+                        </div>
+                        <button class="delete-btn" data-type="${type}" data-index="${index}">Verwijder</button>
+                    `;
+                    itemsList.appendChild(listItem);
+                });
+            });
+        }
 
-      let data = JSON.parse(localStorage.getItem("studyData")) || { tests: [], exams: [], tasks: [] };
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const storedData = localStorage.getItem(dataKey);
+            const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
 
-      data[type].push({ title, description, date });
-      localStorage.setItem("studyData", JSON.stringify(data));
+            const type = document.getElementById('type').value;
+            const newItem = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                date: document.getElementById('date').value
+            };
 
-      alert("Item toegevoegd!");
-      window.location.href = "./home.html";
+            data[type].push(newItem);
+            localStorage.setItem(dataKey, JSON.stringify(data));
+            
+            form.reset();
+            loadItems();
+        });
+
+        itemsList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                const type = e.target.getAttribute('data-type');
+                const index = e.target.getAttribute('data-index');
+                const storedData = localStorage.getItem(dataKey);
+                const data = JSON.parse(storedData);
+                
+                data[type].splice(index, 1);
+                localStorage.setItem(dataKey, JSON.stringify(data));
+                
+                loadItems();
+            }
+        });
+
+        loadItems();
     });
-  </script>
+</script>
+
 </body>
 </html>
