@@ -41,7 +41,7 @@
         }
 
         .header {
-            margin-bottom: 15px; /* Minder marge om de tools dichterbij te plaatsen */
+            margin-bottom: 15px;
         }
         .header h1 {
             font-size: 38px;
@@ -56,7 +56,7 @@
         }
 
         .tools-section {
-            margin-bottom: 25px; /* Marge onder de tools sectie */
+            margin-bottom: 25px;
         }
 
         .tools-grid {
@@ -184,7 +184,7 @@
 
     <div class="tools-section">
         <div class="tools-grid">
-            <a href="./pomodoro.html" class="tool-button">
+            <a href="javascript:void(0);" id="pomodoro-button" class="tool-button">
                 <i class="fas fa-stopwatch"></i>
                 Pomodoro
             </a>
@@ -211,6 +211,7 @@
         const greetingTextEl = document.getElementById('greeting-text');
         const cardListEl = document.getElementById('card-list');
         const currentDateEl = document.getElementById('current-date');
+        const pomodoroButton = document.getElementById('pomodoro-button');
         
         let allItems = [];
 
@@ -298,11 +299,16 @@
         }
         
         greetingTextEl.textContent = getGreeting();
-        updateDateTime(); // Initial call
-        setInterval(updateDateTime, 60000); // Update every minute (60,000 milliseconds)
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
         updateUI();
 
         window.addEventListener('focus', updateUI);
+
+        // Send a message to the parent to handle Pomodoro navigation
+        pomodoroButton.addEventListener('click', () => {
+            window.parent.postMessage({ page: 'pomodoro' }, '*');
+        });
     });
 </script>
 
