@@ -131,9 +131,9 @@
         }
 
         /* Colors based on type */
-        .task .label { background-color: var(--task-bg); }
-        .test .label { background-color: var(--test-bg); }
-        .exam .label { background-color: var(--exam-bg); }
+        .tasks .label { background-color: var(--task-bg); }
+        .tests .label { background-color: var(--test-bg); }
+        .exams .label { background-color: var(--exam-bg); }
     </style>
 </head>
 <body>
@@ -193,12 +193,17 @@
                 }
                 
                 const formattedTime = `${item.startTime} - ${item.endTime}`;
+
+                let labelText = item.type;
+                if (labelText === 'tasks') labelText = 'Task';
+                else if (labelText === 'tests') labelText = 'Test';
+                else if (labelText === 'exams') labelText = 'Exam';
                 
                 const cardHTML = `
                     <li>
                         <a href="detail.html?id=${item.type}_${item.id}" class="card ${item.type}">
                             <div class="card-top">
-                                <div class="label">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
+                                <div class="label">${labelText}</div>
                                 <div class="date-time">${formattedDate} | ${formattedTime}</div>
                             </div>
                             <h2>${item.title}</h2>
@@ -210,8 +215,6 @@
         }
 
         function updateUI() {
-            // Retrieve data from localStorage.
-            // If it doesn't exist, create an empty structure.
             const storedData = localStorage.getItem('HRN_Study_data');
             const data = storedData ? JSON.parse(storedData) : { tasks: [], tests: [], exams: [] };
 
