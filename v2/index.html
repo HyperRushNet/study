@@ -24,13 +24,18 @@
     </style>
 </head>
 <body>
-    <iframe id="mainIframe" src="./home.html"></iframe>
+    <iframe id="mainIframe" src=""></iframe>
     
-    <iframe id="pomodoroIframe" src="./pomodoro.html"></iframe>
+    <iframe id="pomodoroIframe" src=""></iframe>
 
     <script>
         const mainIframe = document.getElementById('mainIframe');
         const pomodoroIframe = document.getElementById('pomodoroIframe');
+
+        // Dynamische cache-bypass bij de eerste keer laden
+        const timestamp = Date.now();
+        mainIframe.src = `./home.html?v=${timestamp}`;
+        pomodoroIframe.src = `./pomodoro.html?v=${timestamp}`;
 
         // Toon de startpagina direct
         mainIframe.style.display = 'block';
