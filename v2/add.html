@@ -23,12 +23,9 @@
     </style>
 </head>
 <body>
-
 <a href="./home.html" class="back-button">&larr;</a>
-
 <div class="container">
     <h1>Instellingen</h1>
-
     <h2>Nieuwe item toevoegen</h2>
     <form id="item-form">
         <div class="form-group">
@@ -51,16 +48,22 @@
             <label for="date">Datum:</label>
             <input type="date" id="date" required>
         </div>
+        <div class="form-group">
+            <label for="startTime">Starttijd:</label>
+            <input type="time" id="startTime" required>
+        </div>
+        <div class="form-group">
+            <label for="endTime">Eindtijd:</label>
+            <input type="time" id="endTime" required>
+        </div>
         <button type="submit">Item toevoegen</button>
     </form>
-    
     <div class="list-section">
         <h2>Bestaande items</h2>
         <div id="items-list">
-            </div>
+        </div>
     </div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('item-form');
@@ -71,17 +74,16 @@
         function loadItems() {
             const storedData = localStorage.getItem(dataKey);
             const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
-            
+
             itemsList.innerHTML = '';
             
-            // Toon alle items
             Object.keys(data).forEach(type => {
                 data[type].forEach((item, index) => {
                     const listItem = document.createElement('div');
                     listItem.className = 'list-item';
                     listItem.innerHTML = `
                         <div class="details">
-                            <strong>${item.title}</strong> (${item.date})<br>
+                            <strong>${item.title}</strong> (${item.date} ${item.startTime} - ${item.endTime})<br>
                             <em>${item.description}</em>
                         </div>
                         <button class="delete-btn" data-type="${type}" data-index="${index}">Verwijder</button>
@@ -100,7 +102,9 @@
             const newItem = {
                 title: document.getElementById('title').value,
                 description: document.getElementById('description').value,
-                date: document.getElementById('date').value
+                date: document.getElementById('date').value,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value
             };
 
             data[type].push(newItem);
@@ -116,10 +120,10 @@
                 const index = e.target.getAttribute('data-index');
                 const storedData = localStorage.getItem(dataKey);
                 const data = JSON.parse(storedData);
-                
+                                
                 data[type].splice(index, 1);
                 localStorage.setItem(dataKey, JSON.stringify(data));
-                
+                                
                 loadItems();
             }
         });
@@ -127,6 +131,5 @@
         loadItems();
     });
 </script>
-
 </body>
 </html>
