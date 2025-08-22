@@ -20,7 +20,6 @@
             --exam-bg: #e6fff2;
         }
 
-        /* Zorg dat de body en html een hoogte van 100% hebben */
         html, body {
             height: 100%;
             margin: 0;
@@ -31,7 +30,6 @@
             justify-content: center;
         }
 
-        /* Zorg dat .phone-ui de volledige hoogte van de body opvult en de inhoud in kolommen weergeeft */
         .phone-ui {
             width: 100vw;
             max-width: 500px;
@@ -255,7 +253,7 @@
             cardListEl.innerHTML = '';
 
             if (allItems.length === 0) {
-                cardListEl.innerHTML = `<p class="no-items">Yay, no items found!</p>`;
+                cardListEl.innerHTML = `<p class="no-items">You don't have any assignments (left)! You can always add some with the "+" button.</p>`;
                 return;
             }
 
