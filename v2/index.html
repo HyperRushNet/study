@@ -27,7 +27,7 @@
             background-color: #f0f2f5;
         }
 
-        #fullscreenBtn {
+        #fullscreenBtn, #reloadBtn {
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -43,16 +43,25 @@
             gap: 10px;
         }
 
-        #fullscreenBtn:hover {
+        #fullscreenBtn:hover, #reloadBtn:hover {
             background-color: #45a049;
             transform: translateY(-2px);
         }
 
-        #fullscreenBtn:active {
+        #fullscreenBtn:active, #reloadBtn:active {
             transform: translateY(0);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        
+
+        .action-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none; /* Standaard verborgen */
+            flex-direction: column;
+            gap: 10px;
+        }
+
         iframe {
             width: 100vw;
             height: 100vh;
@@ -68,6 +77,12 @@
         </button>
     </div>
 
+    <div id="action-buttons" class="action-buttons">
+        <button id="reloadBtn">
+            <i class="fas fa-sync-alt"></i> Reload
+        </button>
+    </div>
+
     <iframe id="mainIframe" src="./home.html"></iframe>
     
     <iframe id="pomodoroIframe" src="./pomodoro.html"></iframe>
@@ -77,6 +92,8 @@
         const fullscreenContainer = document.getElementById('fullscreen-container');
         const mainIframe = document.getElementById('mainIframe');
         const pomodoroIframe = document.getElementById('pomodoroIframe');
+        const actionButtons = document.getElementById('action-buttons');
+        const reloadBtn = document.getElementById('reloadBtn');
 
         pomodoroIframe.style.display = 'none';
         mainIframe.style.display = 'none';
@@ -92,9 +109,25 @@
 
             fullscreenContainer.style.display = 'none';
             mainIframe.style.display = 'block';
+            actionButtons.style.display = 'flex';
         });
 
-        // Listen for messages from child iframes to switch pages
+        reloadBtn.addEventListener('click', () => {
+            let activeIframe;
+            if (mainIframe.style.display === 'block') {
+                activeIframe = mainIframe;
+            } else if (pomodoroIframe.style.display === 'block') {
+                activeIframe = pomodoroIframe;
+            }
+
+            if (activeIframe) {
+                const url = new URL(activeIframe.src);
+                url.searchParams.set('nocache', Date.now());
+                activeIframe.src = url.toString();
+            }
+        });
+
+        // Luister naar berichten van child iframes om van pagina te wisselen
         window.addEventListener('message', (event) => {
             if (event.data && event.data.page) {
                 if (event.data.page === 'pomodoro') {
@@ -104,7 +137,7 @@
                     pomodoroIframe.style.display = 'none';
                     mainIframe.style.display = 'block';
                 } else {
-                    // This handles navigation for other links within the main iframe
+                    // Dit handelt navigatie af voor andere links binnen het main iframe
                     mainIframe.src = event.data.page;
                     pomodoroIframe.style.display = 'none';
                     mainIframe.style.display = 'block';
