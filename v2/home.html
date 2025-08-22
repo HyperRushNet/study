@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HRN Study Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; padding: 0; box-sizing: border-box; }
         .phone-ui { width: 100vw; height: 100vh; max-width: none; background-color: #ffffff; border-radius: 0; box-shadow: none; overflow: auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; }
@@ -27,11 +28,26 @@
         .class-info .time { font-weight: 600; font-size: 12px; color: #4CAF50; margin-top: 5px; }
         .label-ribbon { color: white; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.5); }
         .schedule-card { background-color: #f7f9fc; border-radius: 15px; padding: 0px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); position: relative; max-height: 20vh; }
-        .schedule-card .title { font-size: 18px; font-weight: 600; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap; }
+        .schedule-card .title { font-size: 25px; font-weight: 600; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap; }
         .schedule-card .image-container { margin: 0; border-radius: 10px; overflow: hidden; position: relative; }
         .schedule-card .image-container img { width: 100%; height: auto; display: block; }
         .schedule-card .image-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.3); }
-        .settings-button { position: fixed; bottom: 20px; right: 20px; background-color: #4CAF50; color: white; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; display: flex; justify-content: center; align-items: center; text-decoration: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+        .add-button { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background-color: #4CAF50; 
+            color: white; 
+            border-radius: 50%; 
+            width: 50px; 
+            height: 50px; 
+            font-size: 24px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            text-decoration: none; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -41,21 +57,21 @@
         <div class="image-container">
             <img src="https://i.pinimg.com/originals/bf/6d/09/bf6d09e856465f2318afef9ca7500d44.jpg" alt="basketball court">
         </div>
-        <div class="title">Good morning!</div>
+        <div class="title">Good evening!</div>
     </div>
     
     <div class="summary-grid">
         <div class="summary-block">
             <div class="count" id="tests-count">0</div>
-            <div class="label">Tests</div>
+            <div class="label" id="tests-label">Tests</div>
         </div>
         <div class="summary-block">
             <div class="count" id="exams-count">0</div>
-            <div class="label">Exams</div>
+            <div class="label" id="exams-label">Exams</div>
         </div>
         <div class="summary-block">
             <div class="count" id="tasks-count">0</div>
-            <div class="label">Taken</div>
+            <div class="label" id="tasks-label">Tasks</div>
         </div>
     </div>
 
@@ -63,7 +79,7 @@
     <div class="classes-grid" id="classes-grid">
         </div>
 
-    <a href="./add.html" class="settings-button">+</a>
+    <a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
 
 </div>
 
@@ -73,17 +89,30 @@
         const testsCountEl = document.getElementById('tests-count');
         const examsCountEl = document.getElementById('exams-count');
         const tasksCountEl = document.getElementById('tasks-count');
+        const testsLabelEl = document.getElementById('tests-label');
+        const examsLabelEl = document.getElementById('exams-label');
+        const tasksLabelEl = document.getElementById('tasks-label');
 
         function updateUI() {
             const storedData = localStorage.getItem('HRN_Study_data');
             const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
+            
+            const hasUsedBefore = localStorage.getItem('hasUsedBefore');
 
+            // Update the counts for tests, exams, and tasks
             testsCountEl.textContent = data.tests.length;
             examsCountEl.textContent = data.exams.length;
             tasksCountEl.textContent = data.tasks.length;
+            
+            // Update the labels based on count
+            testsLabelEl.textContent = data.tests.length === 1 ? 'Test' : 'Tests';
+            examsLabelEl.textContent = data.exams.length === 1 ? 'Exam' : 'Exams';
+            tasksLabelEl.textContent = data.tasks.length === 1 ? 'Task' : 'Tasks';
 
+            // Clear the grid
             classesGrid.innerHTML = '';
             
+            // Combine all items into one array
             const allItems = [
                 ...data.tests.map((item, index) => ({ ...item, type: 'tests', id: `tests_${index}` })),
                 ...data.exams.map((item, index) => ({ ...item, type: 'exams', id: `exams_${index}` })),
@@ -91,6 +120,7 @@
             ];
             
             if (allItems.length > 0) {
+                // If there are tasks, display them
                 allItems.forEach(item => {
                     const classCard = document.createElement('a');
                     classCard.href = `detail.html?id=${item.id}`;
@@ -105,8 +135,21 @@
                     `;
                     classesGrid.appendChild(classCard);
                 });
+                
+                // Mark that the app has been used before
+                if (!hasUsedBefore) {
+                    localStorage.setItem('hasUsedBefore', 'true');
+                }
+
             } else {
-                classesGrid.innerHTML = '<p style="text-align: center; color: #888;">Nog geen taken toegevoegd. Ga naar instellingen om te beginnen!</p>';
+                // If there are no tasks
+                if (hasUsedBefore) {
+                    // Show "Yay, no tasks!" message if it's not the first time
+                    classesGrid.innerHTML = '<p style="text-align: center; color: #4CAF50; font-weight: 600;">🥳 Yay, no tasks!</p>';
+                } else {
+                    // Show the "get started" message if it's the first time
+                    classesGrid.innerHTML = '<p style="text-align: center; color: #888;">No assignments added yet. Click on the plus sign to get started!</p>';
+                }
             }
         }
 
