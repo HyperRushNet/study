@@ -7,7 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
-html,body{margin:0;padding:0;font-family:'Inter',sans-serif;background:#fff}body{scroll-behavior:smooth}
+html,body{margin:0;padding:0;font-family:'Inter',sans-serif;background:#fff}
+body{scroll-behavior:smooth}
 .banner{width:100%;height:30vh;background-image:url('http://wallup.net/wp-content/uploads/2017/03/28/291899-plants.jpg');background-size:cover;background-position:center;position:relative;z-index:1}
 .container{position:relative;top:-5vh;background:#fff;border-top-left-radius:30px;border-top-right-radius:30px;padding:25px;z-index:2}
 .delete-icon-fixed,.back-icon-fixed{position:fixed;top:10px;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);color:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:10;transition:background 0.2s,transform 0.2s}
@@ -19,17 +20,16 @@ p{font-size:15px;color:#555;line-height:1.5;margin:10px 0}
 </style>
 </head>
 <body>
-
 <div class="banner"></div>
 <div class="delete-icon-fixed" id="deleteBtn"><i class="fas fa-trash"></i></div>
 <div class="back-icon-fixed" onclick="window.location.href='./home.html'"><i class="fas fa-arrow-left"></i></div>
 <div class="container">
-  <h2 id="itemTitle"></h2>
-  <p><strong>Categorie:</strong> <span id="itemType"></span></p>
-  <p><strong>Beschrijving:</strong> <span id="itemDescription"></span></p>
-  <p><strong>Datum:</strong> <span id="itemDate"></span></p>
+    <h2 id="itemTitle"></h2>
+    <p><strong>Categorie:</strong> <span id="itemType"></span></p>
+    <p><strong>Beschrijving:</strong> <span id="itemDescription"></span></p>
+    <p><strong>Datum:</strong> <span id="itemDate"></span></p>
+    <p><strong>Tijd:</strong> <span id="itemTime"></span></p>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
@@ -39,6 +39,7 @@ p{font-size:15px;color:#555;line-height:1.5;margin:10px 0}
         const itemTypeEl = document.getElementById('itemType');
         const itemDescriptionEl = document.getElementById('itemDescription');
         const itemDateEl = document.getElementById('itemDate');
+        const itemTimeEl = document.getElementById('itemTime');
         const deleteBtn = document.getElementById('deleteBtn');
 
         const dataKey = 'HRN_Study_data';
@@ -55,33 +56,30 @@ p{font-size:15px;color:#555;line-height:1.5;margin:10px 0}
                 itemIndex = index;
             }
         }
-        
+                
         if (item) {
             itemTitleEl.textContent = item.title || 'Onbekend';
             itemTypeEl.textContent = itemType === 'tests' ? 'Test' : itemType === 'exams' ? 'Examen' : 'Taak';
             itemDescriptionEl.textContent = item.description || '-';
             itemDateEl.textContent = item.date || '-';
+            itemTimeEl.textContent = (item.startTime && item.endTime) ? `${item.startTime} - ${item.endTime}` : '-';
 
             deleteBtn.addEventListener('click', () => {
                 if(confirm('Weet je zeker dat je dit item wilt verwijderen?')) {
-                    // Verwijder het item uit de array
                     data[itemType].splice(itemIndex, 1);
-                    // Sla de bijgewerkte data op in localStorage
                     localStorage.setItem(dataKey, JSON.stringify(data));
-                    // Navigeer terug naar de homepagina
                     window.location.href = './home.html';
                 }
             });
         } else {
-            // Item niet gevonden of ongeldige ID
             itemTitleEl.textContent = 'Item niet gevonden';
             itemTypeEl.textContent = '';
             itemDescriptionEl.textContent = 'Dit item bestaat niet of de URL is onjuist.';
             itemDateEl.textContent = '';
+            itemTimeEl.textContent = '';
             deleteBtn.style.display = 'none';
         }
     });
 </script>
-
 </body>
 </html>
