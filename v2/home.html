@@ -6,235 +6,234 @@
     <title>HRN Study Data</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; padding: 0; box-sizing: border-box; }
-        .phone-ui { width: 100vw; height: 100vh; max-width: none; background-color: #ffffff; border-radius: 0; box-shadow: none; overflow: auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; }
-        .summary-grid { display: flex; gap: 10px; justify-content: space-between; }
-        .summary-block { background-color: #f7f9fc; border-radius: 15px; padding: 15px 10px; text-align: center; flex: 1; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
-        .summary-block .count { font-size: 24px; font-weight: 700; color: #4CAF50; margin-bottom: 5px; }
-        .summary-block .label { font-size: 12px; color: #888; font-weight: 500; }
-        .classes-grid { display: flex; flex-direction: column; gap: 15px; }
-        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 5px; margin-left: 10px; }
-        .class-card { border-radius: 15px; padding: 20px; display: flex; justify-content: space-between; align-items: flex-start; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); text-decoration: none; color: inherit; transition: transform 0.2s; }
-        .class-card:hover { transform: translateY(-5px); }
-        .class-card.test { background-color: #e8f5e9; }
-        .class-card.exam { background-color: #e3f2fd; }
-        .class-card.task { background-color: #ffecb3; }
-        .class-info { flex-grow: 1; }
-        .class-info h2 { margin: 0; font-size: 20px; font-weight: 700; }
-        .class-card.test .class-info h2 { color: #388e3c; }
-        .class-card.exam .class-info h2 { color: #1976d2; }
-        .class-card.task .class-info h2 { color: #f57c00; }
-        .class-info p { margin: 5px 0 0; font-size: 14px; color: #666; }
-        .class-info .time { font-weight: 600; font-size: 12px; color: #4CAF50; margin-top: 5px; }
-        .label-ribbon { color: white; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.5); }
-        .schedule-card { 
-            background-color: #f7f9fc; 
-            border-radius: 15px; 
-            padding: 0; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
-            position: relative; 
-            max-height: 20vh; 
-            overflow: hidden; 
+        :root {
+            --primary-color: #5d5dff;
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color-dark: #333;
+            --text-color-medium: #666;
+            --text-color-light: #888;
+            --task-color: #ffe9d6;
+            --test-color: #e6f2ff;
+            --exam-color: #e6fff2;
         }
-        .schedule-card .title { font-size: 25px; font-weight: 600; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; white-space: nowrap; }
-        .schedule-card .image-container { 
-            margin: 0; 
-            border-radius: 10px; 
-            overflow: hidden; 
-            position: relative;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .phone-ui {
+            width: 100%;
+            max-width: 450px;
             height: 100%;
+            background-color: var(--card-background);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            box-sizing: border-box;
         }
-        .schedule-card .image-container img { 
-            width: 100%; 
-            height: auto; 
-            display: block;
-            transition: opacity 2s ease-in-out; 
+
+        .header {
+            text-align: left;
+            margin-bottom: 20px;
         }
-        .schedule-card .image-container::before { 
-            content: ''; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0, 0, 0, 0.3); 
-            z-index: 1; 
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-color-dark);
+            margin: 0;
         }
-        .add-button { 
-            position: fixed; 
-            bottom: 20px; 
-            right: 20px; 
-            background-color: #4CAF50; 
-            color: white; 
-            border-radius: 50%; 
-            width: 50px; 
-            height: 50px; 
-            font-size: 24px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            text-decoration: none; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .header p {
+            font-size: 16px;
+            color: var(--text-color-medium);
+            margin: 5px 0 0;
         }
+
+        /* Next Card */
+        .next-card {
+            background-color: var(--card-background);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: transform 0.2s ease;
+        }
+        .next-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header .label {
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color-dark);
+        }
+        .card-date {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-color-medium);
+        }
+
+        .card-info h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color-dark);
+            margin: 0;
+            line-height: 1.2;
+        }
+        .card-info p {
+            font-size: 16px;
+            color: var(--text-color-medium);
+            margin: 5px 0 0;
+            line-height: 1.4;
+        }
+
+        .no-tasks {
+            text-align: center;
+            color: var(--text-color-light);
+            font-size: 18px;
+            margin-top: 50px;
+        }
+
+        .add-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Colors based on type */
+        .test .label { background-color: var(--test-color); }
+        .exam .label { background-color: var(--exam-color); }
+        .task .label { background-color: var(--task-color); }
+
     </style>
 </head>
 <body>
 
 <div class="phone-ui">
-    <div class="schedule-card">
-        <div class="image-container">
-            <img id="bg-image" src="" alt="Time of day background">
-        </div>
-        <div class="title" id="greeting-title"></div>
+    <div class="header">
+        <h1 id="greeting-text">Hallo!</h1>
+        <p>Your next item is...</p>
     </div>
+
+    <div id="next-card-container">
+        </div>
     
-    <div class="summary-grid">
-        <div class="summary-block">
-            <div class="count" id="tests-count">0</div>
-            <div class="label" id="tests-label">Tests</div>
-        </div>
-        <div class="summary-block">
-            <div class="count" id="exams-count">0</div>
-            <div class="label" id="exams-label">Exams</div>
-        </div>
-        <div class="summary-block">
-            <div class="count" id="tasks-count">0</div>
-            <div class="label" id="tasks-label">Tasks</div>
-        </div>
-    </div>
-
-    <div class="section-title">Up next</div>
-    <div class="classes-grid" id="classes-grid">
-    </div>
-
     <a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
 
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const classesGrid = document.getElementById('classes-grid');
-        const testsCountEl = document.getElementById('tests-count');
-        const examsCountEl = document.getElementById('exams-count');
-        const tasksCountEl = document.getElementById('tasks-count');
-        const testsLabelEl = document.getElementById('tests-label');
-        const examsLabelEl = document.getElementById('exams-label');
-        const tasksLabelEl = document.getElementById('tasks-label');
-        const greetingTitleEl = document.getElementById('greeting-title');
-        const bgImageEl = document.getElementById('bg-image');
+        const greetingTextEl = document.getElementById('greeting-text');
+        const nextCardContainer = document.getElementById('next-card-container');
 
-        // Lijst met afbeeldingen voor elk tijdstip
-        const backgroundImages = {
-            morning: 'https://i.pinimg.com/originals/bf/6d/09/bf6d09e856465f2318afef9ca7500d44.jpg',
-            afternoon: 'https://png.pngtree.com/background/20230614/original/pngtree-sun-in-a-field-on-a-sunny-day-picture-image_3530002.jpg',
-            evening: 'https://img.freepik.com/premium-photo/beautiful-evening-sunset-twilight-scenery_410516-19955.jpg',
-            night: 'https://cdn.pixabay.com/photo/2018/01/29/12/02/night-3115977_960_720.jpg'
-        };
-
-        // Function to determine the time-based greeting and background image
-        function getGreetingAndTimeOfDay() {
+        function getGreeting() {
             const hour = new Date().getHours();
             if (hour >= 5 && hour < 12) {
-                return { text: 'Good morning!', image: backgroundImages.morning };
+                return 'Good morning!';
             } else if (hour >= 12 && hour < 18) {
-                return { text: 'Good afternoon!', image: backgroundImages.afternoon };
+                return 'Good afternoon!';
             } else if (hour >= 18 && hour < 22) {
-                return { text: 'Good evening!', image: backgroundImages.evening };
+                return 'Good evening!';
             } else {
-                return { text: 'Goodnight!', image: backgroundImages.night };
-            }
-        }
-        
-        // Function to update only the greeting and background image
-        function updateGreetingAndBackground(initialLoad = false) {
-            const timeOfDay = getGreetingAndTimeOfDay();
-            greetingTitleEl.textContent = timeOfDay.text;
-            
-            // Immediately set the image on initial load without transition
-            if (initialLoad) {
-                bgImageEl.src = timeOfDay.image;
-                bgImageEl.style.opacity = '1';
-            } else {
-                // Check if the image needs to change
-                if (bgImageEl.src !== timeOfDay.image) {
-                    bgImageEl.style.opacity = '0';
-                    setTimeout(() => {
-                        bgImageEl.src = timeOfDay.image;
-                        bgImageEl.style.opacity = '1';
-                    }, 2000); // Wait 2 seconds for the transition
-                }
+                return 'Goodnight!';
             }
         }
 
         function updateUI() {
             const storedData = localStorage.getItem('HRN_Study_data');
             const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
-            
-            const hasUsedBefore = localStorage.getItem('hasUsedBefore');
 
-            // Update the counts for tests, exams, and tasks
-            testsCountEl.textContent = data.tests.length;
-            examsCountEl.textContent = data.exams.length;
-            tasksCountEl.textContent = data.tasks.length;
-            
-            // Update the labels based on count
-            testsLabelEl.textContent = data.tests.length === 1 ? 'Test' : 'Tests';
-            examsLabelEl.textContent = data.exams.length === 1 ? 'Exam' : 'Exams';
-            tasksLabelEl.textContent = data.tasks.length === 1 ? 'Task' : 'Tasks';
-
-            // Clear the grid
-            classesGrid.innerHTML = '';
-            
-            // Combine all items into one array
             const allItems = [
-                ...data.tests.map((item, index) => ({ ...item, type: 'test', id: `tests_${index}` })),
-                ...data.exams.map((item, index) => ({ ...item, type: 'exam', id: `exams_${index}` })),
-                ...data.tasks.map((item, index) => ({ ...item, type: 'task', id: `tasks_${index}` }))
+                ...data.tests.map(item => ({ ...item, type: 'test' })),
+                ...data.exams.map(item => ({ ...item, type: 'exam' })),
+                ...data.tasks.map(item => ({ ...item, type: 'task' }))
             ];
-            
-            if (allItems.length > 0) {
-                // If there are tasks, display them
-                allItems.forEach(item => {
-                    const classCard = document.createElement('a');
-                    classCard.href = `detail.html?id=${item.id}`;
-                    classCard.className = `class-card ${item.type}`;
-                    classCard.innerHTML = `
-                        <div class="class-info">
-                            <h2>${item.title}</h2>
-                            <p>${item.description}</p>
-                            <div class="time">${item.date}</div>
-                        </div>
-                        <div class="label-ribbon">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
-                    `;
-                    classesGrid.appendChild(classCard);
-                });
-                
-                // Mark that the app has been used before
-                if (!hasUsedBefore) {
-                    localStorage.setItem('hasUsedBefore', 'true');
-                }
 
+            const now = new Date();
+            const upcomingItems = allItems.filter(item => {
+                const itemDate = new Date(`${item.date}T${item.startTime}`);
+                return itemDate >= now;
+            }).sort((a, b) => {
+                const dateA = new Date(`${a.date}T${a.startTime}`);
+                const dateB = new Date(`${b.date}T${b.startTime}`);
+                return dateA - dateB;
+            });
+
+            nextCardContainer.innerHTML = '';
+            
+            if (upcomingItems.length > 0) {
+                const nextItem = upcomingItems[0];
+                const formattedDate = new Date(`${nextItem.date}T${nextItem.startTime}`).toLocaleDateString('en-US', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                });
+                const formattedTime = `${nextItem.startTime} - ${nextItem.endTime}`;
+
+                const nextCardHTML = `
+                    <div class="next-card ${nextItem.type}">
+                        <div class="card-header">
+                            <div class="label">${nextItem.type.charAt(0).toUpperCase() + nextItem.type.slice(1)}</div>
+                            <div class="card-date">${formattedDate}<br>${formattedTime}</div>
+                        </div>
+                        <div class="card-info">
+                            <h2>${nextItem.title}</h2>
+                            <p>${nextItem.description}</p>
+                        </div>
+                    </div>
+                `;
+                nextCardContainer.innerHTML = nextCardHTML;
             } else {
-                // If there are no tasks
-                if (hasUsedBefore) {
-                    // Show "Yay, no tasks!" message with the same style as other gray text
-                    classesGrid.innerHTML = '<p style="text-align: center; color: #888;">Yay, no tasks!</p>';
-                } else {
-                    // Show the "get started" message if it's the first time
-                    classesGrid.innerHTML = '<p style="text-align: center; color: #888;">No assignments added yet. Click on the plus sign to get started!</p>';
+                const hasUsedBefore = localStorage.getItem('hasUsedBefore');
+                let message = 'Yay, no upcoming tasks!';
+                if (!hasUsedBefore) {
+                     message = 'No assignments added yet. Click the plus sign to get started!';
                 }
+                nextCardContainer.innerHTML = `<p class="no-tasks">${message}</p>`;
+            }
+
+            if (allItems.length > 0) {
+                 localStorage.setItem('hasUsedBefore', 'true');
             }
         }
-
-        // Initial setup on page load
-        updateGreetingAndBackground(true);
-        updateUI();
         
-        // Update the greeting and background every minute
-        setInterval(updateGreetingAndBackground, 60000); 
+        greetingTextEl.textContent = getGreeting();
+        updateUI();
+
+        window.addEventListener('focus', updateUI);
     });
 </script>
 
