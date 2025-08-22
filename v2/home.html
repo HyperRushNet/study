@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -323,12 +324,23 @@
             const formattedDate = today.toLocaleDateString('en-US', dateOptions);
             const formattedTime = today.toLocaleTimeString('en-US', timeOptions);
             currentDateEl.textContent = `${formattedDate} - ${formattedTime}`;
+            greetingTextEl.textContent = getGreeting();
         }
-        
-        greetingTextEl.textContent = getGreeting();
+
+        // === INIT ===
         updateDateTime();
-        setInterval(updateDateTime, 60000);
         updateUI();
+
+        // eerst updaten op de volgende volle minuut
+        const now = new Date();
+        const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+        setTimeout(() => {
+            updateDateTime();
+            setInterval(() => {
+                updateDateTime();
+                updateUI();
+            }, 60000);
+        }, msUntilNextMinute);
 
         window.addEventListener('focus', updateUI);
 
@@ -337,6 +349,7 @@
         });
     });
 </script>
+
 
 </body>
 </html>
