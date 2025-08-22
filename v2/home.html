@@ -159,28 +159,6 @@
         
         let allItems = [];
 
-        function generateDummyData() {
-            const now = new Date();
-            const today = now.toISOString().split('T')[0];
-            const tomorrow = new Date(now);
-            tomorrow.setDate(now.getDate() + 1);
-            const tomorrowDate = tomorrow.toISOString().split('T')[0];
-
-            return {
-                tasks: [
-                    { title: "English Reading", description: "Read 10 pages of the book.", date: today, startTime: "16:00", endTime: "17:00" },
-                    { title: "Biology Report", description: "Report on photosynthesis with a very long title that is probably too long for the card.", date: today, startTime: "11:00", endTime: "12:00" }
-                ],
-                tests: [
-                    { title: "Maths Test", description: "Practice algebra exercises.", date: tomorrowDate, startTime: "09:00", endTime: "10:00" },
-                    { title: "History Test", description: "Chapter 3: Cold War and the Fall of the Wall.", date: today, startTime: "14:30", endTime: "15:30" }
-                ],
-                exams: [
-                    { title: "Computer Science Exam", description: "Programming in Python.", date: tomorrowDate, startTime: "10:00", endTime: "12:00" }
-                ]
-            };
-        }
-
         function getGreeting() {
             const hour = new Date().getHours();
             if (hour >= 5 && hour < 12) return 'Good morning!';
@@ -232,12 +210,10 @@
         }
 
         function updateUI() {
+            // Retrieve data from localStorage.
+            // If it doesn't exist, create an empty structure.
             const storedData = localStorage.getItem('HRN_Study_data');
-            const data = storedData ? JSON.parse(storedData) : generateDummyData();
-
-            if (!storedData) {
-                localStorage.setItem('HRN_Study_data', JSON.stringify(data));
-            }
+            const data = storedData ? JSON.parse(storedData) : { tasks: [], tests: [], exams: [] };
 
             allItems = [
                 ...data.tasks.map((item, index) => ({ ...item, type: 'tasks', id: index })),
