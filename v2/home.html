@@ -93,6 +93,14 @@
             color: var(--primary);
         }
         
+        /* NIEUWE STIJL VOOR HET SCROLLENDE GEBIED */
+        .scrollable-content {
+            flex-grow: 1; /* Zorgt ervoor dat het de beschikbare verticale ruimte opvult */
+            overflow-y: auto; /* Alleen deze div kan verticaal scrollen */
+            padding-right: 5px; /* Voeg een kleine padding toe voor de scrollbar */
+        }
+
+        /* VERPLAATST naar de nieuwe .scrollable-content div */
         .card-list {
             display: flex;
             flex-direction: column;
@@ -199,8 +207,10 @@
         </div>
     </div>
     
-    <ul id="card-list" class="card-list">
-        </ul>
+    <div class="scrollable-content">
+        <ul id="card-list" class="card-list">
+            </ul>
+    </div>
     
     <a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
 
@@ -305,7 +315,6 @@
 
         window.addEventListener('focus', updateUI);
 
-        // Send a message to the parent to handle Pomodoro navigation
         pomodoroButton.addEventListener('click', () => {
             window.parent.postMessage({ page: 'pomodoro' }, '*');
         });
