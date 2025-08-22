@@ -109,6 +109,27 @@
         .button-reset:hover {
             background-color: #ccc;
         }
+        
+        .timer-settings {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .timer-settings label {
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .timer-settings input {
+            width: 80px;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -121,6 +142,12 @@
     <div class="pomodoro-container">
         <div class="phase-indicator" id="phase-indicator">Work</div>
         <div class="timer-display" id="timer-display">25:00</div>
+        
+        <div class="timer-settings">
+            <label for="work-time">Work Time (min):</label>
+            <input type="number" id="work-time" value="25" min="1" max="60">
+        </div>
+
         <div class="timer-controls">
             <button id="start-button">Start</button>
             <button id="pause-button" disabled>Pause</button>
@@ -137,16 +164,19 @@
         const pauseButton = document.getElementById('pause-button');
         const resetButton = document.getElementById('reset-button');
         const backButton = document.getElementById('back-button');
+        const workTimeInput = document.getElementById('work-time');
 
-        const WORK_TIME = 25;
         const SHORT_BREAK_TIME = 5;
         const LONG_BREAK_TIME = 15;
 
-        let currentTime = WORK_TIME * 60;
+        let workTime = parseInt(workTimeInput.value);
+        let currentTime = workTime * 60;
         let isRunning = false;
         let isWorking = true;
         let pomodoroCount = 0;
         let timerInterval;
+
+        const bellSound = new Audio('./endbell.mp3');
 
         function updateDisplay() {
             const minutes = Math.floor(currentTime / 60);
@@ -155,6 +185,7 @@
         }
 
         function switchPhase() {
+            bellSound.play();
             if (isWorking) {
                 pomodoroCount++;
                 if (pomodoroCount % 4 === 0) {
@@ -168,7 +199,8 @@
                 }
             } else {
                 isWorking = true;
-                currentTime = WORK_TIME * 60;
+                workTime = parseInt(workTimeInput.value) || 25;
+                currentTime = workTime * 60;
                 phaseIndicator.textContent = 'Work';
             }
             updateDisplay();
@@ -179,6 +211,7 @@
             isRunning = true;
             startButton.disabled = true;
             pauseButton.disabled = false;
+            workTimeInput.disabled = true;
 
             timerInterval = setInterval(() => {
                 currentTime--;
@@ -197,20 +230,29 @@
             clearInterval(timerInterval);
             startButton.disabled = false;
             pauseButton.disabled = true;
+            workTimeInput.disabled = false;
         }
 
         function resetTimer() {
             pauseTimer();
             isWorking = true;
             pomodoroCount = 0;
-            currentTime = WORK_TIME * 60;
+            workTime = parseInt(workTimeInput.value) || 25;
+            currentTime = workTime * 60;
             phaseIndicator.textContent = 'Work';
             updateDisplay();
+            workTimeInput.disabled = false;
         }
 
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
         resetButton.addEventListener('click', resetTimer);
+
+        workTimeInput.addEventListener('change', () => {
+            if (!isRunning) {
+                resetTimer();
+            }
+        });
 
         // Send a message to the parent to navigate back to the home page
         backButton.addEventListener('click', () => {
