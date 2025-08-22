@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="./js/play16beepsound.min.js"></script>
     <style>
         :root {
             --primary: #5d5dff;
@@ -176,8 +177,6 @@
         let pomodoroCount = 0;
         let timerInterval;
 
-        const bellSound = new Audio('./endbell.webm');
-
         function updateDisplay() {
             const minutes = Math.floor(currentTime / 60);
             const seconds = currentTime % 60;
@@ -185,7 +184,7 @@
         }
 
         function switchPhase() {
-            bellSound.play();
+            play16beepsound();
             if (isWorking) {
                 pomodoroCount++;
                 if (pomodoroCount % 4 === 0) {
@@ -254,7 +253,6 @@
             }
         });
 
-        // Send a message to the parent to navigate back to the home page
         backButton.addEventListener('click', () => {
             window.parent.postMessage({ page: 'home' }, '*');
         });
