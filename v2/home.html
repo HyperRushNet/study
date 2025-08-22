@@ -37,7 +37,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
             position: relative; 
             max-height: 20vh; 
-            overflow: hidden; /* Zorgt ervoor dat de overgang mooi in het vak blijft */
+            overflow: hidden; 
         }
         .schedule-card .title { font-size: 25px; font-weight: 600; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; white-space: nowrap; }
         .schedule-card .image-container { 
@@ -51,7 +51,7 @@
             width: 100%; 
             height: auto; 
             display: block;
-            transition: opacity 2s ease-in-out; /* De fade-overgang */
+            transition: opacity 2s ease-in-out; 
         }
         .schedule-card .image-container::before { 
             content: ''; 
@@ -61,7 +61,7 @@
             width: 100%; 
             height: 100%; 
             background-color: rgba(0, 0, 0, 0.3); 
-            z-index: 1; /* Zorgt dat de overlay boven de afbeelding ligt */
+            z-index: 1; 
         }
         .add-button { 
             position: fixed; 
@@ -108,7 +108,7 @@
 
     <div class="section-title">Up next</div>
     <div class="classes-grid" id="classes-grid">
-        </div>
+    </div>
 
     <a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
 
@@ -190,9 +190,9 @@
             
             // Combine all items into one array
             const allItems = [
-                ...data.tests.map((item, index) => ({ ...item, type: 'tests', id: `tests_${index}` })),
-                ...data.exams.map((item, index) => ({ ...item, type: 'exams', id: `exams_${index}` })),
-                ...data.tasks.map((item, index) => ({ ...item, type: 'tasks', id: `tasks_${index}` }))
+                ...data.tests.map((item, index) => ({ ...item, type: 'test', id: `tests_${index}` })),
+                ...data.exams.map((item, index) => ({ ...item, type: 'exam', id: `exams_${index}` })),
+                ...data.tasks.map((item, index) => ({ ...item, type: 'task', id: `tasks_${index}` }))
             ];
             
             if (allItems.length > 0) {
@@ -220,8 +220,8 @@
             } else {
                 // If there are no tasks
                 if (hasUsedBefore) {
-                    // Show "Yay, no tasks!" message if it's not the first time
-                    classesGrid.innerHTML = '<p style="text-align: center; color: #4CAF50; font-weight: 600;">🥳 Yay, no tasks!</p>';
+                    // Show "Yay, no tasks!" message with the same style as other gray text
+                    classesGrid.innerHTML = '<p style="text-align: center; color: #888;">Yay, no tasks!</p>';
                 } else {
                     // Show the "get started" message if it's the first time
                     classesGrid.innerHTML = '<p style="text-align: center; color: #888;">No assignments added yet. Click on the plus sign to get started!</p>';
