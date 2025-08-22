@@ -72,6 +72,8 @@
             flex-direction: column;
             gap: 15px;
             transition: transform 0.2s ease;
+            text-decoration: none;
+            color: inherit;
         }
         .next-card:hover {
             transform: translateY(-5px);
@@ -93,6 +95,8 @@
             font-size: 18px;
             font-weight: 500;
             color: var(--text-color-medium);
+            text-align: right;
+            line-height: 1.2;
         }
 
         .card-info h2 {
@@ -130,7 +134,7 @@
             justify-content: center;
             align-items: center;
             text-decoration: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 10;
         }
 
@@ -142,9 +146,10 @@
         /* Navigation Buttons */
         .navigation-buttons {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-top: 20px;
+            gap: 15px;
         }
         .nav-button {
             background-color: var(--primary-color);
@@ -157,7 +162,6 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
             flex-grow: 1;
-            margin: 0 5px;
         }
         .nav-button:hover {
             background-color: #4a4afc;
@@ -168,20 +172,6 @@
             cursor: not-allowed;
             transform: none;
         }
-
-        .next-btn {
-            background-color: var(--primary-color);
-        }
-        .prev-btn {
-            background-color: #888;
-        }
-        .next-btn:hover {
-            background-color: #4a4afc;
-        }
-        .prev-btn:hover {
-            background-color: #777;
-        }
-
     </style>
 </head>
 <body>
@@ -189,15 +179,15 @@
 <div class="phone-ui">
     <div class="header">
         <h1 id="greeting-text">Hallo!</h1>
-        <p>Your next item is...</p>
+        <p>Jouw item is...</p>
     </div>
 
     <div id="next-card-container">
         </div>
     
     <div class="navigation-buttons">
-        <button id="prevBtn" class="nav-button prev-btn">Previous</button>
-        <button id="nextBtn" class="nav-button next-btn">Next</button>
+        <button id="prevBtn" class="nav-button">Vorige</button>
+        <button id="nextBtn" class="nav-button">Volgende</button>
     </div>
 
     <a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
@@ -211,37 +201,60 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
 
-        let allUpcomingItems = [];
+        let allItems = [];
         let currentIndex = 0;
+
+        // Functie om dummydata te genereren
+        function generateDummyData() {
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            const tomorrowDate = tomorrow.toISOString().split('T')[0];
+
+            return {
+                tasks: [
+                    { title: "Engels Lezen", description: "Lees 10 pagina's van het boek", date: today, startTime: "16:00", endTime: "17:00" },
+                    { title: "Biologie Verslag", description: "Verslag over fotosynthese", date: today, startTime: "11:00", endTime: "12:00" }
+                ],
+                tests: [
+                    { title: "Wiskunde Toets", description: "Oefenen van algebra", date: tomorrowDate, startTime: "09:00", endTime: "10:00" },
+                    { title: "Geschiedenis Toets", description: "Hoofdstuk 3: Koude Oorlog", date: today, startTime: "14:30", endTime: "15:30" }
+                ],
+                exams: [
+                    { title: "Informatica Examen", description: "Programmeren in Python", date: tomorrowDate, startTime: "10:00", endTime: "12:00" }
+                ]
+            };
+        }
 
         function getGreeting() {
             const hour = new Date().getHours();
             if (hour >= 5 && hour < 12) {
-                return 'Good morning!';
+                return 'Goedemorgen!';
             } else if (hour >= 12 && hour < 18) {
-                return 'Good afternoon!';
+                return 'Goedemiddag!';
             } else if (hour >= 18 && hour < 22) {
-                return 'Good evening!';
+                return 'Goedeavond!';
             } else {
-                return 'Goodnight!';
+                return 'Goedenacht!';
             }
         }
 
         function renderCard(item) {
             if (!item) {
-                nextCardContainer.innerHTML = '';
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
+                nextCardContainer.innerHTML = `<p class="no-tasks">Yay, geen taken gevonden!</p>`;
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
                 return;
             }
 
-            const formattedDate = new Date(`${item.date}T${item.startTime}`).toLocaleDateString('en-US', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            const formattedDate = new Date(`${item.date}T${item.startTime}`).toLocaleDateString('nl-NL', {
+                weekday: 'short', month: 'short', day: 'numeric'
             });
             const formattedTime = `${item.startTime} - ${item.endTime}`;
             
             const cardHTML = `
-                <a href="detail.html?id=${item.type}_${item.index}" class="next-card ${item.type}">
+                <a href="detail.html?id=${item.type}_${item.id}" class="next-card ${item.type}">
                     <div class="card-header">
                         <div class="label">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
                         <div class="card-date">${formattedDate}<br>${formattedTime}</div>
@@ -257,44 +270,26 @@
 
         function updateUI() {
             const storedData = localStorage.getItem('HRN_Study_data');
-            const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
+            const data = storedData ? JSON.parse(storedData) : generateDummyData();
 
-            const allItems = [
-                ...data.tests.map((item, index) => ({ ...item, type: 'test', index: `tests_${index}` })),
-                ...data.exams.map((item, index) => ({ ...item, type: 'exam', index: `exams_${index}` })),
-                ...data.tasks.map((item, index) => ({ ...item, type: 'task', index: `tasks_${index}` }))
+            if (!storedData) {
+                localStorage.setItem('HRN_Study_data', JSON.stringify(data));
+            }
+
+            allItems = [
+                ...data.tasks.map((item, index) => ({ ...item, type: 'task', id: `tasks_${index}` })),
+                ...data.tests.map((item, index) => ({ ...item, type: 'test', id: `tests_${index}` })),
+                ...data.exams.map((item, index) => ({ ...item, type: 'exam', id: `exams_${index}` }))
             ];
             
-            const now = new Date();
-            allUpcomingItems = allItems.filter(item => {
-                const itemDateTime = new Date(`${item.date}T${item.startTime}`);
-                return itemDateTime >= now;
-            }).sort((a, b) => {
-                const dateA = new Date(`${a.date}T${a.startTime}`);
-                const dateB = new Date(`${b.date}T${b.startTime}`);
-                return dateA - dateB;
-            });
-
-            if (allUpcomingItems.length > 0) {
-                renderCard(allUpcomingItems[currentIndex]);
-                
-                prevBtn.style.display = currentIndex > 0 ? 'block' : 'none';
-                nextBtn.style.display = currentIndex < allUpcomingItems.length - 1 ? 'block' : 'none';
-                
+            if (allItems.length > 0) {
+                renderCard(allItems[currentIndex]);
             } else {
-                const hasUsedBefore = localStorage.getItem('hasUsedBefore');
-                let message = 'Yay, no upcoming tasks!';
-                if (!hasUsedBefore) {
-                     message = 'No assignments added yet. Click the plus sign to get started!';
-                }
-                nextCardContainer.innerHTML = `<p class="no-tasks">${message}</p>`;
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
+                renderCard(null); // Toon de "geen taken" melding
             }
             
-            if (allItems.length > 0) {
-                 localStorage.setItem('hasUsedBefore', 'true');
-            }
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === allItems.length - 1;
         }
         
         prevBtn.addEventListener('click', () => {
@@ -305,7 +300,7 @@
         });
 
         nextBtn.addEventListener('click', () => {
-            if (currentIndex < allUpcomingItems.length - 1) {
+            if (currentIndex < allItems.length - 1) {
                 currentIndex++;
                 updateUI();
             }
