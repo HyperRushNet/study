@@ -1,73 +1,118 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nieuw item toevoegen</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; }
-    .main-content {
-      max-width: 500px; margin: auto; background: #fff;
-      min-height: 100vh; padding: 25px; box-shadow: 0 0 15px rgba(0,0,0,.08);
-    }
-    h2 { margin-top: 0; color: #222; }
-    label { font-weight: 600; display: block; margin-top: 15px; }
-    input, select, textarea {
-      width: 100%; padding: 10px; margin-top: 5px;
-      border: 1px solid #ccc; border-radius: 6px; font-family: inherit;
-    }
-    button {
-      margin-top: 20px; width: 100%; padding: 12px;
-      background: #007bff; color: #fff; border: none;
-      border-radius: 6px; font-size: 15px; cursor: pointer;
-    }
-    button:hover { background: #0056b3; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRN Study Data</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; padding: 0; box-sizing: border-box; }
+        .phone-ui { width: 100vw; height: 100vh; max-width: none; background-color: #ffffff; border-radius: 0; box-shadow: none; overflow: auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; }
+        .summary-grid { display: flex; gap: 10px; justify-content: space-between; }
+        .summary-block { background-color: #f7f9fc; border-radius: 15px; padding: 15px 10px; text-align: center; flex: 1; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+        .summary-block .count { font-size: 24px; font-weight: 700; color: #4CAF50; margin-bottom: 5px; }
+        .summary-block .label { font-size: 12px; color: #888; font-weight: 500; }
+        .classes-grid { display: flex; flex-direction: column; gap: 15px; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 5px; margin-left: 10px; }
+        .class-card { border-radius: 15px; padding: 20px; display: flex; justify-content: space-between; align-items: flex-start; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); text-decoration: none; color: inherit; transition: transform 0.2s; }
+        .class-card:hover { transform: translateY(-5px); }
+        .class-card.test { background-color: #e8f5e9; }
+        .class-card.exam { background-color: #e3f2fd; }
+        .class-card.task { background-color: #ffecb3; }
+        .class-info { flex-grow: 1; }
+        .class-info h2 { margin: 0; font-size: 20px; font-weight: 700; }
+        .class-card.test .class-info h2 { color: #388e3c; }
+        .class-card.exam .class-info h2 { color: #1976d2; }
+        .class-card.task .class-info h2 { color: #f57c00; }
+        .class-info p { margin: 5px 0 0; font-size: 14px; color: #666; }
+        .class-info .time { font-weight: 600; font-size: 12px; color: #4CAF50; margin-top: 5px; }
+        .label-ribbon { color: white; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.5); }
+        .schedule-card { background-color: #f7f9fc; border-radius: 15px; padding: 0px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); position: relative; max-height: 20vh; }
+        .schedule-card .title { font-size: 18px; font-weight: 600; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap; }
+        .schedule-card .image-container { margin: 0; border-radius: 10px; overflow: hidden; position: relative; }
+        .schedule-card .image-container img { width: 100%; height: auto; display: block; }
+        .schedule-card .image-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.3); }
+        .settings-button { position: fixed; bottom: 20px; right: 20px; background-color: #4CAF50; color: white; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; display: flex; justify-content: center; align-items: center; text-decoration: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+    </style>
 </head>
 <body>
-  <div class="main-content">
-    <h2>Nieuw item toevoegen</h2>
-    <form id="itemForm">
-      <label for="type">Type</label>
-      <select id="type" required>
-        <option value="tests">Test</option>
-        <option value="exams">Examen</option>
-        <option value="tasks">Taak</option>
-      </select>
 
-      <label for="title">Titel</label>
-      <input type="text" id="title" placeholder="Titel van het item" required />
+<div class="phone-ui">
+    <div class="schedule-card">
+        <div class="image-container">
+            <img src="https://i.pinimg.com/originals/bf/6d/09/bf6d09e856465f2318afef9ca7500d44.jpg" alt="basketball court">
+        </div>
+        <div class="title">Good morning!</div>
+    </div>
+    
+    <div class="summary-grid">
+        <div class="summary-block">
+            <div class="count" id="tests-count">0</div>
+            <div class="label">Tests</div>
+        </div>
+        <div class="summary-block">
+            <div class="count" id="exams-count">0</div>
+            <div class="label">Exams</div>
+        </div>
+        <div class="summary-block">
+            <div class="count" id="tasks-count">0</div>
+            <div class="label">Taken</div>
+        </div>
+    </div>
 
-      <label for="description">Beschrijving</label>
-      <textarea id="description" placeholder="Optionele beschrijving"></textarea>
+    <div class="section-title">Up next</div>
+    <div class="classes-grid" id="classes-grid">
+        </div>
 
-      <label for="date">Datum</label>
-      <input type="date" id="date" />
+    <a href="./add.html" class="settings-button">+</a>
 
-      <button type="submit">Toevoegen</button>
-    </form>
-  </div>
+</div>
 
-  <script>
-    document.getElementById("itemForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const classesGrid = document.getElementById('classes-grid');
+        const testsCountEl = document.getElementById('tests-count');
+        const examsCountEl = document.getElementById('exams-count');
+        const tasksCountEl = document.getElementById('tasks-count');
 
-      const type = document.getElementById("type").value;
-      const title = document.getElementById("title").value.trim();
-      const description = document.getElementById("description").value.trim();
-      const date = document.getElementById("date").value;
+        function updateUI() {
+            const storedData = localStorage.getItem('HRN_Study_data');
+            const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
 
-      if (!title) return alert("Voer een titel in.");
+            testsCountEl.textContent = data.tests.length;
+            examsCountEl.textContent = data.exams.length;
+            tasksCountEl.textContent = data.tasks.length;
 
-      let data = JSON.parse(localStorage.getItem("studyData")) || { tests: [], exams: [], tasks: [] };
+            classesGrid.innerHTML = '';
+            
+            const allItems = [
+                ...data.tests.map((item, index) => ({ ...item, type: 'tests', id: `tests_${index}` })),
+                ...data.exams.map((item, index) => ({ ...item, type: 'exams', id: `exams_${index}` })),
+                ...data.tasks.map((item, index) => ({ ...item, type: 'tasks', id: `tasks_${index}` }))
+            ];
+            
+            if (allItems.length > 0) {
+                allItems.forEach(item => {
+                    const classCard = document.createElement('a');
+                    classCard.href = `detail.html?id=${item.id}`;
+                    classCard.className = `class-card ${item.type}`;
+                    classCard.innerHTML = `
+                        <div class="class-info">
+                            <h2>${item.title}</h2>
+                            <p>${item.description}</p>
+                            <div class="time">${item.date}</div>
+                        </div>
+                        <div class="label-ribbon">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
+                    `;
+                    classesGrid.appendChild(classCard);
+                });
+            } else {
+                classesGrid.innerHTML = '<p style="text-align: center; color: #888;">Nog geen taken toegevoegd. Ga naar instellingen om te beginnen!</p>';
+            }
+        }
 
-      data[type].push({ title, description, date });
-      localStorage.setItem("studyData", JSON.stringify(data));
-
-      alert("Item toegevoegd!");
-      window.location.href = "./home.html";
+        updateUI();
     });
-  </script>
+</script>
+
 </body>
 </html>
