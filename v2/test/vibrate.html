@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibrate for 10 Seconds</title>
+</head>
+<body>
+  <h1>Click the button to vibrate</h1>
+  <button id="vibrateBtn">Vibrate 10 seconds</button>
+
+  <script>
+    const button = document.getElementById('vibrateBtn');
+
+    button.addEventListener('click', () => {
+      if ('vibrate' in navigator) {
+        // 10 seconds = 10000 milliseconds
+        navigator.vibrate(10000);
+      } else {
+        alert('Sorry, your device does not support vibration.');
+      }
+    });
+  </script>
+</body>
+</html>
