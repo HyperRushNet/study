@@ -3,133 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRN Study Data Settings</title>
+    <title>Add New Item</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: flex-start; height: 100vh; width: 100vw; margin: 0; padding: 20px; box-sizing: border-box; }
-        .container { width: 100%; max-width: 500px; background-color: #ffffff; border-radius: 15px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; gap: 20px; }
-        h1 { margin: 0 0 10px 0; font-size: 24px; color: #333; }
-        .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
-        label { font-size: 14px; font-weight: 600; color: #555; margin-bottom: 5px; }
-        input, select { padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; }
-        button { padding: 12px; font-size: 16px; font-weight: 600; color: white; background-color: #4CAF50; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; }
-        button:hover { background-color: #45a049; }
-        .back-button { position: fixed; top: 20px; left: 20px; background-color: #ccc; color: white; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; display: flex; justify-content: center; align-items: center; text-decoration: none; }
-        .list-section { margin-top: 20px; }
-        .list-section h2 { font-size: 20px; margin-bottom: 10px; }
-        .item-list { display: flex; flex-direction: column; gap: 10px; }
-        .list-item { background-color: #f7f9fc; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .list-item .details { font-size: 14px; }
-        .list-item .delete-btn { background-color: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        :root {
+            --primary: #5d5dff;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-dark: #333;
+            --text-medium: #666;
+            --text-light: #888;
+            --input-border: #ccc;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone-ui {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header .back-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-dark);
+            cursor: pointer;
+            margin-right: 15px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            font-size: 16px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .save-button {
+            padding: 15px;
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
-<a href="./home.html" class="back-button">&larr;</a>
-<div class="container">
-    <h1>Instellingen</h1>
-    <h2>Nieuwe item toevoegen</h2>
-    <form id="item-form">
+
+<div class="phone-ui">
+    <div class="header">
+        <button class="back-button" onclick="window.history.back();"><i class="fas fa-chevron-left"></i></button>
+        <h1>Add New Item</h1>
+    </div>
+
+    <form id="addItemForm" class="form-section">
         <div class="form-group">
-            <label for="type">Type:</label>
-            <select id="type">
+            <label for="itemTitle">Title</label>
+            <input type="text" id="itemTitle" required>
+        </div>
+        <div class="form-group">
+            <label for="itemDescription">Description</label>
+            <textarea id="itemDescription" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="itemDate">Date</label>
+            <input type="date" id="itemDate" required>
+        </div>
+        <div class="form-group">
+            <label for="itemStartTime">Start Time</label>
+            <input type="time" id="itemStartTime" required>
+        </div>
+        <div class="form-group">
+            <label for="itemEndTime">End Time</label>
+            <input type="time" id="itemEndTime" required>
+        </div>
+        <div class="form-group">
+            <label for="itemType">Type</label>
+            <select id="itemType" required>
+                <option value="tasks">Task</option>
                 <option value="tests">Test</option>
-                <option value="exams">Examen</option>
-                <option value="tasks">Taak</option>
+                <option value="exams">Exam</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="title">Titel:</label>
-            <input type="text" id="title" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Beschrijving:</label>
-            <input type="text" id="description" required>
-        </div>
-        <div class="form-group">
-            <label for="date">Datum:</label>
-            <input type="date" id="date" required>
-        </div>
-        <div class="form-group">
-            <label for="startTime">Starttijd:</label>
-            <input type="time" id="startTime" required>
-        </div>
-        <div class="form-group">
-            <label for="endTime">Eindtijd:</label>
-            <input type="time" id="endTime" required>
-        </div>
-        <button type="submit">Item toevoegen</button>
+        <button type="submit" class="save-button">Save Item</button>
     </form>
-    <div class="list-section">
-        <h2>Bestaande items</h2>
-        <div id="items-list">
-        </div>
-    </div>
+
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('item-form');
-        const itemsList = document.getElementById('items-list');
-
-        const dataKey = 'HRN_Study_data';
-
-        function loadItems() {
-            const storedData = localStorage.getItem(dataKey);
-            const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
-
-            itemsList.innerHTML = '';
-            
-            Object.keys(data).forEach(type => {
-                data[type].forEach((item, index) => {
-                    const listItem = document.createElement('div');
-                    listItem.className = 'list-item';
-                    listItem.innerHTML = `
-                        <div class="details">
-                            <strong>${item.title}</strong> (${item.date} ${item.startTime} - ${item.endTime})<br>
-                            <em>${item.description}</em>
-                        </div>
-                        <button class="delete-btn" data-type="${type}" data-index="${index}">Verwijder</button>
-                    `;
-                    itemsList.appendChild(listItem);
-                });
-            });
-        }
+        const form = document.getElementById('addItemForm');
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            const storedData = localStorage.getItem(dataKey);
-            const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
 
-            const type = document.getElementById('type').value;
+            const title = document.getElementById('itemTitle').value;
+            const description = document.getElementById('itemDescription').value;
+            const date = document.getElementById('itemDate').value;
+            const startTime = document.getElementById('itemStartTime').value;
+            const endTime = document.getElementById('itemEndTime').value;
+            const type = document.getElementById('itemType').value;
+
+            const storedData = localStorage.getItem('HRN_Study_data');
+            const data = storedData ? JSON.parse(storedData) : { tasks: [], tests: [], exams: [] };
+
             const newItem = {
-                title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
-                date: document.getElementById('date').value,
-                startTime: document.getElementById('startTime').value,
-                endTime: document.getElementById('endTime').value
+                title,
+                description,
+                date,
+                startTime,
+                endTime
             };
-
             data[type].push(newItem);
-            localStorage.setItem(dataKey, JSON.stringify(data));
-            
-            form.reset();
-            loadItems();
-        });
 
-        itemsList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-btn')) {
-                const type = e.target.getAttribute('data-type');
-                const index = e.target.getAttribute('data-index');
-                const storedData = localStorage.getItem(dataKey);
-                const data = JSON.parse(storedData);
-                                
-                data[type].splice(index, 1);
-                localStorage.setItem(dataKey, JSON.stringify(data));
-                                
-                loadItems();
-            }
-        });
+            localStorage.setItem('HRN_Study_data', JSON.stringify(data));
 
-        loadItems();
+            window.history.back();
+        });
     });
 </script>
+
 </body>
 </html>
