@@ -3,119 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRN Study Data</title>
+    <title>HRN Study</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #5d5dff;
-            --background-color: #f0f2f5;
-            --card-background: #ffffff;
-            --text-color-dark: #333;
-            --text-color-medium: #666;
-            --text-color-light: #888;
-            --task-color: #ffe9d6;
-            --test-color: #e6f2ff;
-            --exam-color: #e6fff2;
+            --primary: #5d5dff;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-dark: #333;
+            --text-medium: #666;
+            --text-light: #888;
+            --task-bg: #ffe9d6;
+            --test-bg: #e6f2ff;
+            --exam-bg: #e6fff2;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--background-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
         }
 
         .phone-ui {
             width: 100%;
             max-width: 450px;
-            height: 100%;
-            background-color: var(--card-background);
-            border-radius: 20px;
+            min-height: 100vh;
+            background-color: var(--card-bg);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            padding: 30px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            padding: 30px 20px;
             box-sizing: border-box;
+            position: relative;
         }
 
         .header {
-            text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .header h1 {
-            font-size: 32px;
+            font-size: 38px;
             font-weight: 700;
-            color: var(--text-color-dark);
+            color: var(--text-dark);
             margin: 0;
         }
-        .header p {
-            font-size: 16px;
-            color: var(--text-color-medium);
-            margin: 5px 0 0;
+        .header .date {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 5px;
         }
 
-        /* Next Card */
-        .next-card {
-            background-color: var(--card-background);
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            padding: 25px;
+        .card-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            transition: transform 0.2s ease;
+            gap: 12px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             text-decoration: none;
             color: inherit;
         }
-        .next-card:hover {
-            transform: translateY(-5px);
-        }
 
-        .card-header {
+        .card-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .card-header .label {
-            padding: 6px 14px;
+        .card-top .label {
+            padding: 5px 12px;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text-color-dark);
+            color: var(--text-dark);
         }
-        .card-date {
-            font-size: 18px;
+        .card-top .date-time {
+            font-size: 15px;
             font-weight: 500;
-            color: var(--text-color-medium);
+            color: var(--text-medium);
             text-align: right;
             line-height: 1.2;
         }
 
-        .card-info h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-color-dark);
+        .card h2 {
+            font-size: 19px;
+            font-weight: 500;
+            color: var(--text-dark);
             margin: 0;
-            line-height: 1.2;
-        }
-        .card-info p {
-            font-size: 16px;
-            color: var(--text-color-medium);
-            margin: 5px 0 0;
-            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .no-tasks {
+        .no-items {
             text-align: center;
-            color: var(--text-color-light);
+            color: var(--text-light);
             font-size: 18px;
             margin-top: 50px;
         }
@@ -124,72 +116,37 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background-color: var(--primary-color);
+            background-color: var(--primary);
             color: #fff;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 28px;
+            width: 55px;
+            height: 55px;
+            font-size: 26px;
             display: flex;
             justify-content: center;
             align-items: center;
             text-decoration: none;
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 10;
         }
 
         /* Colors based on type */
-        .test .label { background-color: var(--test-color); }
-        .exam .label { background-color: var(--exam-color); }
-        .task .label { background-color: var(--task-color); }
-
-        /* Navigation Buttons */
-        .navigation-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            gap: 15px;
-        }
-        .nav-button {
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            flex-grow: 1;
-        }
-        .nav-button:hover {
-            background-color: #4a4afc;
-            transform: translateY(-2px);
-        }
-        .nav-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .task .label { background-color: var(--task-bg); }
+        .test .label { background-color: var(--test-bg); }
+        .exam .label { background-color: var(--exam-bg); }
     </style>
 </head>
 <body>
 
 <div class="phone-ui">
     <div class="header">
-        <h1 id="greeting-text">Hallo!</h1>
-        <p>Jouw item is...</p>
+        <h1 id="greeting-text">Hello!</h1>
+        <p class="date" id="current-date"></p>
     </div>
 
-    <div id="next-card-container">
-        </div>
+    <ul id="card-list" class="card-list">
+        </ul>
     
-    <div class="navigation-buttons">
-        <button id="prevBtn" class="nav-button">Vorige</button>
-        <button id="nextBtn" class="nav-button">Volgende</button>
-    </div>
-
     <a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
 
 </div>
@@ -197,14 +154,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const greetingTextEl = document.getElementById('greeting-text');
-        const nextCardContainer = document.getElementById('next-card-container');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-
+        const cardListEl = document.getElementById('card-list');
+        const currentDateEl = document.getElementById('current-date');
+        
         let allItems = [];
-        let currentIndex = 0;
 
-        // Functie om dummydata te genereren
         function generateDummyData() {
             const now = new Date();
             const today = now.toISOString().split('T')[0];
@@ -214,58 +168,67 @@
 
             return {
                 tasks: [
-                    { title: "Engels Lezen", description: "Lees 10 pagina's van het boek", date: today, startTime: "16:00", endTime: "17:00" },
-                    { title: "Biologie Verslag", description: "Verslag over fotosynthese", date: today, startTime: "11:00", endTime: "12:00" }
+                    { title: "English Reading", description: "Read 10 pages of the book.", date: today, startTime: "16:00", endTime: "17:00" },
+                    { title: "Biology Report", description: "Report on photosynthesis with a very long title that is probably too long for the card.", date: today, startTime: "11:00", endTime: "12:00" }
                 ],
                 tests: [
-                    { title: "Wiskunde Toets", description: "Oefenen van algebra", date: tomorrowDate, startTime: "09:00", endTime: "10:00" },
-                    { title: "Geschiedenis Toets", description: "Hoofdstuk 3: Koude Oorlog", date: today, startTime: "14:30", endTime: "15:30" }
+                    { title: "Maths Test", description: "Practice algebra exercises.", date: tomorrowDate, startTime: "09:00", endTime: "10:00" },
+                    { title: "History Test", description: "Chapter 3: Cold War and the Fall of the Wall.", date: today, startTime: "14:30", endTime: "15:30" }
                 ],
                 exams: [
-                    { title: "Informatica Examen", description: "Programmeren in Python", date: tomorrowDate, startTime: "10:00", endTime: "12:00" }
+                    { title: "Computer Science Exam", description: "Programming in Python.", date: tomorrowDate, startTime: "10:00", endTime: "12:00" }
                 ]
             };
         }
 
         function getGreeting() {
             const hour = new Date().getHours();
-            if (hour >= 5 && hour < 12) {
-                return 'Goedemorgen!';
-            } else if (hour >= 12 && hour < 18) {
-                return 'Goedemiddag!';
-            } else if (hour >= 18 && hour < 22) {
-                return 'Goedeavond!';
-            } else {
-                return 'Goedenacht!';
-            }
+            if (hour >= 5 && hour < 12) return 'Good morning!';
+            if (hour >= 12 && hour < 18) return 'Good afternoon!';
+            if (hour >= 18 && hour < 22) return 'Good evening!';
+            return 'Good night!';
         }
 
-        function renderCard(item) {
-            if (!item) {
-                nextCardContainer.innerHTML = `<p class="no-tasks">Yay, geen taken gevonden!</p>`;
-                prevBtn.disabled = true;
-                nextBtn.disabled = true;
+        function renderCards() {
+            cardListEl.innerHTML = '';
+
+            if (allItems.length === 0) {
+                cardListEl.innerHTML = `<p class="no-items">Yay, no items found!</p>`;
                 return;
             }
 
-            const formattedDate = new Date(`${item.date}T${item.startTime}`).toLocaleDateString('nl-NL', {
-                weekday: 'short', month: 'short', day: 'numeric'
+            const todayISO = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowISO = tomorrow.toISOString().split('T')[0];
+
+            allItems.forEach(item => {
+                const dateObj = new Date(item.date);
+                let formattedDate = dateObj.toLocaleDateString('en-US', {
+                    weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric'
+                });
+
+                if (item.date === todayISO) {
+                    formattedDate = 'Today';
+                } else if (item.date === tomorrowISO) {
+                    formattedDate = 'Tomorrow';
+                }
+                
+                const formattedTime = `${item.startTime} - ${item.endTime}`;
+                
+                const cardHTML = `
+                    <li>
+                        <a href="detail.html?id=${item.type}_${item.id}" class="card ${item.type}">
+                            <div class="card-top">
+                                <div class="label">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
+                                <div class="date-time">${formattedDate} | ${formattedTime}</div>
+                            </div>
+                            <h2>${item.title}</h2>
+                        </a>
+                    </li>
+                `;
+                cardListEl.innerHTML += cardHTML;
             });
-            const formattedTime = `${item.startTime} - ${item.endTime}`;
-            
-            const cardHTML = `
-                <a href="detail.html?id=${item.type}_${item.id}" class="next-card ${item.type}">
-                    <div class="card-header">
-                        <div class="label">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
-                        <div class="card-date">${formattedDate}<br>${formattedTime}</div>
-                    </div>
-                    <div class="card-info">
-                        <h2>${item.title}</h2>
-                        <p>${item.description}</p>
-                    </div>
-                </a>
-            `;
-            nextCardContainer.innerHTML = cardHTML;
         }
 
         function updateUI() {
@@ -277,36 +240,28 @@
             }
 
             allItems = [
-                ...data.tasks.map((item, index) => ({ ...item, type: 'task', id: `tasks_${index}` })),
-                ...data.tests.map((item, index) => ({ ...item, type: 'test', id: `tests_${index}` })),
-                ...data.exams.map((item, index) => ({ ...item, type: 'exam', id: `exams_${index}` }))
+                ...data.tasks.map((item, index) => ({ ...item, type: 'tasks', id: index })),
+                ...data.tests.map((item, index) => ({ ...item, type: 'tests', id: index })),
+                ...data.exams.map((item, index) => ({ ...item, type: 'exams', id: index }))
             ];
             
-            if (allItems.length > 0) {
-                renderCard(allItems[currentIndex]);
-            } else {
-                renderCard(null); // Toon de "geen taken" melding
-            }
-            
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex === allItems.length - 1;
+            allItems.sort((a, b) => {
+                const dateTimeA = new Date(`${a.date}T${a.startTime}`);
+                const dateTimeB = new Date(`${b.date}T${b.startTime}`);
+                return dateTimeA - dateTimeB;
+            });
+
+            renderCards();
+        }
+
+        function setCurrentDate() {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateEl.textContent = today.toLocaleDateString('en-US', options);
         }
         
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateUI();
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            if (currentIndex < allItems.length - 1) {
-                currentIndex++;
-                updateUI();
-            }
-        });
-
         greetingTextEl.textContent = getGreeting();
+        setCurrentDate();
         updateUI();
 
         window.addEventListener('focus', updateUI);
