@@ -27,11 +27,42 @@
         .class-info p { margin: 5px 0 0; font-size: 14px; color: #666; }
         .class-info .time { font-weight: 600; font-size: 12px; color: #4CAF50; margin-top: 5px; }
         .label-ribbon { color: white; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.5); }
-        .schedule-card { background-color: #f7f9fc; border-radius: 15px; padding: 0px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); position: relative; max-height: 20vh; }
-        .schedule-card .title { font-size: 25px; font-weight: 600; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap; }
-        .schedule-card .image-container { margin: 0; border-radius: 10px; overflow: hidden; position: relative; }
-        .schedule-card .image-container img { width: 100%; height: auto; display: block; }
-        .schedule-card .image-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.3); }
+        .schedule-card { 
+            background-color: #f7f9fc; 
+            border-radius: 15px; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+            position: relative; 
+            max-height: 20vh; 
+            overflow: hidden; /* Zorgt ervoor dat de overgang mooi in het vak blijft */
+        }
+        .schedule-card .title { font-size: 25px; font-weight: 600; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; white-space: nowrap; }
+        .schedule-card .image-container { 
+            margin: 0; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            position: relative;
+            height: 100%;
+        }
+        .schedule-card .image-container img { 
+            width: 100%; 
+            height: auto; 
+            display: block;
+            transition: opacity 2s ease-in-out; /* De fade-overgang */
+        }
+        .schedule-card .image-container::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.3); 
+            z-index: 1; /* Zorgt dat de overlay boven de afbeelding ligt */
+        }
         .add-button { 
             position: fixed; 
             bottom: 20px; 
@@ -55,9 +86,9 @@
 <div class="phone-ui">
     <div class="schedule-card">
         <div class="image-container">
-            <img src="https://i.pinimg.com/originals/bf/6d/09/bf6d09e856465f2318afef9ca7500d44.jpg" alt="basketball court">
+            <img id="bg-image" src="" alt="Time of day background">
         </div>
-        <div class="title">Good evening!</div>
+        <div class="title" id="greeting-title"></div>
     </div>
     
     <div class="summary-grid">
@@ -92,6 +123,51 @@
         const testsLabelEl = document.getElementById('tests-label');
         const examsLabelEl = document.getElementById('exams-label');
         const tasksLabelEl = document.getElementById('tasks-label');
+        const greetingTitleEl = document.getElementById('greeting-title');
+        const bgImageEl = document.getElementById('bg-image');
+
+        // Lijst met afbeeldingen voor elk tijdstip
+        const backgroundImages = {
+            morning: 'https://i.pinimg.com/originals/bf/6d/09/bf6d09e856465f2318afef9ca7500d44.jpg',
+            afternoon: 'https://png.pngtree.com/background/20230614/original/pngtree-sun-in-a-field-on-a-sunny-day-picture-image_3530002.jpg',
+            evening: 'https://img.freepik.com/premium-photo/beautiful-evening-sunset-twilight-scenery_410516-19955.jpg',
+            night: 'https://cdn.pixabay.com/photo/2018/01/29/12/02/night-3115977_960_720.jpg'
+        };
+
+        // Function to determine the time-based greeting and background image
+        function getGreetingAndTimeOfDay() {
+            const hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) {
+                return { text: 'Good morning!', image: backgroundImages.morning };
+            } else if (hour >= 12 && hour < 18) {
+                return { text: 'Good afternoon!', image: backgroundImages.afternoon };
+            } else if (hour >= 18 && hour < 22) {
+                return { text: 'Good evening!', image: backgroundImages.evening };
+            } else {
+                return { text: 'Goodnight!', image: backgroundImages.night };
+            }
+        }
+        
+        // Function to update only the greeting and background image
+        function updateGreetingAndBackground(initialLoad = false) {
+            const timeOfDay = getGreetingAndTimeOfDay();
+            greetingTitleEl.textContent = timeOfDay.text;
+            
+            // Immediately set the image on initial load without transition
+            if (initialLoad) {
+                bgImageEl.src = timeOfDay.image;
+                bgImageEl.style.opacity = '1';
+            } else {
+                // Check if the image needs to change
+                if (bgImageEl.src !== timeOfDay.image) {
+                    bgImageEl.style.opacity = '0';
+                    setTimeout(() => {
+                        bgImageEl.src = timeOfDay.image;
+                        bgImageEl.style.opacity = '1';
+                    }, 2000); // Wait 2 seconds for the transition
+                }
+            }
+        }
 
         function updateUI() {
             const storedData = localStorage.getItem('HRN_Study_data');
@@ -153,7 +229,12 @@
             }
         }
 
+        // Initial setup on page load
+        updateGreetingAndBackground(true);
         updateUI();
+        
+        // Update the greeting and background every minute
+        setInterval(updateGreetingAndBackground, 60000); 
     });
 </script>
 
