@@ -114,7 +114,7 @@
 <body>
 
 <div class="phone-ui">
-    <a href="./home.html" class="back-button">
+    <a href="javascript:void(0);" id="back-button" class="back-button">
         <i class="fas fa-arrow-left"></i> Home
     </a>
     
@@ -136,8 +136,8 @@
         const startButton = document.getElementById('start-button');
         const pauseButton = document.getElementById('pause-button');
         const resetButton = document.getElementById('reset-button');
+        const backButton = document.getElementById('back-button');
 
-        // Pomodoro settings in minutes
         const WORK_TIME = 25;
         const SHORT_BREAK_TIME = 5;
         const LONG_BREAK_TIME = 15;
@@ -187,7 +187,7 @@
                 if (currentTime < 0) {
                     clearInterval(timerInterval);
                     switchPhase();
-                    startTimer(); // Start the next phase automatically
+                    startTimer();
                 }
             }, 1000);
         }
@@ -212,7 +212,11 @@
         pauseButton.addEventListener('click', pauseTimer);
         resetButton.addEventListener('click', resetTimer);
 
-        // Initial display update
+        // Send a message to the parent to navigate back to the home page
+        backButton.addEventListener('click', () => {
+            window.parent.postMessage({ page: 'home' }, '*');
+        });
+
         updateDisplay();
     });
 </script>
