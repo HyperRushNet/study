@@ -139,6 +139,49 @@
         .exam .label { background-color: var(--exam-color); }
         .task .label { background-color: var(--task-color); }
 
+        /* Navigation Buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .nav-button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            flex-grow: 1;
+            margin: 0 5px;
+        }
+        .nav-button:hover {
+            background-color: #4a4afc;
+            transform: translateY(-2px);
+        }
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .next-btn {
+            background-color: var(--primary-color);
+        }
+        .prev-btn {
+            background-color: #888;
+        }
+        .next-btn:hover {
+            background-color: #4a4afc;
+        }
+        .prev-btn:hover {
+            background-color: #777;
+        }
+
     </style>
 </head>
 <body>
@@ -152,6 +195,11 @@
     <div id="next-card-container">
         </div>
     
+    <div class="navigation-buttons">
+        <button id="prevBtn" class="nav-button prev-btn">Previous</button>
+        <button id="nextBtn" class="nav-button next-btn">Next</button>
+    </div>
+
     <a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
 
 </div>
@@ -160,6 +208,11 @@
     document.addEventListener('DOMContentLoaded', () => {
         const greetingTextEl = document.getElementById('greeting-text');
         const nextCardContainer = document.getElementById('next-card-container');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let allUpcomingItems = [];
+        let currentIndex = 0;
 
         function getGreeting() {
             const hour = new Date().getHours();
@@ -174,48 +227,60 @@
             }
         }
 
+        function renderCard(item) {
+            if (!item) {
+                nextCardContainer.innerHTML = '';
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                return;
+            }
+
+            const formattedDate = new Date(`${item.date}T${item.startTime}`).toLocaleDateString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+            const formattedTime = `${item.startTime} - ${item.endTime}`;
+            
+            const cardHTML = `
+                <a href="detail.html?id=${item.type}_${item.index}" class="next-card ${item.type}">
+                    <div class="card-header">
+                        <div class="label">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
+                        <div class="card-date">${formattedDate}<br>${formattedTime}</div>
+                    </div>
+                    <div class="card-info">
+                        <h2>${item.title}</h2>
+                        <p>${item.description}</p>
+                    </div>
+                </a>
+            `;
+            nextCardContainer.innerHTML = cardHTML;
+        }
+
         function updateUI() {
             const storedData = localStorage.getItem('HRN_Study_data');
             const data = storedData ? JSON.parse(storedData) : { tests: [], exams: [], tasks: [] };
 
             const allItems = [
-                ...data.tests.map(item => ({ ...item, type: 'test' })),
-                ...data.exams.map(item => ({ ...item, type: 'exam' })),
-                ...data.tasks.map(item => ({ ...item, type: 'task' }))
+                ...data.tests.map((item, index) => ({ ...item, type: 'test', index: `tests_${index}` })),
+                ...data.exams.map((item, index) => ({ ...item, type: 'exam', index: `exams_${index}` })),
+                ...data.tasks.map((item, index) => ({ ...item, type: 'task', index: `tasks_${index}` }))
             ];
-
+            
             const now = new Date();
-            const upcomingItems = allItems.filter(item => {
-                const itemDate = new Date(`${item.date}T${item.startTime}`);
-                return itemDate >= now;
+            allUpcomingItems = allItems.filter(item => {
+                const itemDateTime = new Date(`${item.date}T${item.startTime}`);
+                return itemDateTime >= now;
             }).sort((a, b) => {
                 const dateA = new Date(`${a.date}T${a.startTime}`);
                 const dateB = new Date(`${b.date}T${b.startTime}`);
                 return dateA - dateB;
             });
 
-            nextCardContainer.innerHTML = '';
-            
-            if (upcomingItems.length > 0) {
-                const nextItem = upcomingItems[0];
-                const formattedDate = new Date(`${nextItem.date}T${nextItem.startTime}`).toLocaleDateString('en-US', {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                });
-                const formattedTime = `${nextItem.startTime} - ${nextItem.endTime}`;
-
-                const nextCardHTML = `
-                    <div class="next-card ${nextItem.type}">
-                        <div class="card-header">
-                            <div class="label">${nextItem.type.charAt(0).toUpperCase() + nextItem.type.slice(1)}</div>
-                            <div class="card-date">${formattedDate}<br>${formattedTime}</div>
-                        </div>
-                        <div class="card-info">
-                            <h2>${nextItem.title}</h2>
-                            <p>${nextItem.description}</p>
-                        </div>
-                    </div>
-                `;
-                nextCardContainer.innerHTML = nextCardHTML;
+            if (allUpcomingItems.length > 0) {
+                renderCard(allUpcomingItems[currentIndex]);
+                
+                prevBtn.style.display = currentIndex > 0 ? 'block' : 'none';
+                nextBtn.style.display = currentIndex < allUpcomingItems.length - 1 ? 'block' : 'none';
+                
             } else {
                 const hasUsedBefore = localStorage.getItem('hasUsedBefore');
                 let message = 'Yay, no upcoming tasks!';
@@ -223,13 +288,29 @@
                      message = 'No assignments added yet. Click the plus sign to get started!';
                 }
                 nextCardContainer.innerHTML = `<p class="no-tasks">${message}</p>`;
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
             }
-
+            
             if (allItems.length > 0) {
                  localStorage.setItem('hasUsedBefore', 'true');
             }
         }
         
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateUI();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < allUpcomingItems.length - 1) {
+                currentIndex++;
+                updateUI();
+            }
+        });
+
         greetingTextEl.textContent = getGreeting();
         updateUI();
 
