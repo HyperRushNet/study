@@ -1,4 +1,4 @@
-// ocr.js
+// ocr.js 2
 // Simple JS OCR library using Pollinations AI with Base64 output (UTF-8 safe)
 
 export async function scanForText(base64Image) {
@@ -7,8 +7,7 @@ export async function scanForText(base64Image) {
     messages: [
       {
         role: "system",
-        content: `
-You are a highly accurate OCR AI. Your task is to extract **all visible text** from the uploaded image **exactly as it appears**, including:
+        content: `You are a highly accurate OCR AI. Your task is to extract **all visible text** from the uploaded image **exactly as it appears**, including:
 
 - Every line, space, and character
 - Repeated text exactly as it appears
@@ -17,7 +16,6 @@ You are a highly accurate OCR AI. Your task is to extract **all visible text** f
 - Maintain the **exact visual structure** of the text as on the image
 
 Do NOT:
-
 - Correct spelling or grammar
 - Omit, censor, or modify any text
 - Interpret or summarize the content
@@ -25,8 +23,7 @@ Do NOT:
 
 If no text is visible, return exactly: "No text found."
 
-Return the extracted text **exactly as-is**, preserving the visual structure and all repetitions.
-`
+Return the extracted text exactly as-is, preserving the visual structure and all repetitions.`
       },
       {
         role: "user",
@@ -64,8 +61,7 @@ Return the extracted text **exactly as-is**, preserving the visual structure and
 export function utf8ToBase64(str) {
   const bytes = new TextEncoder().encode(str);
   let binary = '';
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < bytes.length; i++) {
     binary += String.fromCharCode(bytes[i]);
   }
   return btoa(binary);
