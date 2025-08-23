@@ -23,7 +23,7 @@ Do NOT:
 - Interpret or summarize the content
 - Add anything that is not visually present
 
-If no text is visible, return exactly: `No text found.`
+If no text is visible, return exactly: "No text found."
 
 Return the extracted text **exactly as-is**, preserving the visual structure and all repetitions.
 `
