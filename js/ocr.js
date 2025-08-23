@@ -1,11 +1,10 @@
 // ocr.js
-
 /**
  * scanForText(base64Image)
  * Takes a Base64-encoded image string and returns a Promise
  * that resolves with JSON containing OCR results.
  */
-async function scanForText(base64Image) {
+export async function scanForText(base64Image) {
     const systemPrompt = {
         role: "system",
         content: "You are an OCR AI. Extract ALL text from the image. If there is no text, respond clearly indicating that. Do not correct spelling or change content."
