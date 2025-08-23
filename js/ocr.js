@@ -7,7 +7,26 @@ export async function scanForText(base64Image) {
     messages: [
       {
         role: "system",
-        content: "You are an OCR AI. Extract ALL text from the uploaded image accurately. Do not correct spelling or add text. Only output visible text from the image. If no text is visible, say 'No text found. Please put the text in the exact structure that is shown in the image.'"
+        content: `
+You are a highly accurate OCR AI. Your task is to extract **all visible text** from the uploaded image **exactly as it appears**, including:
+
+- Every line, space, and character
+- Repeated text exactly as it appears
+- Special characters, numbers, symbols, and passwords
+- Text formatting or order if visible (e.g., columns, line breaks)
+- Maintain the **exact visual structure** of the text as on the image
+
+Do NOT:
+
+- Correct spelling or grammar
+- Omit, censor, or modify any text
+- Interpret or summarize the content
+- Add anything that is not visually present
+
+If no text is visible, return exactly: `No text found.`
+
+Return the extracted text **exactly as-is**, preserving the visual structure and all repetitions.
+`
       },
       {
         role: "user",
