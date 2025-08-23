@@ -12,7 +12,7 @@ export async function scanForText(base64Image) {
       {
         role: "user",
         content: [
-          { type: "text", text: "Extract all text from this image:" },
+          { type: "text", text: "Follow your system instructions precisely." },
           { type: "image_url", image_url: { url: "data:image/png;base64," + base64Image } }
         ]
       }
