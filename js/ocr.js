@@ -1,42 +1,38 @@
 // ocr.js
+// Simple JS OCR library using Pollinations AI
 
-// Expose a global function
-window.scanForText = function(base64) {
-  return new Promise(async (resolve, reject) => {
-    if (!base64) {
-      reject(new Error("No image data provided"));
-      return;
-    }
+export async function scanForText(base64Image) {
+  const payload = {
+    model: "openai",
+    messages: [
+      {
+        role: "system",
+        content: "You are an OCR AI. Extract ALL text from the uploaded image accurately. Do not correct spelling or add text. Only output visible text from the image. If no text is visible, say 'No text found.'"
+      },
+      {
+        role: "user",
+        content: [
+          { type: "text", text: "Extract all text from this image:" },
+          { type: "image_url", image_url: { url: "data:image/png;base64," + base64Image } }
+        ]
+      }
+    ]
+  };
 
-    try {
-      const response = await fetch("https://text.pollinations.ai/openai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "openai",
-          messages: [
-            {
-              role: "system",
-              content: "You are an OCR AI. Extract all visible text from the uploaded image. Do not correct spelling, do not change layout. Return JSON: { text: '...' }."
-            },
-            {
-              role: "user",
-              content: [
-                { type: "text", text: "Extract text from this image:" },
-                { type: "image_url", image_url: { url: "data:image/png;base64," + base64 } }
-              ]
-            }
-          ]
-        })
-      });
+  try {
+    const response = await fetch("https://text.pollinations.ai/openai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-      if (!response.ok) throw new Error("HTTP error " + response.status);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-      const data = await response.json();
-      const text = data.choices?.[0]?.message?.content || "";
-      resolve({ text });
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
+    const data = await response.json();
+    const text = data.choices?.[0]?.message?.content || "No text returned.";
+
+    return { success: true, text };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
