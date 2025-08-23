@@ -1,5 +1,5 @@
-// ocr.js
-// Simple JS OCR library using Pollinations AI with Base64 output
+// ocr.js 2
+// Simple JS OCR library using Pollinations AI with Base64 output (UTF-8 safe)
 
 export async function scanForText(base64Image) {
   const payload = {
@@ -31,11 +31,32 @@ export async function scanForText(base64Image) {
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || "No text returned.";
 
-    // Encode the text as Base64
-    const base64Text = btoa(unescape(encodeURIComponent(text)));
+    // Encode text veilig naar Base64 (UTF-8 safe)
+    const base64Text = utf8ToBase64(text);
 
     return { success: true, text: base64Text };
   } catch (err) {
     return { success: false, error: err.message };
   }
+}
+
+// --- UTF-8 safe Base64 helpers ---
+
+export function utf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+export function base64ToUtf8(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder().decode(bytes);
 }
