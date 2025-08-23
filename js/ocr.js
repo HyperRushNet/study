@@ -1,5 +1,5 @@
 // ocr.js
-// Simple JS OCR library using Pollinations AI
+// Simple JS OCR library using Pollinations AI with Base64 output
 
 export async function scanForText(base64Image) {
   const payload = {
@@ -31,7 +31,10 @@ export async function scanForText(base64Image) {
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || "No text returned.";
 
-    return { success: true, text };
+    // Encode the text as Base64
+    const base64Text = btoa(unescape(encodeURIComponent(text)));
+
+    return { success: true, text: base64Text };
   } catch (err) {
     return { success: false, error: err.message };
   }
