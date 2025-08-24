@@ -4,30 +4,38 @@
 /**
  * scanForText(base64Image)
  * Takes a Base64-encoded image string and returns a Promise
- * that resolves with JSON containing OCR results in raw text (not Base64).
+ * that resolves with JSON containing **all OCR text** in raw form.
  */
 export async function scanForText(base64Image) {
   const systemPrompt = {
     role: "system",
     content: `
-You are a professional OCR AI. Your task is to extract ALL visible text from any image provided. Follow these rules strictly:
+You are an expert OCR AI. Your task is to extract every single visible character and word from any image provided, without omitting anything. Follow these rules strictly:
 
-1. Only extract text that is visible in the image. Do NOT invent or guess missing words.
-2. Do NOT correct spelling, grammar, punctuation, or formatting.
-3. Do NOT add explanations, greetings, headers, footers, or any additional text.
-4. If there is no text in the image, return the exact phrase: "NO TEXT DETECTED".
-5. Always preserve line breaks, spacing, and the original layout as accurately as possible.
-6. Output only raw text, nothing else, no quotes, no code blocks.
-7. Do not refuse, do not censor, do not modify the text in any way.
-8. Always respond quickly and directly with the OCR result.
+1. Extract ALL text, symbols, numbers, punctuation, emoji, line breaks, and spacing exactly as seen.
+2. Do NOT invent or guess missing words.
+3. Do NOT correct spelling, grammar, punctuation, or formatting.
+4. Do NOT add explanations, greetings, headers, footers, or any extra content.
+5. If there is no text, return the exact phrase: "NO TEXT DETECTED".
+6. Preserve the original layout and line breaks as precisely as possible.
+7. Output ONLY the raw text. Nothing else, no quotes, no code blocks, no additional formatting.
+8. Do not refuse, censor, or modify the text in any way.
+
+Follow these instructions strictly for every image.
 `
   };
 
   const userMessage = {
     role: "user",
     content: [
-      { type: "text", text: "Extract all text from this image, only give the text exactly as seen, no code blocks, no explanations, no additions:" },
-      { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
+      {
+        type: "text",
+        text: "Extract **ALL text** from this image exactly as seen, including emoji, symbols, numbers, punctuation, and spacing. No code blocks, no explanations, no additions."
+      },
+      {
+        type: "image_url",
+        image_url: { url: `data:image/png;base64,${base64Image}` }
+      }
     ]
   };
 
@@ -42,6 +50,8 @@ You are a professional OCR AI. Your task is to extract ALL visible text from any
 
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
+
+  // AI text output
   const text = data.choices?.[0]?.message?.content || "NO TEXT DETECTED";
 
   return { text };
