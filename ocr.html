@@ -22,6 +22,13 @@ const sendButton = document.getElementById('sendButton');
 const decodedOutput = document.getElementById('decodedOutput');
 const base64Output = document.getElementById('base64Output');
 
+// Unicode-safe Base64 decode
+function decodeBase64Unicode(str) {
+    return decodeURIComponent(Array.prototype.map.call(atob(str), c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join(''));
+}
+
 // Dynamically load ocr.js as a module
 async function loadOCRModule() {
     return await import('https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now());
@@ -38,18 +45,16 @@ sendButton.addEventListener('click', async () => {
     base64Output.textContent = "";
 
     try {
-        // Dynamically import the OCR module
         const ocrModule = await loadOCRModule();
 
         const reader = new FileReader();
         reader.onload = async () => {
             const base64 = reader.result.split(',')[1];
 
-            // Call the OCR AI
             const result = await ocrModule.scanForText(base64);
 
-            // Show decoded text
-            const decodedText = decodeURIComponent(escape(atob(result.base64)));
+            // Show decoded text with emoji support
+            const decodedText = decodeBase64Unicode(result.base64);
             decodedOutput.textContent = decodedText;
 
             // Show Base64
