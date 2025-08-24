@@ -8,7 +8,9 @@ const OFFLINE_URLS = [
   './pomodoro.html',  
   './add.html',
   './planner.html',
-  './js/play16beepsound.js'
+  './js/play16beepsound.js',
+  './sw.js'
+
 ];
 
 // Install: cache de belangrijke bestanden
