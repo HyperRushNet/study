@@ -1,6 +1,6 @@
 // sw.js
 
-const CACHE_NAME = 'offline-cache-v2';
+const CACHE_NAME = 'offline-cache-v3';
 const OFFLINE_URLS = [
   './home.html',         
   './index.html',  
