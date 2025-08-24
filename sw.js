@@ -1,16 +1,16 @@
 // sw.js
 
-const CACHE_NAME = 'offline-cache-v4';
+const CACHE_NAME = 'offline-cache-v5';
 const OFFLINE_URLS = [
-  './home.html',         
-  './index.html',  
-  './detail.html', 
-  './pomodoro.html',  
-  './add.html',
-  './planner.html',
-  './js/play16beepsound.js',
-  './sw.js',
-  './sw-register.js'
+  '/home.html',         
+  '/index.html',  
+  '/detail.html', 
+  '/pomodoro.html',  
+  '/add.html',
+  '/planner.html',
+  '/js/play16beepsound.js',
+  '/sw.js',
+  '/sw-register.js'
 
 ];
 
