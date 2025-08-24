@@ -46,7 +46,7 @@ This is your one and only instruction. Follow it exactly, every time, without ex
   const data = await response.json();
   const text = data.choices?.[0]?.message?.content || "NO TEXT DETECTED";
 
-  // Convert AI text output to Base64
+  // Convert AI text output to Base64 (Unicode-safe)
   const base64Text = btoa(unescape(encodeURIComponent(text)));
 
   return { base64: base64Text };
