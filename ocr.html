@@ -2,57 +2,56 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OCR AI Demo</title>
 </head>
 <body>
 <h2>OCR AI Demo</h2>
 
-<input type="file" id="imageInput" accept="image/*"><br><br>
-<button id="sendButton">Scan Image</button>
+<input type="file" id="imageInput" accept="image/*"><br>
+<button id="scanBtn">Scan Image</button>
 
 <h3>OCR Result:</h3>
-<div id="output" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+<div id="output" style="white-space: pre-wrap; border:1px solid #ccc; padding:10px; margin-top:10px;"></div>
 
 <script type="module">
-import { scanForText } from 'https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now();
+const outputDiv = document.getElementById("output");
+const imageInput = document.getElementById("imageInput");
+const scanBtn = document.getElementById("scanBtn");
 
-const imageInput = document.getElementById('imageInput');
-const sendButton = document.getElementById('sendButton');
-const output = document.getElementById('output');
+// Dynamische import met cache-busting
+const ocrModule = await import('https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now());
+const scanForText = ocrModule.scanForText;
 
-// Unicode-safe Base64 decode
-function base64DecodeUnicode(str) {
-  return decodeURIComponent(Array.prototype.map.call(atob(str), c =>
-    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-  ).join(''));
-}
+scanBtn.addEventListener("click", async () => {
+    const file = imageInput.files[0];
+    if(!file) {
+        alert("Please upload an image.");
+        return;
+    }
 
-sendButton.addEventListener('click', async () => {
-  const file = imageInput.files[0];
-  if (!file) {
-    alert("Please upload an image.");
-    return;
-  }
+    outputDiv.textContent = "Processing…";
 
-  output.textContent = "Processing...";
+    // Lees bestand naar Base64
+    const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 
-  const base64 = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-
-  try {
-    const result = await scanForText(base64);
-    const decodedText = base64DecodeUnicode(result.base64);
-    output.textContent = decodedText;
-  } catch (err) {
-    output.textContent = "Error: " + err.message;
-  }
-
-  imageInput.value = "";
+    try {
+        const result = await scanForText(base64);
+        if(result.base64) {
+            // Decode Base64 naar string (UTF-8)
+            const text = decodeURIComponent(escape(atob(result.base64)));
+            outputDiv.textContent = text;
+        } else {
+            outputDiv.textContent = "No text detected.";
+        }
+    } catch(err) {
+        outputDiv.textContent = "Error: " + err;
+        console.error(err);
+    }
 });
 </script>
 </body>
