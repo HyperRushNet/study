@@ -2,69 +2,65 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OCR AI Chat with Base64 Output</title>
+<title>OCR AI Chat</title>
 </head>
 <body>
-<h3>Upload Image for OCR</h3>
+<h3>OCR AI Chat</h3>
 
-<input type="file" id="imageInput" accept="image/*"><br>
-<button id="scanButton">Scan for Text</button>
+<input type="file" id="imageInput" accept="image/*"><br><br>
+<button id="sendButton">Extract Text</button>
 
-<h4>OCR Result (decoded text):</h4>
-<div id="result" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+<h4>Decoded Text:</h4>
+<div id="decodedOutput" style="white-space: pre-wrap; border:1px solid #ccc; padding:10px;"></div>
 
-<h4>OCR Result (Base64):</h4>
-<div id="resultBase64" style="word-break: break-all; border: 1px solid #ccc; padding: 10px;"></div>
+<h4>Base64 Output:</h4>
+<div id="base64Output" style="word-break:break-all; border:1px solid #ccc; padding:10px;"></div>
 
-<script type="module">
-  const imageInput = document.getElementById('imageInput');
-  const scanButton = document.getElementById('scanButton');
-  const resultDiv = document.getElementById('result');
-  const resultBase64Div = document.getElementById('resultBase64');
+<script>
+const imageInput = document.getElementById('imageInput');
+const sendButton = document.getElementById('sendButton');
+const decodedOutput = document.getElementById('decodedOutput');
+const base64Output = document.getElementById('base64Output');
 
-  scanButton.addEventListener('click', async () => {
+// Dynamically load ocr.js as a module
+async function loadOCRModule() {
+    return await import('https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now());
+}
+
+sendButton.addEventListener('click', async () => {
     const file = imageInput.files[0];
-    if(!file){
-      alert('Please select an image.');
-      return;
+    if (!file) {
+        alert("Please upload an image.");
+        return;
     }
 
-    resultDiv.textContent = 'Processing…';
-    resultBase64Div.textContent = '';
+    decodedOutput.textContent = "Processing…";
+    base64Output.textContent = "";
 
     try {
-      const base64 = await fileToBase64(file);
+        // Dynamically import the OCR module
+        const ocrModule = await loadOCRModule();
 
-      // Dynamische import met cache-busting
-      const ocrModule = await import('https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now());
-      const { scanForText } = ocrModule;
+        const reader = new FileReader();
+        reader.onload = async () => {
+            const base64 = reader.result.split(',')[1];
 
-      const response = await scanForText(base64);
+            // Call the OCR AI
+            const result = await ocrModule.scanForText(base64);
 
-      if(response.text){
-        // Unicode-safe Base64 encoding
-        const base64Text = btoa(unescape(encodeURIComponent(response.text)));
+            // Show decoded text
+            const decodedText = decodeURIComponent(escape(atob(result.base64)));
+            decodedOutput.textContent = decodedText;
 
-        resultDiv.textContent = response.text;
-        resultBase64Div.textContent = base64Text;
-      } else {
-        resultDiv.textContent = 'No text returned.';
-      }
-
-    } catch(err){
-      console.error(err);
-      resultDiv.textContent = 'Error: ' + err.message;
+            // Show Base64
+            base64Output.textContent = result.base64;
+        };
+        reader.readAsDataURL(file);
+    } catch (err) {
+        decodedOutput.textContent = "Error: " + err;
+        base64Output.textContent = "";
     }
-  });
-
-  function fileToBase64(file){
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
+});
 </script>
 </body>
 </html>
