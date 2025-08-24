@@ -1,9 +1,7 @@
-// sw.js - versie 6
-
-const CACHE_NAME = 'offline-cache-v6';
+const CACHE_NAME = 'offline-cache-v7';
 const OFFLINE_URLS = [
-  '/home.html',
   '/index.html',
+  '/home.html',
   '/detail.html',
   '/pomodoro.html',
   '/add.html',
@@ -13,38 +11,13 @@ const OFFLINE_URLS = [
   '/sw-register.js'
 ];
 
-// Install: cache alle belangrijke bestanden
+// Install: cache belangrijke assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(OFFLINE_URLS))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting(); // Direct actief
-});
-
-// Fetch: navigatie fallback + cache-first voor assets
-self.addEventListener('fetch', event => {
-  if (event.request.mode === 'navigate') {
-    // Navigatie requests
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        return response || caches.match('/index.html');
-      }).catch(() => new Response('Pagina niet beschikbaar offline.', {
-        status: 503,
-        statusText: 'Service Unavailable'
-      }))
-    );
-  } else {
-    // Andere requests (CSS, JS, afbeeldingen)
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        return response || new Response('Resource niet beschikbaar offline.', {
-          status: 503,
-          statusText: 'Service Unavailable'
-        });
-      })
-    );
-  }
 });
 
 // Activate: oude caches verwijderen
@@ -57,5 +30,25 @@ self.addEventListener('activate', event => {
       )
     )
   );
-  self.clients.claim(); // Direct controle over pagina
+  self.clients.claim();
+});
+
+// Fetch: cache-first, fallback naar offline pagina
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+
+      // Voor navigatie: fallback naar index.html
+      if (event.request.mode === 'navigate') {
+        return caches.match('/index.html');
+      }
+
+      // Niet-gecachete assets: 503
+      return new Response('Resource niet beschikbaar offline.', {
+        status: 503,
+        statusText: 'Service Unavailable'
+      });
+    })
+  );
 });
