@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRN Calendar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --primary: #5d5dff;
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-dark: #333;
+    --text-medium: #666;
+    --text-light: #888;
+    --task-bg: #cce5ff;
+    --selected-bg: #5d5dff;
+    --selected-text: #fff;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.phone-ui {
+    width: 100%;
+    max-width: 450px;
+    min-height: 100vh;
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    position: relative;
+    align-items: center;
+}
+
+.back-button {
+    align-self: flex-start;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.back-button i {
+    margin-right: 8px;
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.weekday {
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    width: 100%;
+}
+
+.day {
+    background-color: var(--card-bg);
+    aspect-ratio: 1 / 1;
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s;
+}
+
+.day.task { background-color: var(--task-bg); }
+.day.selected { background-color: var(--selected-bg); color: var(--selected-text); }
+.day:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,.12); }
+
+.scrollable-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.scrollable-content::-webkit-scrollbar { display: none; }
+.scrollable-content { scrollbar-width: none; -ms-overflow-style: none; }
+
+.card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 100%;
+}
+
+.card {
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,.08);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+    color: inherit;
+    background-color: var(--card-bg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,.12); }
+
+.card h2 {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-top { display: flex; justify-content: space-between; align-items: center; }
+.card-top .label {
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+.card-top .date-time { font-size: 14px; font-weight: 500; color: var(--text-medium); text-align: right; line-height: 1.2; }
+
+.tasks .label { background-color: #ffe9d6; }
+.tests .label { background-color: #e6f2ff; }
+.exams .label { background-color: #e6fff2; }
+
+.no-items { width: 100%; text-align: center; color: var(--text-light); font-size: 16px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="phone-ui">
+    <!-- Gewone link naar index.html -->
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Home
+    </a>
+
+    <div class="calendar-container">
+        <div class="weekdays">
+            <div class="weekday">Sun</div>
+            <div class="weekday">Mon</div>
+            <div class="weekday">Tue</div>
+            <div class="weekday">Wed</div>
+            <div class="weekday">Thu</div>
+            <div class="weekday">Fri</div>
+            <div class="weekday">Sat</div>
+        </div>
+        <div class="calendar" id="calendar"></div>
+    </div>
+    <div class="scrollable-content">
+        <ul id="card-list" class="card-list"></ul>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const calendarEl = document.getElementById('calendar');
+    const cardListEl = document.getElementById('card-list');
+    let selectedDate = new Date().toISOString().split('T')[0];
+
+    function loadTasks() {
+        const storedData = localStorage.getItem('HRN_Study_data');
+        return storedData ? JSON.parse(storedData) : { tasks: [], tests: [], exams: [] };
+    }
+
+    function generateCalendar() {
+        const data = loadTasks();
+        const taskDates = data.tasks.map(t => t.date);
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        calendarEl.innerHTML = '';
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for(let i=0; i<firstDay; i++) { calendarEl.appendChild(document.createElement('div')); }
+
+        for(let day=1; day<=daysInMonth; day++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('day');
+            const dateISO = new Date(year, month, day).toISOString().split('T')[0];
+            if(taskDates.includes(dateISO)) dayDiv.classList.add('task');
+            if(dateISO === selectedDate) dayDiv.classList.add('selected');
+            dayDiv.textContent = day;
+            dayDiv.addEventListener('click', () => {
+                selectedDate = dateISO;
+                document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+                dayDiv.classList.add('selected');
+                renderCards();
+            });
+            calendarEl.appendChild(dayDiv);
+        }
+    }
+
+    function renderCards() {
+        const data = loadTasks();
+        const allItems = [
+            ...data.tasks.map((item,index)=>({...item,type:'tasks',id:index})),
+            ...data.tests.map((item,index)=>({...item,type:'tests',id:index})),
+            ...data.exams.map((item,index)=>({...item,type:'exams',id:index}))
+        ];
+        const filteredItems = allItems.filter(item => item.date === selectedDate);
+        cardListEl.innerHTML = '';
+
+        if(filteredItems.length === 0) {
+            cardListEl.innerHTML = `<p class="no-items">No assignments on this day.</p>`;
+            return;
+        }
+
+        filteredItems.forEach(item => {
+            const dateObj = new Date(item.date);
+            const formattedDate = dateObj.toLocaleDateString('en-US',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
+            const formattedTime = `${item.startTime} - ${item.endTime}`;
+            const label = item.type === 'tasks' ? 'Task' : item.type === 'tests' ? 'Test' : 'Exam';
+            const cardHTML = `<li>
+                <a href="detail.html?id=${item.type}_${item.id}" class="card ${item.type}">
+                    <div class="card-top">
+                        <div class="label">${label}</div>
+                        <div class="date-time">${formattedDate} | ${formattedTime}</div>
+                    </div>
+                    <h2>${item.title}</h2>
+                </a>
+            </li>`;
+            cardListEl.innerHTML += cardHTML;
+        });
+    }
+
+    generateCalendar();
+    renderCards();
+});
+</script>
+</body>
+</html>
