@@ -10,29 +10,33 @@
 <input type="file" id="imageInput" accept="image/*"><br>
 <button id="sendButton">Scan Image</button>
 
-<h4>Base64 OCR Output:</h4>
-<pre id="output"></pre>
+<h4>OCR Text Output:</h4>
+<div id="decodedOutput" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
 
 <script type="module">
-import { scanForText } from "https://hyperrushnet.github.io/study/js/ocr.js?v=1.3";
+const moduleUrl = `https://hyperrushnet.github.io/study/js/ocr.js?v=${Date.now()}`;
+const { scanForText } = await import(moduleUrl);
 
 const imageInput = document.getElementById("imageInput");
 const sendButton = document.getElementById("sendButton");
-const output = document.getElementById("output");
+const decodedOutput = document.getElementById("decodedOutput");
 
 sendButton.addEventListener("click", async () => {
   const file = imageInput.files[0];
-  if (!file) return alert("Please upload an image.");
+  if(!file) return alert("Please upload an image.");
 
-  output.textContent = "Processing…";
-
-  const base64Image = await fileToBase64(file);
+  decodedOutput.textContent = "Processing…";
 
   try {
+    const base64Image = await fileToBase64(file);
     const result = await scanForText(base64Image);
-    output.textContent = result.base64;
-  } catch (err) {
-    output.textContent = "Error: " + err;
+
+    // Decode Base64 safely
+    const decodedText = decodeURIComponent(escape(atob(result.base64 || "")));
+    decodedOutput.textContent = decodedText || "NO TEXT DETECTED";
+
+  } catch(err) {
+    decodedOutput.textContent = "Error: " + err;
   }
 });
 
