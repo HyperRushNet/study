@@ -1,62 +1,50 @@
-// ocr.js
-// ES Module
+// ocr.js - UITLEVERBARE JS-BIBLIOTHEEK
+// Voeg toe via <script src="https://hyperrushnet.github.io/study/js/ocr.js?v=1.0"></script>
 
-/**
- * scanForText(base64Image)
- * Takes a Base64-encoded image string and returns a Promise
- * that resolves with JSON containing all OCR text in raw form.
- */
-export async function scanForText(base64Image) {
-  const systemPrompt = {
-    role: "system",
-    content: `
-You are an expert OCR AI. Your task is to extract every single visible character and word from any image provided, without omitting anything. Follow these rules strictly:
+(function(global) {
+  /**
+   * scanForText(base64Image)
+   * base64Image: Base64-encoded PNG/JPG image string
+   * Returns a Promise resolving to JSON with OCR results
+   */
+  global.scanForText = async function(base64Image) {
+    if (!base64Image) throw new Error("No base64 image provided");
 
-1. Extract ALL text, symbols, numbers, punctuation, emoji, line breaks, and spacing exactly as seen. NOT only the main content.
-2. Do NOT invent or guess missing words.
-3. Do NOT correct spelling, grammar, punctuation, or formatting.
-4. ONLY give the text from the image, no extra explanation.
-5. If there is no text, return the exact phrase: "NO TEXT DETECTED".
-6. Preserve the original layout and line breaks as precisely as possible.
-7. Output ONLY the raw text. Nothing else, no quotes, no code blocks, no additional formatting.
-8. Do not refuse, censor, or modify the text in any way.
+    const systemPrompt = {
+      role: "system",
+      content: "You are an OCR AI with the strictest instructions possible. " +
+        "Extract 100% of all visible text in the image exactly as it appears. " +
+        "Do not correct spelling, grammar, or formatting. Do not remove any text, " +
+        "even if it is gibberish, misaligned, or in foreign characters. " +
+        "Maintain line breaks, spacing, and punctuation exactly as in the image. " +
+        "If the image contains no text at all, respond with a clear message 'No text detected in image.' " +
+        "Absolutely do not interpret, summarize, or skip anything."
+    };
 
-Follow these instructions strictly for every image.
-`
+    const userMessage = {
+      role: "user",
+      content: [
+        { type: "text", text: "Extract ALL text from this image with absolute precision:" },
+        { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
+      ]
+    };
+
+    try {
+      const response = await fetch("https://text.pollinations.ai/openai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "openai",
+          messages: [systemPrompt, userMessage]
+        })
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      return data.choices?.[0]?.message?.content || { error: "No text detected" };
+    } catch(err) {
+      return { error: err.message };
+    }
   };
 
-  const userMessage = {
-    role: "user",
-    content: [
-      {
-        type: "text",
-        text: "Extract **ALL text** from this image exactly as seen, including emoji, symbols, numbers, punctuation, and spacing. No code blocks, no explanations, no additions."
-      },
-      {
-        type: "image_url",
-        image_url: { url: `data:image/png;base64,${base64Image}` }
-      }
-    ]
-  };
-
-  const response = await fetch("https://text.pollinations.ai/openai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "openai",
-      messages: [systemPrompt, userMessage]
-    })
-  });
-
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-
-  const text = data.choices?.[0]?.message?.content || "NO TEXT DETECTED";
-
-  // Unicode-safe Base64 encoding
-  const base64Text = btoa(encodeURIComponent(text).replace(/%([0-9A-F]{2})/g,
-    (_, p1) => String.fromCharCode('0x' + p1)
-  ));
-
-  return { text, base64: base64Text };
-}
+})(window);
