@@ -4,7 +4,7 @@
 /**
  * scanForText(base64Image)
  * Takes a Base64-encoded image string and returns a Promise
- * that resolves with JSON containing **all OCR text** in raw form.
+ * that resolves with JSON containing all OCR text in raw form.
  */
 export async function scanForText(base64Image) {
   const systemPrompt = {
@@ -51,8 +51,12 @@ Follow these instructions strictly for every image.
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
 
-  // AI text output
   const text = data.choices?.[0]?.message?.content || "NO TEXT DETECTED";
 
-  return { text };
+  // Unicode-safe Base64 encoding
+  const base64Text = btoa(encodeURIComponent(text).replace(/%([0-9A-F]{2})/g,
+    (_, p1) => String.fromCharCode('0x' + p1)
+  ));
+
+  return { text, base64: base64Text };
 }
