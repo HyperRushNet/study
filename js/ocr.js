@@ -10,19 +10,17 @@
 
     const systemPrompt = {
       role: "system",
-      content: "You are an OCR AI. Extract ONLY the text that is visible in the image. " +
-               "Do NOT add any labels, headings, commentary, or prefixes. " +
-               "Do NOT add 'Extracted text:' or any other words. " +
-               "Do NOT correct spelling, grammar, punctuation, formatting, or capitalization. " +
-               "Preserve ALL line breaks, spaces, symbols, and special characters EXACTLY as in the image. " +
-               "Do not summarize or interpret. " +
-               "If there is no text, respond ONLY with exactly: 'No text detected in image.'"
+      content: "You are an OCR AI. ONLY return the text that is visible in the image. " +
+               "Do NOT add labels, commentary, explanations, instructions, or extra words. " +
+               "Do NOT correct spelling, grammar, or formatting. " +
+               "Preserve all line breaks, spaces, symbols, and characters exactly as in the image. " +
+               "If there is no text, return exactly: 'No text detected in image.' " +
+               "Output ONLY the text, nothing else."
     };
 
     const userMessage = {
       role: "user",
       content: [
-        { type: "text", text: "Extract all text from this image exactly as it appears, without adding anything:" },
         { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
       ]
     };
