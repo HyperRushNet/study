@@ -3,7 +3,7 @@
 
   const SWLib = {};
 
-  SWLib.register = function(swPath = '/sw.js') {
+  SWLib.register = function(swPath = './sw.js') {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register(swPath)
         .then(reg => console.log('Service Worker geregistreerd:', reg.scope))
