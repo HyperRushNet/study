@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OCR AI Demo (Plain Text)</title>
+  <title>OCR AI Demo (All Visible Text)</title>
 </head>
 <body>
   <h2>OCR AI Demo</h2>
@@ -26,17 +26,20 @@
       const systemPrompt = {
         role: "system",
         content:
-          "You are an OCR AI. Your only job is to transcribe **all visible text** from the image. " +
-          "Output the text exactly as it appears: keep all line breaks, spacing, punctuation, special characters, and formatting. " +
-          "Do not add prefixes like 'Extracted text:' or explanations. " +
-          "Do not summarize or interpret. " +
-          "If truly no text exists, output exactly: No text detected in image."
+          "You are an OCR AI. Extract **absolutely every visible character** from the image. " +
+          "This includes main text, small text, watermarks, disclaimers, labels, metadata, numbers, and anything readable. " +
+          "Never skip faint, small, rotated, or partial text. " +
+          "Preserve line breaks, spacing, punctuation, and symbols exactly as seen. " +
+          "Do not rewrite, fix, correct, or explain. " +
+          "Do not add prefixes like 'Extracted text:'. " +
+          "If and only if there is truly no text at all, output exactly: No text detected in image. " +
+          "Otherwise, output only the raw transcription of everything visible."
       };
 
       const userMessage = {
         role: "user",
         content: [
-          { type: "text", text: "Extract all text from this image and give only the text itself:" },
+          { type: "text", text: "Extract all visible text from this image, including the smallest details, and output only the raw text:" },
           { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
         ]
       };
@@ -83,7 +86,7 @@
 
     try {
       const base64Image = await fileToBase64(file);
-      const aiText = await scanForText(base64Image); // now returns plain text
+      const aiText = await scanForText(base64Image);
       outputDiv.textContent = aiText;
     } catch (err) {
       outputDiv.textContent = "Error: " + err;
