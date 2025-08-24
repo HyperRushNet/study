@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OCR AI Demo</title>
+<title>OCR AI Demo with Emoji</title>
 </head>
 <body>
 <h2>OCR AI Demo</h2>
@@ -22,6 +22,14 @@ const scanBtn = document.getElementById("scanBtn");
 const ocrModule = await import('https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now());
 const scanForText = ocrModule.scanForText;
 
+// Correcte Base64 decode met UTF-8 (emoji support)
+function base64ToUtf8(base64) {
+  const binary = atob(base64);
+  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+  const decoder = new TextDecoder("utf-8");
+  return decoder.decode(bytes);
+}
+
 scanBtn.addEventListener("click", async () => {
     const file = imageInput.files[0];
     if(!file) {
@@ -31,7 +39,6 @@ scanBtn.addEventListener("click", async () => {
 
     outputDiv.textContent = "Processing…";
 
-    // Lees bestand naar Base64
     const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result.split(',')[1]);
@@ -42,8 +49,7 @@ scanBtn.addEventListener("click", async () => {
     try {
         const result = await scanForText(base64);
         if(result.base64) {
-            // Decode Base64 naar string (UTF-8)
-            const text = decodeURIComponent(escape(atob(result.base64)));
+            const text = base64ToUtf8(result.base64);
             outputDiv.textContent = text;
         } else {
             outputDiv.textContent = "No text detected.";
