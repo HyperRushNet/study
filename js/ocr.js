@@ -1,31 +1,32 @@
-// ocr.js - UITLEVERBARE JS-BIBLIOTHEEK
-// Voeg toe via <script src="https://hyperrushnet.github.io/study/js/ocr.js?v=1.0"></script>
+// ocr.js - Gewone JS bibliotheek
+// Laad met <script src="https://hyperrushnet.github.io/study/js/ocr.js?v=1.1"></script>
 
 (function(global) {
   /**
    * scanForText(base64Image)
-   * base64Image: Base64-encoded PNG/JPG image string
+   * base64Image: Base64-encoded PNG/JPG image string WITHOUT line breaks
    * Returns a Promise resolving to JSON with OCR results
    */
   global.scanForText = async function(base64Image) {
     if (!base64Image) throw new Error("No base64 image provided");
 
+    // Verwijder mogelijke line breaks
+    const cleanBase64 = base64Image.replace(/\s+/g, '');
+
     const systemPrompt = {
       role: "system",
-      content: "You are an OCR AI with the strictest instructions possible. " +
-        "Extract 100% of all visible text in the image exactly as it appears. " +
-        "Do not correct spelling, grammar, or formatting. Do not remove any text, " +
-        "even if it is gibberish, misaligned, or in foreign characters. " +
-        "Maintain line breaks, spacing, and punctuation exactly as in the image. " +
-        "If the image contains no text at all, respond with a clear message 'No text detected in image.' " +
-        "Absolutely do not interpret, summarize, or skip anything."
+      content: "You are an OCR AI. Extract 100% of ALL visible text from the image EXACTLY as it appears. " +
+               "Do not correct spelling, grammar, or punctuation. " +
+               "Do not interpret, summarize, or skip anything. " +
+               "Preserve line breaks, spacing, fonts, and all characters as visible in the image. " +
+               "If there is no text, clearly respond: 'No text detected in image.'"
     };
 
     const userMessage = {
       role: "user",
       content: [
-        { type: "text", text: "Extract ALL text from this image with absolute precision:" },
-        { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
+        { type: "text", text: "Extract ALL text from this image:" },
+        { type: "image_url", image_url: { url: `data:image/png;base64,${cleanBase64}` } }
       ]
     };
 
