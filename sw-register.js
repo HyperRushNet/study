@@ -1,44 +1,42 @@
 // sw-register.js
-(function (global) {
+(function(global) {
   'use strict';
 
-  // Bibliotheek object
   const SWLib = {};
 
   /**
    * Registreer de Service Worker
-   * @param {string} swPath - Pad naar je Service Worker bestand
+   * @param {string} swPath - pad naar de SW
    */
-  SWLib.register = function(swPath = './sw.js') {
+  SWLib.register = function(swPath = '/sw.js') {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register(swPath)
-        .then(registration => {
-          console.log(`Service Worker geregistreerd: ${registration.scope}`);
+        .then(reg => {
+          console.log(`Service Worker geregistreerd: ${reg.scope}`);
         })
-        .catch(error => {
-          console.error('Service Worker registratie mislukt:', error);
+        .catch(err => {
+          console.error('SW registratie mislukt:', err);
         });
     } else {
-      console.warn('Service Workers worden niet ondersteund in deze browser.');
+      console.warn('Service Workers niet ondersteund.');
     }
   };
 
   /**
-   * Controleer of er een actieve Service Worker is
+   * Check of SW actief is
    * @returns {boolean}
    */
   SWLib.isActive = function() {
     return navigator.serviceWorker && navigator.serviceWorker.controller ? true : false;
   };
 
-  // Auto-register bij load
+  // Auto-register bij DOMContentLoaded
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     SWLib.register();
   } else {
     window.addEventListener('DOMContentLoaded', () => SWLib.register());
   }
 
-  // Exporteer naar global object
   global.SWLib = SWLib;
 
 })(window);
