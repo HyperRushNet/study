@@ -1,32 +1,27 @@
-// ocr.js - Gewone JS bibliotheek
-// Laad met <script src="https://hyperrushnet.github.io/study/js/ocr.js?v=1.1"></script>
-
+// ocr.js
 (function(global) {
+
   /**
    * scanForText(base64Image)
-   * base64Image: Base64-encoded PNG/JPG image string WITHOUT line breaks
-   * Returns a Promise resolving to JSON with OCR results
+   * Returns a Promise resolving to base64-encoded string of the exact AI OCR output
    */
   global.scanForText = async function(base64Image) {
     if (!base64Image) throw new Error("No base64 image provided");
 
-    // Verwijder mogelijke line breaks
-    const cleanBase64 = base64Image.replace(/\s+/g, '');
-
     const systemPrompt = {
       role: "system",
-      content: "You are an OCR AI. Extract 100% of ALL visible text from the image EXACTLY as it appears. " +
-               "Do not correct spelling, grammar, or punctuation. " +
-               "Do not interpret, summarize, or skip anything. " +
-               "Preserve line breaks, spacing, fonts, and all characters as visible in the image. " +
-               "If there is no text, clearly respond: 'No text detected in image.'"
+      content: "You are an OCR AI. Extract ALL text exactly as seen in the image. " +
+               "Do not correct spelling, grammar, punctuation, or formatting. " +
+               "Preserve all line breaks, spacing, and characters exactly as in the image. " +
+               "If no text exists, respond with exactly 'No text detected in image.' " +
+               "Absolutely do not summarize or interpret."
     };
 
     const userMessage = {
       role: "user",
       content: [
-        { type: "text", text: "Extract ALL text from this image:" },
-        { type: "image_url", image_url: { url: `data:image/png;base64,${cleanBase64}` } }
+        { type: "text", text: "Extract all text from this image, preserving exact structure:" },
+        { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
       ]
     };
 
@@ -41,10 +36,13 @@
       });
 
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
       const data = await response.json();
-      return data.choices?.[0]?.message?.content || { error: "No text detected" };
+      const text = data.choices?.[0]?.message?.content || "No text detected in image.";
+      // encode the exact AI output as Base64
+      return btoa(unescape(encodeURIComponent(text)));
     } catch(err) {
-      return { error: err.message };
+      return btoa(unescape(encodeURIComponent("Error: " + err.message)));
     }
   };
 
