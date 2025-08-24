@@ -1,14 +1,14 @@
-const CACHE_NAME = 'offline-cache-v10';
+const CACHE_NAME = 'offline-cache-v11';
 const OFFLINE_URLS = [
-  './index.html',
-  './home.html',
-  './detail.html',
-  './pomodoro.html',
-  './add.html',
-  './planner.html',
-  './js/play16beepsound.js',
-  './sw.js',
-  './sw-register.js'
+  '/index.html',
+  '/home.html',
+  '/detail.html',
+  '/pomodoro.html',
+  '/add.html',
+  '/planner.html',
+  '/js/play16beepsound.js',
+  '/sw.js',
+  '/sw-register.js'
 ];
 
 // Install: cache alle belangrijke bestanden
@@ -32,18 +32,21 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch: cache-first + navigatie fallback
+// Fetch: cache-first + navigatie fallback, query params negeren
 self.addEventListener('fetch', event => {
+  const requestURL = new URL(event.request.url);
+  const pathname = requestURL.pathname; // strip query parameters
+
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    caches.match(pathname).then(cached => {
       if (cached) return cached;
 
-      // Navigatie (pagina bezoeken) → fallback naar index.html
+      // Navigatie fallback
       if (event.request.mode === 'navigate') {
         return caches.match('/index.html');
       }
 
-      // Alle andere requests: probeer fetch, fallback naar cache als beschikbaar
+      // Andere requests
       return fetch(event.request).catch(() =>
         new Response('Resource niet beschikbaar offline.', {
           status: 503,
