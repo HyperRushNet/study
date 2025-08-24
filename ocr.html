@@ -2,52 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OCR AI Demo</title>
 </head>
 <body>
-<h3>OCR AI Demo</h3>
+<h2>OCR AI Demo</h2>
 
-<input type="file" id="imageInput" accept="image/*"><br>
+<input type="file" id="imageInput" accept="image/*"><br><br>
 <button id="sendButton">Scan Image</button>
 
-<h4>OCR Text Output:</h4>
-<div id="decodedOutput" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+<h3>OCR Result:</h3>
+<div id="output" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
 
 <script type="module">
-const moduleUrl = `https://hyperrushnet.github.io/study/js/ocr.js?v=${Date.now()}`;
-const { scanForText } = await import(moduleUrl);
+import { scanForText } from 'https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now();
 
-const imageInput = document.getElementById("imageInput");
-const sendButton = document.getElementById("sendButton");
-const decodedOutput = document.getElementById("decodedOutput");
+const imageInput = document.getElementById('imageInput');
+const sendButton = document.getElementById('sendButton');
+const output = document.getElementById('output');
 
-sendButton.addEventListener("click", async () => {
+// Unicode-safe Base64 decode
+function base64DecodeUnicode(str) {
+  return decodeURIComponent(Array.prototype.map.call(atob(str), c =>
+    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  ).join(''));
+}
+
+sendButton.addEventListener('click', async () => {
   const file = imageInput.files[0];
-  if(!file) return alert("Please upload an image.");
-
-  decodedOutput.textContent = "Processing…";
-
-  try {
-    const base64Image = await fileToBase64(file);
-    const result = await scanForText(base64Image);
-
-    // Decode Base64 safely
-    const decodedText = decodeURIComponent(escape(atob(result.base64 || "")));
-    decodedOutput.textContent = decodedText || "NO TEXT DETECTED";
-
-  } catch(err) {
-    decodedOutput.textContent = "Error: " + err;
+  if (!file) {
+    alert("Please upload an image.");
+    return;
   }
-});
 
-function fileToBase64(file){
-  return new Promise((resolve, reject)=>{
+  output.textContent = "Processing...";
+
+  const base64 = await new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = ()=>resolve(reader.result.split(',')[1]);
+    reader.onload = () => resolve(reader.result.split(',')[1]);
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
-}
+
+  try {
+    const result = await scanForText(base64);
+    const decodedText = base64DecodeUnicode(result.base64);
+    output.textContent = decodedText;
+  } catch (err) {
+    output.textContent = "Error: " + err.message;
+  }
+
+  imageInput.value = "";
+});
 </script>
 </body>
 </html>
