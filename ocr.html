@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OCR AI Chat with Base64 Output - Fixed</title>
+<title>OCR AI Chat with Base64 Output</title>
 </head>
 <body>
 <h3>Upload Image for OCR</h3>
@@ -10,22 +10,27 @@
 <input type="file" id="imageInput" accept="image/*"><br>
 <button id="scanButton">Scan for Text</button>
 
-<h4>OCR Result:</h4>
+<h4>OCR Result (decoded text):</h4>
 <div id="result" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+
+<h4>OCR Result (Base64):</h4>
+<div id="resultBase64" style="word-break: break-all; border: 1px solid #ccc; padding: 10px;"></div>
 
 <script type="module">
   const imageInput = document.getElementById('imageInput');
   const scanButton = document.getElementById('scanButton');
   const resultDiv = document.getElementById('result');
+  const resultBase64Div = document.getElementById('resultBase64');
 
   scanButton.addEventListener('click', async () => {
     const file = imageInput.files[0];
-    if(!file) {
+    if(!file){
       alert('Please select an image.');
       return;
     }
 
     resultDiv.textContent = 'Processing…';
+    resultBase64Div.textContent = '';
 
     try {
       const base64 = await fileToBase64(file);
@@ -36,21 +41,23 @@
 
       const response = await scanForText(base64);
 
-      if(response.base64) {
-        // Decode Base64 inclusief emoji/Unicode
-        const decodedText = decodeURIComponent(escape(atob(response.base64)));
-        resultDiv.textContent = decodedText;
+      if(response.text){
+        // Unicode-safe Base64 encoding
+        const base64Text = btoa(unescape(encodeURIComponent(response.text)));
+
+        resultDiv.textContent = response.text;
+        resultBase64Div.textContent = base64Text;
       } else {
         resultDiv.textContent = 'No text returned.';
       }
 
-    } catch(err) {
+    } catch(err){
       console.error(err);
       resultDiv.textContent = 'Error: ' + err.message;
     }
   });
 
-  function fileToBase64(file) {
+  function fileToBase64(file){
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result.split(',')[1]);
