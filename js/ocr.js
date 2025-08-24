@@ -15,7 +15,7 @@ export async function scanForText(base64Image) {
   const userMessage = {
     role: "user",
     content: [
-      { type: "text", text: "Extract all text from this image:" },
+      { type: "text", text: "Extract all text from this image, only give the text, no backtick codebox, no explanation, just all raw text from the image:" },
       { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
     ]
   };
