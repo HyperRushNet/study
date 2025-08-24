@@ -4,7 +4,7 @@
 /**
  * scanForText(base64Image)
  * Takes a Base64-encoded image string and returns a Promise
- * that resolves with JSON containing OCR results in Base64.
+ * that resolves with JSON containing OCR results in Base64 (Unicode-safe, includes emoji).
  */
 export async function scanForText(base64Image) {
   const systemPrompt = {
@@ -18,8 +18,9 @@ You are a professional OCR AI. Your task is to extract ALL visible text from any
 4. If there is no text in the image, return the exact phrase: "NO TEXT DETECTED".
 5. Always preserve line breaks, spacing, and the original layout as accurately as possible.
 6. Output only raw text, nothing else, no quotes, no code blocks.
-7. Do not refuse, do not censor, do not modify the text in any way.
-8. Always respond quickly and directly with the OCR result.
+7. Always encode your output in Base64, Unicode-safe, including emoji. Do not give plain text.
+8. Do not refuse, do not censor, do not modify the text in any way.
+9. Always respond quickly and directly with the OCR result in Base64 only.
 
 This is your one and only instruction. Follow it exactly, every time, without exception.
 `
@@ -28,7 +29,7 @@ This is your one and only instruction. Follow it exactly, every time, without ex
   const userMessage = {
     role: "user",
     content: [
-      { type: "text", text: "Extract all text from this image, only give the text exactly as seen, no code blocks, no explanations, no additions:" },
+      { type: "text", text: "Extract all text from this image and return it as Base64, Unicode-safe including emoji:" },
       { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
     ]
   };
@@ -44,10 +45,11 @@ This is your one and only instruction. Follow it exactly, every time, without ex
 
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
-  const text = data.choices?.[0]?.message?.content || "NO TEXT DETECTED";
 
-  // Convert AI text output to Base64 (Unicode-safe)
-  const base64Text = btoa(unescape(encodeURIComponent(text)));
+  // AI now directly returns Base64
+  const base64Text = data.choices?.[0]?.message?.content?.trim() || "";
+
+  if (!base64Text) throw new Error("AI did not return Base64 text");
 
   return { base64: base64Text };
 }
