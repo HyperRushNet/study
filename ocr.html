@@ -2,63 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OCR AI Demo with Emoji</title>
+<title>OCR AI Chat with Base64 Output</title>
 </head>
 <body>
-<h2>OCR AI Demo</h2>
+<h3>Upload Image for OCR</h3>
 
 <input type="file" id="imageInput" accept="image/*"><br>
-<button id="scanBtn">Scan Image</button>
+<button id="scanButton">Scan for Text</button>
 
-<h3>OCR Result:</h3>
-<div id="output" style="white-space: pre-wrap; border:1px solid #ccc; padding:10px; margin-top:10px;"></div>
+<h4>OCR Result:</h4>
+<div id="result" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
 
 <script type="module">
-const outputDiv = document.getElementById("output");
-const imageInput = document.getElementById("imageInput");
-const scanBtn = document.getElementById("scanBtn");
+  import { scanForText } from 'https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now();
 
-// Dynamische import met cache-busting
-const ocrModule = await import('https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now());
-const scanForText = ocrModule.scanForText;
+  const imageInput = document.getElementById('imageInput');
+  const scanButton = document.getElementById('scanButton');
+  const resultDiv = document.getElementById('result');
 
-// Correcte Base64 decode met UTF-8 (emoji support)
-function base64ToUtf8(base64) {
-  const binary = atob(base64);
-  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
-  const decoder = new TextDecoder("utf-8");
-  return decoder.decode(bytes);
-}
-
-scanBtn.addEventListener("click", async () => {
+  scanButton.addEventListener('click', async () => {
     const file = imageInput.files[0];
     if(!file) {
-        alert("Please upload an image.");
-        return;
+      alert('Please select an image.');
+      return;
     }
 
-    outputDiv.textContent = "Processing…";
-
-    const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
+    resultDiv.textContent = 'Processing…';
 
     try {
-        const result = await scanForText(base64);
-        if(result.base64) {
-            const text = base64ToUtf8(result.base64);
-            outputDiv.textContent = text;
-        } else {
-            outputDiv.textContent = "No text detected.";
-        }
+      const base64 = await fileToBase64(file);
+      const response = await scanForText(base64);
+
+      if(response.base64) {
+        // Decode Base64 including emoji/Unicode
+        const decodedText = decodeURIComponent(escape(atob(response.base64)));
+        resultDiv.textContent = decodedText;
+      } else {
+        resultDiv.textContent = 'No text returned.';
+      }
+
     } catch(err) {
-        outputDiv.textContent = "Error: " + err;
-        console.error(err);
+      console.error(err);
+      resultDiv.textContent = 'Error: ' + err.message;
     }
-});
+  });
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
 </script>
 </body>
 </html>
