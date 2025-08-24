@@ -13,9 +13,12 @@
 <h3>OCR Output:</h3>
 <div id="output" style="white-space: pre-wrap; border:1px solid #ccc; padding:10px;"></div>
 
-<script src="https://hyperrushnet.github.io/study/js/ocr.js?v=1335637892537353"></script>
-
 <script>
+// Dynamically load OCR JS with timestamp
+const script = document.createElement("script");
+script.src = `https://hyperrushnet.github.io/study/js/ocr.js?v=${Date.now()}`;
+document.head.appendChild(script);
+
 const imageInput = document.getElementById("imageInput");
 const scanBtn = document.getElementById("scanBtn");
 const outputDiv = document.getElementById("output");
@@ -47,6 +50,11 @@ scanBtn.addEventListener("click", async () => {
 
   try {
     const base64Image = await fileToBase64(file);
+    // Wait until scanForText is loaded
+    if (typeof scanForText !== "function") {
+      outputDiv.textContent = "OCR script not loaded yet. Please wait a moment and try again.";
+      return;
+    }
     const aiBase64 = await scanForText(base64Image); // returns base64
     displayBase64Text(aiBase64);
   } catch (err) {
