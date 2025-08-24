@@ -1,14 +1,14 @@
-const CACHE_NAME = 'offline-cache-v8';
+const CACHE_NAME = 'offline-cache-v9';
 const OFFLINE_URLS = [
-  '/index.html',
-  '/home.html',
-  '/detail.html',
-  '/pomodoro.html',
-  '/add.html',
-  '/planner.html',
-  '/js/play16beepsound.js',
-  '/sw.js',
-  '/sw-register.js'
+  './index.html',
+  './home.html',
+  './detail.html',
+  './pomodoro.html',
+  './add.html',
+  './planner.html',
+  './js/play16beepsound.js',
+  './sw.js',
+  './sw-register.js'
 ];
 
 // Install: cache alle belangrijke bestanden
