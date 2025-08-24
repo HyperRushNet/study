@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OCR AI Chat with Base64 Output</title>
+<title>OCR AI Chat with Base64 Output - Fixed</title>
 </head>
 <body>
 <h3>Upload Image for OCR</h3>
@@ -14,8 +14,6 @@
 <div id="result" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
 
 <script type="module">
-  import { scanForText } from 'https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now();
-
   const imageInput = document.getElementById('imageInput');
   const scanButton = document.getElementById('scanButton');
   const resultDiv = document.getElementById('result');
@@ -31,10 +29,15 @@
 
     try {
       const base64 = await fileToBase64(file);
+
+      // Dynamische import met cache-busting
+      const ocrModule = await import('https://hyperrushnet.github.io/study/js/ocr.js?v=' + Date.now());
+      const { scanForText } = ocrModule;
+
       const response = await scanForText(base64);
 
       if(response.base64) {
-        // Decode Base64 including emoji/Unicode
+        // Decode Base64 inclusief emoji/Unicode
         const decodedText = decodeURIComponent(escape(atob(response.base64)));
         resultDiv.textContent = decodedText;
       } else {
