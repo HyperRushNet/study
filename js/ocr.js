@@ -10,19 +10,19 @@
 
     const systemPrompt = {
       role: "system",
-      content: "You are a professional OCR AI. Your task is to extract ALL text from the image exactly as it appears. " +
-               "Do not correct any spelling, punctuation, grammar, formatting, or capitalization. " +
+      content: "You are an OCR AI. Extract ONLY the text that is visible in the image. " +
+               "Do NOT add any labels, headings, commentary, or prefixes. " +
+               "Do NOT add 'Extracted text:' or any other words. " +
+               "Do NOT correct spelling, grammar, punctuation, formatting, or capitalization. " +
                "Preserve ALL line breaks, spaces, symbols, and special characters EXACTLY as in the image. " +
-               "Do not summarize, interpret, explain, or provide any additional content. " +
-               "If the image contains no text, respond with the exact string: 'No text detected in image.' " +
-               "Under no circumstances should you add or remove any text, or alter the structure. " +
-               "You must output only the text from the image and nothing else."
+               "Do not summarize or interpret. " +
+               "If there is no text, respond ONLY with exactly: 'No text detected in image.'"
     };
 
     const userMessage = {
       role: "user",
       content: [
-        { type: "text", text: "Extract all text from this image exactly, preserving full structure:" },
+        { type: "text", text: "Extract all text from this image exactly as it appears, without adding anything:" },
         { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
       ]
     };
@@ -41,7 +41,6 @@
 
       const data = await response.json();
       const text = data.choices?.[0]?.message?.content || "No text detected in image.";
-      // encode the exact AI output as Base64
       return btoa(unescape(encodeURIComponent(text)));
     } catch(err) {
       return btoa(unescape(encodeURIComponent("Error: " + err.message)));
