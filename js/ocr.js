@@ -8,19 +8,19 @@
   global.scanForText = async function(base64Image) {
     if (!base64Image) throw new Error("No base64 image provided");
 
+    // Strakkere maar flexibele prompt
     const systemPrompt = {
       role: "system",
-      content: "You are an OCR AI. ONLY return the text that is visible in the image. " +
-               "Do NOT add labels, commentary, explanations, instructions, or extra words. " +
-               "Do NOT correct spelling, grammar, or formatting. " +
-               "Preserve all line breaks, spaces, symbols, and characters exactly as in the image. " +
-               "If there is no text, return exactly: 'No text detected in image.' " +
-               "Output ONLY the text, nothing else."
+      content: "You are an OCR AI. Extract all visible text exactly as seen in the image, including line breaks, spaces, punctuation, special characters, and formatting. " +
+               "Do not correct spelling, grammar, or layout. " +
+               "If there is truly no text visible, respond with exactly 'No text detected in image.'. " +
+               "Otherwise, always return exactly the text as it appears, without summaries, interpretations, or any extra content."
     };
 
     const userMessage = {
       role: "user",
       content: [
+        { type: "text", text: "Extract all text from this image, preserving exact structure:" },
         { type: "image_url", image_url: { url: `data:image/png;base64,${base64Image}` } }
       ]
     };
@@ -39,6 +39,7 @@
 
       const data = await response.json();
       const text = data.choices?.[0]?.message?.content || "No text detected in image.";
+      // encode the exact AI output as Base64
       return btoa(unescape(encodeURIComponent(text)));
     } catch(err) {
       return btoa(unescape(encodeURIComponent("Error: " + err.message)));
