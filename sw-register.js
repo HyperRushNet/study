@@ -17,7 +17,7 @@
     return !!(navigator.serviceWorker && navigator.serviceWorker.controller);
   };
 
-  // Auto-register
+  // Auto-register bij DOM ready
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     SWLib.register();
   } else {
