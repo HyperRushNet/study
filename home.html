@@ -6,200 +6,211 @@
 		<title>HRN Study</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 		<style>
- :root{
-    --primary:#5d5dff;
-    --bg-color:#f0f2f5;
-    --card-bg:#fff;
-    --text-dark:#333;
-    --text-medium:#666;
-    --text-light:#888;
-    --task-bg:#ffe9d6;
-    --test-bg:#e6f2ff;
-    --exam-bg:#e6fff2
-}
-html,body{
-    height:100%;
-    margin:0;
-    padding:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background-color:var(--bg-color);
-    display:flex;
-    justify-content:center
-}
-.phone-ui{
-    width:100vw;
-    max-width:500px;
-    min-height:100%;
-    background-color:var(--card-bg);
-    box-shadow:0 4px 20px rgba(0,0,0,.1);
-    display:flex;
-    flex-direction:column;
-    padding:30px 20px;
-    box-sizing:border-box;
-    position:relative
-}
-.header{
-    margin-bottom:15px
-}
-.header h1{
-    font-size:32px;
-    font-weight:600;
-    color:var(--text-dark);
-    margin:0
-}
-.header .date{
-    font-size:14px;
-    color:var(--text-light);
-    margin-top:5px
-}
-.tools-section{
-    margin-bottom:5px;
-    position:relative;
-    overflow:hidden;
-    width:100%;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    user-select:none
-}
-.tools-container{
-    display:flex;
-    flex-wrap:nowrap;
-    gap:15px;
-    width:100%;
-    transform:translateX(0);
-    transition:transform .3s ease-in-out
-}
-.tools-grid{
-    min-width:100%;
-    flex-shrink:0;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    padding:15px;
-    background-color:var(--card-bg);
-    border-radius:16px;
-    box-sizing:border-box
-}
-.tool-button{
-    background-color:var(--card-bg);
-    box-shadow:0 4px 8px rgba(0,0,0,.1);
-    border-radius:16px;
-    padding:15px 0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-decoration:none;
-    color:var(--text-dark);
-    font-size:14px;
-    font-weight:500;
-    text-align:center;
-    transition:transform .2s ease
-}
-.tool-button:hover{
-    transform:translateY(-3px)
-}
-.tool-button i{
-    font-size:28px;
-    margin-bottom:8px;
-    color:var(--primary)
-}
-.scrollable-content{
-    flex-grow:1;
-    overflow-y:auto;
-    padding-right:5px;
-    display:flex;
-    flex-direction:column;
-    align-items:center
-}
-.scrollable-content::-webkit-scrollbar{
-    display:none
-}
-.scrollable-content{
-    scrollbar-width:none;
-    -ms-overflow-style:none
-}
-.card-list{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    padding:0;
-    margin:0;
-    list-style:none;
-    width:100%
-}
-.card{
-    border-radius:16px;
-    box-shadow:0 4px 8px rgba(0,0,0,.1);
-    padding:18px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    text-decoration:none;
-    color:inherit
-}
-.card-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center
-}
-.card-top .label{
-    padding:5px 12px;
-    border-radius:12px;
-    font-size:13px;
-    font-weight:600;
-    color:var(--text-dark)
-}
-.card-top .date-time{
-    font-size:15px;
-    font-weight:500;
-    color:var(--text-medium);
-    text-align:right;
-    line-height:1.2
-}
-.card h2{
-    font-size:19px;
-    font-weight:500;
-    color:var(--text-dark);
-    margin:0;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis
-}
-.no-items{
-    width:100%;
-    text-align:center;
-    color:var(--text-light);
-    font-size:18px;
-    margin-top:50px
-}
-.add-button{
-    position:fixed;
-    bottom:30px;
-    right:30px;
-    background-color:var(--primary);
-    color:#fff;
-    border-radius:50%;
-    width:55px;
-    height:55px;
-    font-size:26px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-decoration:none;
-    box-shadow:0 4px 10px rgba(0,0,0,.2);
-    z-index:10
-}
-.tasks .label{
-    background-color:var(--task-bg)
-}
-.tests .label{
-    background-color:var(--test-bg)
-}
-.exams .label{
-    background-color:var(--exam-bg)
-}
+			:root {
+				--primary: #794dff;
+				--bg-color: #57a5ff;
+				--card-bg: #fff;
+				--text-dark: #2a2a2a;
+				--text-medium: #555;
+				--text-light: #999;
+				--task-bg: #ffe9d6;
+				--test-bg: #e6f2ff;
+				--exam-bg: #e6fff2;
+			}
+			html,
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+				background-color: var(--bg-color);
+				display: flex;
+				justify-content: center;
+			}
+			.phone-ui {
+				width: 100vw;
+				max-width: 500px;
+				min-height: 100%;
+				background-color: var(--card-bg);
+				box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+				display: flex;
+				flex-direction: column;
+				padding: 30px 20px;
+				box-sizing: border-box;
+				position: relative;
+			}
+			.header {
+				margin-bottom: 25px;
+			}
+			.header h1 {
+				font-size: 34px;
+				font-weight: 700;
+				color: var(--text-dark);
+				margin: 0;
+			}
+			.header .date {
+				font-size: 15px;
+				color: var(--text-light);
+				margin-top: 5px;
+			}
+			.tools-section {
+				margin-bottom: 20px;
+				position: relative;
+				overflow: hidden;
+				width: 100%;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				user-select: none;
+			}
+			.tools-container {
+				display: flex;
+				flex-wrap: nowrap;
+				gap: 15px;
+				width: 100%;
+				transform: translateX(0);
+				transition: transform 0.3s ease-in-out;
+			}
+			.tools-grid {
+				min-width: 100%;
+				flex-shrink: 0;
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 15px;
+				padding: 15px;
+				background-color: transparent;
+				border-radius: 18px;
+				box-sizing: border-box;
+  box-shadow: inset 0 0 0 1px #e8e8e8;
+          
+			}
+			.tool-button {
+				background-color: var(--card-bg);
+				box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+				border-radius: 16px;
+				padding: 15px 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-decoration: none;
+				color: var(--text-dark);
+				font-size: 13px;
+				font-weight: 500;
+				text-align: center;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+                border: 1px solid #e8e8e8;
+			}
 
+			.tool-button i {
+				font-size: 30px;
+				margin-bottom: 10px;
+				color: var(--primary);
+			}
+			.scrollable-content {
+				flex-grow: 1;
+				overflow-y: auto;
+				padding-right: 5px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.scrollable-content::-webkit-scrollbar {
+				display: none;
+			}
+			.scrollable-content {
+				scrollbar-width: none;
+				-ms-overflow-style: none;
+			}
+			.card-list {
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				width: 100%;
+			}
+			.card {
+				border-radius: 18px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+				padding: 20px;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				text-decoration: none;
+				color: inherit;
+				transition: transform 0.2s ease;
+                border: 1px solid #e8e8e8;
+			}
+	
+			.card-top {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+			}
+			.card-top .label {
+				padding: 6px 14px;
+				border-radius: 14px;
+				font-size: 13px;
+				font-weight: 600;
+				color: var(--text-dark);
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+			.card-top .date-time {
+				font-size: 14px;
+				font-weight: 500;
+				color: var(--text-medium);
+				text-align: right;
+				line-height: 1.2;
+			}
+			.card h2 {
+				font-size: 20px;
+				font-weight: 600;
+				color: var(--text-dark);
+				margin: 0;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.no-items {
+				width: 100%;
+				text-align: center;
+				color: var(--text-light);
+				font-size: 18px;
+				margin-top: 50px;
+				line-height: 1.5;
+			}
+			.add-button {
+				position: fixed;
+				bottom: 30px;
+				right: 30px;
+				background-color: var(--primary);
+				color: #fff;
+				border-radius: 50%;
+				width: 60px;
+				height: 60px;
+				font-size: 28px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				text-decoration: none;
+				box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+				z-index: 10;
+				transition: transform 0.2s ease;
+			}
+			.add-button:hover {
+				transform: translateY(-2px);
+			}
+			.tasks .label {
+				background-color: var(--task-bg);
+			}
+			.tests .label {
+				background-color: var(--test-bg);
+			}
+			.exams .label {
+				background-color: var(--exam-bg);
+			}
 		</style>
 	</head>
 	<body>
@@ -227,7 +238,115 @@ html,body{
 			<a href="./add.html" class="add-button"><i class="fas fa-plus"></i></a>
 		</div>
 		<script>
-			document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("greeting-text"),t=document.getElementById("card-list"),c=document.getElementById("current-date"),o=document.getElementById("pomodoro-button");let s=[];const r=document.querySelector(".tools-container"),d=document.querySelector(".tools-section");let i=!1,a=0,l=0,n=0,u=0;const m=3;function v(){const e=d.offsetWidth+15;l=u*-e,n=l,p()}function p(){r.style.transform=`translateX(${l}px)`}function f(e){i=!0,a=e.touches[0].clientX,r.style.transition="none"}function h(e){if(!i)return;const t=e.touches[0].clientX,c=t-a;let o=n+c;if(u===0&&c>0){o=n+c/2}else if(u===m-1&&c<0){o=n+c/2}l=o,p()}function k(){i=!1;const e=l-n,t=d.offsetWidth/3;if(e<-t&&u<m-1){u+=1}else if(e>t&&u>0){u-=1}r.style.transition="transform .3s ease-in-out",v()}r.addEventListener("touchstart",f),r.addEventListener("touchmove",h),r.addEventListener("touchend",k);function g(){const e=(new Date).getHours();return e>=5&&e<12?"Good morning!":e>=12&&e<18?"Good afternoon!":e>=18&&e<22?"Good evening!":"Good night!"}function x(){if(t.innerHTML="",!localStorage.getItem("HRN_Study_visited")){localStorage.setItem("HRN_Study_visited","true")}if(0===s.length)return void(t.innerHTML=`<p class="no-items">${!localStorage.getItem("HRN_Study_visited")?"No assignments yet. You can add some using the \"+\" button.":"You have completed all your assignments! You can always add more using the \"+\" button."}</p>`);const e=(new Date).toISOString().split("T")[0],c=new Date;c.setDate(c.getDate()+1);const o=c.toISOString().split("T")[0];s.forEach((c=>{const s=new Date(c.date);let d=s.toLocaleDateString("en-US",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"});c.date===e?d="Today":c.date===o&&(d="Tomorrow");const i=`${c.startTime} - ${c.endTime}`;let a=c.type;a="tasks"===a?"Task":"tests"===a?"Test":"exams"===a?"Exam":"";const l=`<li><a href="detail.html?id=${c.type}_${c.id}" class="card ${c.type}"><div class="card-top"><div class="label">${a}</div><div class="date-time">${d} | ${i}</div></div><h2>${c.title}</h2></a></li>`;t.innerHTML+=l}))}function y(){const e=localStorage.getItem("HRN_Study_data"),t=e?JSON.parse(e):{tasks:[],tests:[],exams:[]};s=[...t.tasks.map(((e,t)=>({...e,type:"tasks",id:t}))),...t.tests.map(((e,t)=>({...e,type:"tests",id:t}))),...t.exams.map(((e,t)=>({...e,type:"exams",id:t})))],s.sort(((e,t)=>{const c=new Date(`${e.date}T${e.startTime}`),o=new Date(`${t.date}T${t.startTime}`);return c-o})),x()}function w(){const t=new Date,c={weekday:"long",year:"numeric",month:"long",day:"numeric"},o={hour:"2-digit",minute:"2-digit",hourCycle:"h23"},s=t.toLocaleDateString("en-US",c),r=t.toLocaleTimeString("en-US",o);e.textContent=g(),document.getElementById("current-date").textContent=`${s} - ${r}`}w(),y();const S=new Date,D=(60-S.getSeconds())*1e3-S.getMilliseconds();setTimeout((()=>{w(),setInterval((()=>{w(),y()}),6e4)}),D),window.addEventListener("focus",y),o.addEventListener("click",(()=>{window.parent.postMessage({page:"pomodoro"},"*")}))});
+			document.addEventListener("DOMContentLoaded", () => {
+				const e = document.getElementById("greeting-text"),
+					t = document.getElementById("card-list"),
+					c = document.getElementById("current-date"),
+					o = document.getElementById("pomodoro-button");
+				let s = [];
+				const r = document.querySelector(".tools-container"),
+					d = document.querySelector(".tools-section");
+				let i = !1,
+					a = 0,
+					l = 0,
+					n = 0,
+					u = 0;
+				const m = 3;
+				function v() {
+					const e = d.offsetWidth + 15;
+					(l = u * -e), (n = l), p();
+				}
+				function p() {
+					r.style.transform = `translateX(${l}px)`;
+				}
+				function f(e) {
+					(i = !0), (a = e.touches[0].clientX), (r.style.transition = "none");
+				}
+				function h(e) {
+					if (!i) return;
+					const t = e.touches[0].clientX,
+						c = t - a;
+					let o = n + c;
+					if (0 === u && c > 0) {
+						o = n + c / 2;
+					} else if (u === m - 1 && c < 0) {
+						o = n + c / 2;
+					}
+					(l = o), p();
+				}
+				function k() {
+					i = !1;
+					const e = l - n,
+						t = d.offsetWidth / 3;
+					if (e < -t && u < m - 1) {
+						u += 1;
+					} else if (e > t && u > 0) {
+						u -= 1;
+					}
+					(r.style.transition = "transform .3s ease-in-out"), v();
+				}
+				r.addEventListener("touchstart", f), r.addEventListener("touchmove", h), r.addEventListener("touchend", k);
+				function g() {
+					const e = new Date().getHours();
+					return e >= 5 && e < 12 ? "Good morning!" : e >= 12 && e < 18 ? "Good afternoon!" : e >= 18 && e < 22 ? "Good evening!" : "Good night!";
+				}
+				function x() {
+					if (((t.innerHTML = ""), !localStorage.getItem("HRN_Study_visited"))) {
+						localStorage.setItem("HRN_Study_visited", "true");
+					}
+					if (0 === s.length)
+						return void (t.innerHTML = `<p class="no-items">${!localStorage.getItem("HRN_Study_visited") ? 'No assignments yet. You can add some using the "+" button.' : 'You have completed all your assignments! You can always add more using the "+" button.'}</p>`);
+					const e = new Date().toISOString().split("T")[0],
+						c = new Date();
+					c.setDate(c.getDate() + 1);
+					const o = c.toISOString().split("T")[0];
+					s.forEach((c) => {
+						const s = new Date(c.date);
+						let d = s.toLocaleDateString("en-US", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+						c.date === e ? (d = "Today") : c.date === o && (d = "Tomorrow");
+						const i = `${c.startTime} - ${c.endTime}`;
+						let a = c.type;
+						(a = "tasks" === a ? "Task" : "tests" === a ? "Test" : "exams" === a ? "Exam" : ""),
+							(t.innerHTML += `<li><a href="detail.html?id=${c.type}_${c.id}" class="card ${c.type}"><div class="card-top"><div class="label">${a}</div><div class="date-time">${d} | ${i}</div></div><h2>${c.title}</h2></a></li>`);
+					});
+				}
+				function y() {
+					const e = localStorage.getItem("HRN_Study_data"),
+						t = e ? JSON.parse(e) : { tasks: [], tests: [], exams: [] };
+					(s = [
+						...t.tasks.map((e, t) => ({ ...e, type: "tasks", id: t })),
+						...t.tests.map((e, t) => ({ ...e, type: "tests", id: t })),
+						...t.exams.map((e, t) => ({ ...e, type: "exams", id: t })),
+					]),
+						s.sort((e, t) => {
+							const c = new Date(`${e.date}T${e.startTime}`),
+								o = new Date(`${t.date}T${t.startTime}`);
+							return c - o;
+						}),
+						x();
+				}
+				function w() {
+					const t = new Date(),
+						c = { weekday: "long", year: "numeric", month: "long", day: "numeric" },
+						o = { hour: "2-digit", minute: "2-digit", hourCycle: "h23" },
+						s = t.toLocaleDateString("en-US", c),
+						r = t.toLocaleTimeString("en-US", o);
+					(e.textContent = g()), (document.getElementById("current-date").textContent = `${s} - ${r}`);
+				}
+				w(), y();
+				const S = new Date(),
+					D = 6e4 - (1e3 * S.getSeconds() + S.getMilliseconds());
+				setTimeout(() => {
+					w(),
+						setInterval(() => {
+							w(), y();
+						}, 6e4);
+				}, D),
+					window.addEventListener("focus", y),
+					o.addEventListener("click", () => {
+						window.parent.postMessage({ page: "pomodoro" }, "*");
+					});
+			});
 		</script>
 	</body>
 </html>
