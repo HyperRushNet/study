@@ -6,27 +6,42 @@
 <title>HRN Study</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{--primary:#5d5dff;--bg-color:#f0f2f5;--card-bg:#fff;--text-dark:#333;--text-medium:#666;--text-light:#888;--task-bg:#ffe9d6;--test-bg:#e6f2ff;--exam-bg:#e6fff2}html,body{height:100%;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background-color:var(--bg-color);display:flex;justify-content:center}.phone-ui{width:100vw;max-width:500px;min-height:100%;background-color:var(--card-bg);box-shadow:0 4px 20px rgba(0,0,0,.1);display:flex;flex-direction:column;padding:30px 20px;box-sizing:border-box;position:relative}.header{margin-bottom:15px}.header h1{font-size:32px;font-weight:600;color:var(--text-dark);margin:0}.header .date{font-size:14px;color:var(--text-light);margin-top:5px}.tools-section{margin-bottom:25px}.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.tool-button{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:15px;background-color:var(--card-bg);border-radius:16px;box-shadow:0 4px 8px rgba(0,0,0,.1);text-decoration:none;color:var(--text-dark);font-size:14px;font-weight:500;text-align:center;transition:transform .2s ease,box-shadow .2s ease}.tool-button:hover{transform:translateY(-3px);box-shadow:0 6px 12px rgba(0,0,0,.15)}.tool-button i{font-size:28px;margin-bottom:8px;color:var(--primary)}.scrollable-content{flex-grow:1;overflow-y:auto;padding-right:5px;display:flex;flex-direction:column;align-items:center}.scrollable-content::-webkit-scrollbar{display:none}.scrollable-content{scrollbar-width:none;-ms-overflow-style:none}.card-list{display:flex;flex-direction:column;gap:12px;padding:0;margin:0;list-style:none;width:100%}.card{border-radius:16px;box-shadow:0 4px 8px rgba(0,0,0,.1);padding:18px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit}.card-top{display:flex;justify-content:space-between;align-items:center}.card-top .label{padding:5px 12px;border-radius:12px;font-size:13px;font-weight:600;color:var(--text-dark)}.card-top .date-time{font-size:15px;font-weight:500;color:var(--text-medium);text-align:right;line-height:1.2}.card h2{font-size:19px;font-weight:500;color:var(--text-dark);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.no-items{width:100%;text-align:center;color:var(--text-light);font-size:18px;margin-top:50px}.add-button{position:fixed;bottom:30px;right:30px;background-color:var(--primary);color:#fff;border-radius:50%;width:55px;height:55px;font-size:26px;display:flex;justify-content:center;align-items:center;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:10}.tasks .label{background-color:var(--task-bg)}.tests .label{background-color:var(--test-bg)}.exams .label{background-color:var(--exam-bg)}
+:root{--primary:#5d5dff;--bg-color:#f0f2f5;--card-bg:#fff;--text-dark:#333;--text-medium:#666;--text-light:#888;--task-bg:#ffe9d6;--test-bg:#e6f2ff;--exam-bg:#e6fff2}html,body{height:100%;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background-color:var(--bg-color);display:flex;justify-content:center}.phone-ui{width:100vw;max-width:500px;min-height:100%;background-color:var(--card-bg);box-shadow:0 4px 20px rgba(0,0,0,.1);display:flex;flex-direction:column;padding:30px 20px;box-sizing:border-box;position:relative}.header{margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}.header h1{font-size:32px;font-weight:600;color:var(--text-dark);margin:0}.header .date{font-size:14px;color:var(--text-light);margin-top:5px}.tools-section{margin-bottom:25px;padding-left:15px;padding-right:15px;position:relative;height:120px;overflow:hidden}.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;position:absolute;top:0;left:15px;width:calc(100% - 30px);height:100%;transition:transform 0.5s ease-in-out,opacity 0.5s ease-in-out}.tools-grid-active{z-index:1;opacity:1;transform:translateX(0)}.tools-grid-left{opacity:0;transform:translateX(-100%);z-index:0}.tools-grid-right{opacity:0;transform:translateX(100%);z-index:0}.tool-button{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:15px;background-color:var(--card-bg);border-radius:16px;border-bottom: 1px solid #D3D3D3; border-right: 1px solid #D3D3D3; text-decoration:none;color:var(--text-dark);font-size:14px;font-weight:500;text-align:center;transition:transform .2s ease,box-shadow .2s ease}.tool-button:hover{transform:translateY(-3px);box-shadow:0 6px 12px rgba(0,0,0,.15)}.tool-button i{font-size:28px;margin-bottom:8px;color:var(--primary)}.scrollable-content{flex-grow:1;overflow-y:auto;padding:0 15px;display:flex;flex-direction:column;align-items:center}.scrollable-content::-webkit-scrollbar{display:none}.scrollable-content{scrollbar-width:none;-ms-overflow-style:none}.card-list{display:flex;flex-direction:column;gap:15px;padding:0;margin:0;list-style:none;width:100%}.card-list li{margin:0;padding:0;}.card{border-radius:16px;box-shadow:0 4px 8px rgba(0,0,0,.1);padding:18px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit}.card-top{display:flex;justify-content:space-between;align-items:center}.card-top .label{padding:5px 12px;border-radius:12px;font-size:13px;font-weight:600;color:var(--text-dark)}.card-top .date-time{font-size:15px;font-weight:500;color:var(--text-medium);text-align:right;line-height:1.2}.card h2{font-size:19px;font-weight:500;color:var(--text-dark);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.no-items{width:100%;text-align:center;color:var(--text-light);font-size:18px;margin-top:50px}.add-button{position:fixed;bottom:30px;right:30px;background-color:var(--primary);color:#fff;border-radius:50%;width:55px;height:55px;font-size:26px;display:flex;justify-content:center;align-items:center;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:10}.tasks .label{background-color:var(--task-bg)}.tests .label{background-color:var(--test-bg)}.exams .label{background-color:var(--exam-bg)}
 </style>
 </head>
 <script src="./sw-register.js"></script>
 <body>
 <div class="phone-ui">
     <div class="header">
-        <h1 id="greeting-text">Hello!</h1>
-        <p class="date" id="current-date"></p>
+        <div>
+            <h1 id="greeting-text">Hello!</h1>
+            <p class="date" id="current-date"></p>
+        </div>
     </div>
     <div class="tools-section">
-        <div class="tools-grid">
-            <a href="javascript:void(0);" id="pomodoro-button" class="tool-button">
-                <i class="fas fa-stopwatch"></i>Pomodoro
-            </a>
-            <a href="javascript:alert('Coming Soon!')" class="tool-button">
-                <i class="fas fa-tools"></i>All Tools
-            </a>
-            <a href="./planner.html" class="tool-button">
-                <i class="fas fa-calendar-alt"></i>Planner
-            </a>
+        <div id="tools-container">
+            <div id="tools-set-1" class="tools-grid tools-grid-active">
+                <a href="javascript:void(0);" id="pomodoro-button" class="tool-button">
+                    <i class="fas fa-stopwatch"></i>Pomodoro
+                </a>
+                <a href="javascript:alert('Coming Soon!')" class="tool-button">
+                    <i class="fas fa-tools"></i>All Tools
+                </a>
+                <a href="./planner.html" class="tool-button">
+                    <i class="fas fa-calendar-alt"></i>Planner
+                </a>
+            </div>
+            <div id="tools-set-2" class="tools-grid tools-grid-right">
+                <a href="javascript:alert('New Feature 1!')" class="tool-button">
+                    <i class="fas fa-chart-line"></i>Stats
+                </a>
+                <a href="javascript:alert('New Feature 2!')" class="tool-button">
+                    <i class="fas fa-bell"></i>Herinneringen
+                </a>
+                <a href="javascript:alert('New Feature 3!')" class="tool-button">
+                    <i class="fas fa-book"></i>Vakken
+                </a>
+            </div>
         </div>
     </div>
     <div class="scrollable-content">
@@ -36,51 +51,82 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded',()=>{
-    const greetingTextEl=document.getElementById('greeting-text');
-    const cardListEl=document.getElementById('card-list');
-    const currentDateEl=document.getElementById('current-date');
-    const pomodoroButton=document.getElementById('pomodoro-button');
-    let allItems=[];
+document.addEventListener('DOMContentLoaded', () => {
+    const greetingTextEl = document.getElementById('greeting-text');
+    const cardListEl = document.getElementById('card-list');
+    const currentDateEl = document.getElementById('current-date');
+    let allItems = [];
+
+    const toolsContainer = document.getElementById('tools-container');
+    const toolsSet1 = document.getElementById('tools-set-1');
+    const toolsSet2 = document.getElementById('tools-set-2');
+
+    let startX = 0;
+    let endX = 0;
+
+    toolsContainer.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    toolsContainer.addEventListener('touchmove', (e) => {
+        endX = e.touches[0].clientX;
+    });
+
+    toolsContainer.addEventListener('touchend', () => {
+        const swipeThreshold = 50;
+        const swipeDistance = startX - endX;
+
+        if (swipeDistance > swipeThreshold && toolsSet1.classList.contains('tools-grid-active')) {
+            toolsSet1.classList.remove('tools-grid-active');
+            toolsSet1.classList.add('tools-grid-left');
+            toolsSet2.classList.remove('tools-grid-right');
+            toolsSet2.classList.add('tools-grid-active');
+        } else if (swipeDistance < -swipeThreshold && toolsSet2.classList.contains('tools-grid-active')) {
+            toolsSet2.classList.remove('tools-grid-active');
+            toolsSet2.classList.add('tools-grid-right');
+            toolsSet1.classList.remove('tools-grid-left');
+            toolsSet1.classList.add('tools-grid-active');
+        }
+    });
 
     function getGreeting(){
-        const hour=new Date().getHours();
-        if(hour>=5&&hour<12)return'Good morning!';
-        if(hour>=12&&hour<18)return'Good afternoon!';
-        if(hour>=18&&hour<22)return'Good evening!';
-        return'Good night!';
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 12) return 'Goedemorgen!';
+        if (hour >= 12 && hour < 18) return 'Goedemiddag!';
+        if (hour >= 18 && hour < 22) return 'Goedenavond!';
+        return 'Goedenacht!';
     }
 
     function renderCards(){
-        cardListEl.innerHTML='';
-        const isFirstTime=!localStorage.getItem('HRN_Study_visited');
-        localStorage.setItem('HRN_Study_visited','true');
+        cardListEl.innerHTML = '';
+        const isFirstTime = !localStorage.getItem('HRN_Study_visited');
+        localStorage.setItem('HRN_Study_visited', 'true');
 
-        if(allItems.length===0){
-            if(isFirstTime){
-                cardListEl.innerHTML=`<p class="no-items">No assignments yet. You can add some using the "+" button.</p>`;
-            }else{
-                cardListEl.innerHTML=`<p class="no-items">You have completed all your assignments! You can always add more using the "+" button.</p>`;
+        if (allItems.length === 0) {
+            if (isFirstTime) {
+                cardListEl.innerHTML = `<p class="no-items">Nog geen opdrachten. Je kunt er een toevoegen met de "+" knop.</p>`;
+            } else {
+                cardListEl.innerHTML = `<p class="no-items">Je hebt al je opdrachten voltooid! Je kunt altijd meer toevoegen met de "+" knop.</p>`;
             }
             return;
         }
 
-        const todayISO=new Date().toISOString().split('T')[0];
-        const tomorrow=new Date();
-        tomorrow.setDate(tomorrow.getDate()+1);
-        const tomorrowISO=tomorrow.toISOString().split('T')[0];
+        const todayISO = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowISO = tomorrow.toISOString().split('T')[0];
 
-        allItems.forEach(item=>{
-            const dateObj=new Date(item.date);
-            let formattedDate=dateObj.toLocaleDateString('en-US',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
-            if(item.date===todayISO)formattedDate='Today';
-            else if(item.date===tomorrowISO)formattedDate='Tomorrow';
-            const formattedTime=`${item.startTime} - ${item.endTime}`;
-            let labelText=item.type;
-            if(labelText==='tasks')labelText='Task';
-            else if(labelText==='tests')labelText='Test';
-            else if(labelText==='exams')labelText='Exam';
-            const cardHTML=`<li>
+        allItems.forEach(item => {
+            const dateObj = new Date(item.date);
+            let formattedDate = dateObj.toLocaleDateString('nl-BE', {weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric'});
+            if (item.date === todayISO) formattedDate = 'Vandaag';
+            else if (item.date === tomorrowISO) formattedDate = 'Morgen';
+            const formattedTime = `${item.startTime} - ${item.endTime}`;
+            let labelText = item.type;
+            if (labelText === 'tasks') labelText = 'Taak';
+            else if (labelText === 'tests') labelText = 'Test';
+            else if (labelText === 'exams') labelText = 'Examen';
+            const cardHTML = `<li>
                 <a href="detail.html?id=${item.type}_${item.id}" class="card ${item.type}">
                     <div class="card-top">
                         <div class="label">${labelText}</div>
@@ -89,46 +135,49 @@ document.addEventListener('DOMContentLoaded',()=>{
                     <h2>${item.title}</h2>
                 </a>
             </li>`;
-            cardListEl.innerHTML+=cardHTML;
+            cardListEl.innerHTML += cardHTML;
         });
     }
 
     function updateUI(){
-        const storedData=localStorage.getItem('HRN_Study_data');
-        const data=storedData?JSON.parse(storedData):{tasks:[],tests:[],exams:[]};
-        allItems=[
-            ...data.tasks.map((item,index)=>({...item,type:'tasks',id:index})),
-            ...data.tests.map((item,index)=>({...item,type:'tests',id:index})),
-            ...data.exams.map((item,index)=>({...item,type:'exams',id:index}))
+        const storedData = localStorage.getItem('HRN_Study_data');
+        const data = storedData ? JSON.parse(storedData) : {tasks: [], tests: [], exams: []};
+        allItems = [
+            ...data.tasks.map((item, index) => ({...item, type: 'tasks', id: index})),
+            ...data.tests.map((item, index) => ({...item, type: 'tests', id: index})),
+            ...data.exams.map((item, index) => ({...item, type: 'exams', id: index}))
         ];
-        allItems.sort((a,b)=>{
-            const dateTimeA=new Date(`${a.date}T${a.startTime}`);
-            const dateTimeB=new Date(`${b.date}T${b.startTime}`);
-            return dateTimeA-dateTimeB;
+        allItems.sort((a, b) => {
+            const dateTimeA = new Date(`${a.date}T${a.startTime}`);
+            const dateTimeB = new Date(`${b.date}T${b.startTime}`);
+            return dateTimeA - dateTimeB;
         });
         renderCards();
     }
 
     function updateDateTime(){
-        const today=new Date();
-        const dateOptions={weekday:'long',year:'numeric',month:'long',day:'numeric'};
-        const timeOptions={hour:'2-digit',minute:'2-digit',hourCycle:'h23'};
-        const formattedDate=today.toLocaleDateString('en-US',dateOptions);
-        const formattedTime=today.toLocaleTimeString('en-US',timeOptions);
-        currentDateEl.textContent=`${formattedDate} - ${formattedTime}`;
-        greetingTextEl.textContent=getGreeting();
+        const today = new Date();
+        const dateOptions = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+        const timeOptions = {hour: '2-digit', minute: '2-digit', hourCycle: 'h23'};
+        const formattedDate = today.toLocaleDateString('nl-BE', dateOptions);
+        const formattedTime = today.toLocaleTimeString('nl-BE', timeOptions);
+        currentDateEl.textContent = `${formattedDate} - ${formattedTime}`;
+        greetingTextEl.textContent = getGreeting();
     }
 
+    // Voeg event listener toe aan de Pomodoro knop
+    document.getElementById('pomodoro-button')?.addEventListener('click', () => { window.parent.postMessage({ page: 'pomodoro' }, '*'); });
+
+    // Initialiseer de UI
     updateDateTime();
     updateUI();
-    const now=new Date();
-    const msUntilNextMinute=(60-now.getSeconds())*1000-now.getMilliseconds();
-    setTimeout(()=>{
+    const now = new Date();
+    const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+    setTimeout(() => {
         updateDateTime();
-        setInterval(()=>{updateDateTime();updateUI();},60000);
-    },msUntilNextMinute);
-    window.addEventListener('focus',updateUI);
-    pomodoroButton.addEventListener('click',()=>{window.parent.postMessage({page:'pomodoro'},'*');});
+        setInterval(() => { updateDateTime(); updateUI(); }, 60000);
+    }, msUntilNextMinute);
+    window.addEventListener('focus', updateUI);
 });
 </script>
 </body>
